@@ -7,4 +7,4 @@ r"""
 @Description:
     数据库，从数据库模块中导入数据库相关函数，供其他模块调用，不用每次都通过相对路径导入了
 """
-from ...db import *
+from ..db import *

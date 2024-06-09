@@ -13,7 +13,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 import time
 from ..module.resp import UNEXPECTED_ERROR_500, PARAMS_ERROR_422
-from ...log import swanlog as swl
+from swanlab.log import swanlog as swl
 from swanlab.package import get_package_version
 from ..settings import ASSETS, INDEX  # 响应路径
 
@@ -79,9 +79,23 @@ async def log_print(request: Request, call_next):
     # status = str(resp.status_code)
     if not request.url.path.startswith("/api"):
         # 如果不是请求api，直接返回
-        swl.debug("[" + str(resp.status_code) + "] " + request.method + " assets: " + request.url.path)
+        swl.debug(
+            "["
+            + str(resp.status_code)
+            + "] "
+            + request.method
+            + " assets: "
+            + request.url.path
+        )
     else:
-        content = "[" + str(resp.status_code) + "] " + request.method + " api: " + request.url.path
+        content = (
+            "["
+            + str(resp.status_code)
+            + "] "
+            + request.method
+            + " api: "
+            + request.url.path
+        )
         swl.debug(content)
     return resp
 

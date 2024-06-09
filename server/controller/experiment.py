@@ -23,9 +23,9 @@ from ..settings import (
     get_meta_path,
     get_requirements_path,
 )
-from ...utils.time import create_time
+from ..utils.time import create_time
 import yaml
-from ...log import swanlog
+from swanlab.log import swanlog
 from .db import (
     Project,
     Experiment,
@@ -34,8 +34,15 @@ from .db import (
     connect,
     NotExistedError,
 )
-from .utils import get_exp_charts, clear_field, read_tag_data, get_tag_files, LOGS_CONFIGS, lttb
-from ...compat.server.controller.experiment import compat_text
+from .utils import (
+    get_exp_charts,
+    clear_field,
+    read_tag_data,
+    get_tag_files,
+    LOGS_CONFIGS,
+    lttb,
+)
+from ..compat.server.controller.experiment import compat_text
 
 __to_list = Experiment.search2list
 
@@ -140,13 +147,13 @@ def get_experiment_info(experiment_id: int):
     # 加载实验配置
     config_path = get_config_path(experiment["run_id"])
     if os.path.exists(config_path):
-        with open(config_path, 'r+') as f:
+        with open(config_path, "r+") as f:
             experiment["config"] = yaml.load(f, Loader=yaml.FullLoader)
 
     # 加载实验元信息
     meta_path = get_meta_path(experiment["run_id"])
     if os.path.exists(meta_path) and not os.stat(meta_path).st_size == 0:
-        with open(meta_path, 'r+') as f:
+        with open(meta_path, "r+") as f:
             experiment["system"] = ujson.load(f)
     else:
         experiment["system"] = {}
@@ -276,7 +283,11 @@ def get_experiment_summary(experiment_id: int) -> dict:
     tag_list = [tag["name"] for tag in __to_list(experiment.tags)]
     experiment_path = __get_logs_dir_by_id(experiment_id)
     # 通过目录结构获取所有正常的tag
-    tags = [f for f in os.listdir(experiment_path) if os.path.isdir(os.path.join(experiment_path, f))]
+    tags = [
+        f
+        for f in os.listdir(experiment_path)
+        if os.path.isdir(os.path.join(experiment_path, f))
+    ]
     # 实验总结数据
     summaries = []
     for tag in tag_list:
@@ -350,7 +361,9 @@ def get_recent_logs(experiment_id):
     total: int = len(consoles)
     # # 如果 total 大于 1, 按照时间排序
     if total > 1:
-        consoles = sorted(consoles, key=lambda x: datetime.strptime(x[:-4], "%Y-%m-%d"), reverse=True)
+        consoles = sorted(
+            consoles, key=lambda x: datetime.strptime(x[:-4], "%Y-%m-%d"), reverse=True
+        )
     logs = []
     # # current_page = total
     for index, f in enumerate(consoles, start=1):
@@ -554,7 +567,9 @@ def change_experiment_visibility(experiment_id: int, show: bool):
     try:
         experiment = Experiment.get_by_id(experiment_id)
     except NotExistedError:
-        return NOT_FOUND_404("Experiment with id {} does not exist.".format(experiment_id))
+        return NOT_FOUND_404(
+            "Experiment with id {} does not exist.".format(experiment_id)
+        )
 
     if show:
         experiment.show = 1

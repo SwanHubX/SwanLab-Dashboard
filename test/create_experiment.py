@@ -45,7 +45,10 @@ for epoch in range(2, swanlab.config.epoches):
         test_audio_arr = np.random.randn(2, 100000)
         swanlab.log(
             {
-                "test/audio": [swanlab.Audio(test_audio_arr, sample_rate, caption="test")] * (epoch // 10),
+                "test/audio": [
+                    swanlab.Audio(test_audio_arr, sample_rate, caption="test")
+                ]
+                * (epoch // 10),
             },
             step=epoch,
         )
@@ -53,7 +56,8 @@ for epoch in range(2, swanlab.config.epoches):
         test_image = np.random.randint(0, 255, (100, 100, 3))
         swanlab.log(
             {
-                "test/image": [swanlab.Image(test_image, caption="test")] * (epoch // 10),
+                "test/image": [swanlab.Image(test_image, caption="test")]
+                * (epoch // 10),
             },
             step=epoch,
         )

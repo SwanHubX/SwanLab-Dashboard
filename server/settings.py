@@ -9,7 +9,6 @@ r"""
 """
 import os
 import mimetypes
-from ..env import get_swanlog_dir
 
 """
 在此处注册静态文件路径，因为静态文件由vue框架编译后生成，在配置中，编译后的文件存储在/swanlab/template中
@@ -24,7 +23,8 @@ TEMPLATE_PATH = os.path.join(FILEPATH, "template")
 ASSETS = os.path.join(TEMPLATE_PATH, "assets")
 INDEX = os.path.join(TEMPLATE_PATH, "index.html")
 # swanlog文件夹路径
-SWANLOG_DIR = get_swanlog_dir()
+# TODO 怎么获取swanlog文件夹路径
+SWANLOG_DIR = os.environ.get("SWANLAB_LOG_DIR")
 
 
 # ---------------------------------- 实验目录下的各个路径 ----------------------------------

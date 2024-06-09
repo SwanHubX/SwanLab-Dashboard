@@ -48,7 +48,7 @@ export default defineConfig(({ mode }) => {
     },
     // 标明编译后存放的位置
     build: {
-      outDir: path.resolve(__dirname, 'swanlab/template'),
+      outDir: path.resolve(__dirname, 'swanboard/template'),
       emptyOutDir: true,
       minify: 'terser',
       // 根据模式应用不同的 terser 配置
