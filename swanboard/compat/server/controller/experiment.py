@@ -10,7 +10,7 @@ r"""
 import shutil
 from ....db import *
 from urllib.parse import unquote
-from swanlab.server.settings import (
+from swanboard.settings import (
     get_media_dir,
     get_tag_dir,
 )
@@ -68,7 +68,9 @@ def compat_text(experiment_id: int, tag: str):
         如果不需要转化，返回 False，如果需要转化，返回转化后的数据
     """
 
-    tag = Tag.filter(Tag.experiment_id == experiment_id, Tag.name == unquote(tag)).first()
+    tag = Tag.filter(
+        Tag.experiment_id == experiment_id, Tag.name == unquote(tag)
+    ).first()
     if tag.type != "text":
         return False
     # 检测在 media 下是否存在同名目录

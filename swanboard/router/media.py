@@ -15,7 +15,7 @@ from ..settings import get_media_dir
 from fastapi import APIRouter
 from urllib.parse import quote
 from fastapi.responses import FileResponse
-from ...db import Experiment
+from ..db import Experiment
 import os
 
 router = APIRouter()
