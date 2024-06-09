@@ -1,0 +1,38 @@
+# frontend
+node_modules
+package-lock.json
+pnpm-lock.yaml
+vue/components.d.ts
+vue/auto-imports.d.ts
+swanlog/
+swanlog.bak/
+.eslintrc-auto-import.json
+dist/
+
+# test
+temp/
+tutils/config.json
+tutils/package.mock.json
+
+# playground
+playground/
+
+# Jetbrains
+.idea/
+.DS_Store
+
+# python
+__pycache__
+.pytest_cache/
+
+# test-integration-ultralytics
+yolov8n-cls.pt
+yolov8n.pt
+yolov8n-pose.pt
+yolov8n-seg.pt
+runs/
+
+# test-integration-lightning
+LightningTest/
+
+swanboard/template
