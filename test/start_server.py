@@ -9,11 +9,11 @@ r"""
     事实上在使用中并不是这样的，而是在命令行执行命令完成的，这里只是为了测试和开发
     增加了实际开发中不会用到的热启动功能
 """
-import uvicorn
 from tutils.config import SWANLAB_LOG_DIR
 from swanboard.db import connect
 from swanboard.app import app
 import os
+from swanboard import run
 
 os.environ["SWANLAB_LOG_DIR"] = SWANLAB_LOG_DIR
 
@@ -25,10 +25,4 @@ def main():
 
 
 if __name__ == "__main__":
-    uvicorn.run(
-        "start_server:main",
-        host="0.0.0.0",
-        port=6092,
-        reload=True,
-        log_level="critical",
-    )
+    run()
