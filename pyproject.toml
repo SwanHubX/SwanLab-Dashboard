@@ -38,8 +38,6 @@ classifiers = [# 项目分类
     'Topic :: Scientific/Engineering :: Artificial Intelligence',
     'Topic :: Scientific/Engineering :: Visualization',
 ]
-[project.scripts] # 项目脚本
-swanlab = "swanlab.cli:cli" # 项目命令行工具(可添加多个)
 
 [project.urls] # 项目链接
 "Homepage" = "https://swanhub.co"
@@ -58,29 +56,12 @@ files = ["requirements.txt"]
 content-type = "text/markdown"
 fragments = [{ path = "README.md" }]
 
-[[tool.hatch.metadata.hooks.fancy-pypi-readme.substitutions]]  # 动态设置readme中的图片链接，渲染为html格式，gradio设置了，暂时不知道有什么用
-pattern = "(readme_files)/"
-replacement = 'https://raw.githubusercontent.com/SwanHubX/SwanLab-Dashboard/main/\g<1>/'
-
-[[tool.hatch.metadata.hooks.fancy-pypi-readme.substitutions]]  # 动态设置中文README跳转规则
-pattern = "README_en.md"
-replacement = 'https://github.com/SwanHubX/SwanLab/blob/main/README_en.md'
-
-[[tool.hatch.metadata.hooks.fancy-pypi-readme.substitutions]]  # 动态设置README跳转规则
-pattern = "README.md"
-replacement = "https://github.com/SwanHubX/SwanLab/blob/main/README.md"
-
-
 [tool.hatch.build]
 artifacts = [# 将一些非python文件打包到项目中
     "/swanboard/template",
     "*.json",
     "*.pyi", # 类型提示文件
 ]
-
-# [tool.hatch.build.targets.wheel.hooks.custom]  # 构建wheel时，用python执行一些脚本
-# path = ".config/copy_frontend.py"  # TODO 拷贝前端文件的脚本
-
 
 [tool.hatch.build.targets.sdist]  # 在执行构建之前，将一些必要文件拷贝到虚拟环境中，以便构建，此时已经完成了vue的编译
 include = [

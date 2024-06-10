@@ -1,10 +1,6 @@
 {
-    "name": "swanboard",
-    "version": "0.1.0",
-    "description": "Dashboard for Swanlab",
-    "python": "true",
-    "host": {
-        "web": "https://swanlab.cn",
-        "api": "https://swanlab.cn/api"
-      }
+  "name": "swanboard",
+  "version": "0.1.0",
+  "description": "Dashboard for Swanlab",
+  "python": "true"
 }
