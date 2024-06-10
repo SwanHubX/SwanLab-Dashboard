@@ -97,18 +97,3 @@ app.include_router(experiment, prefix=prefix + "/experiment")
 app.include_router(media, prefix=prefix + "/media")
 app.include_router(namespace, prefix=prefix + "/namespace")
 app.include_router(chart, prefix=prefix + "/chart")
-
-
-# ---------------------------------- 启动函数 ----------------------------------
-
-import uvicorn
-
-
-def run():
-    uvicorn.run(
-        "start_server:main",
-        host="0.0.0.0",
-        port=6092,
-        reload=True,
-        log_level="critical",
-    )
