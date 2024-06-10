@@ -30,4 +30,3 @@ from .error import (
 from .table_config import tables
 from .db_connect import connect
 from .utils import add_multi_chart
-from .callback import GlomCallback
