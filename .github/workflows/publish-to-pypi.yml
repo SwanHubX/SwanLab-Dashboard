@@ -2,7 +2,8 @@ name: Publish to PyPI
 
 on:
   push:
-    branches: feature/*
+    tags:
+        - 'v*.*.*'
 
 jobs:
   publish:
