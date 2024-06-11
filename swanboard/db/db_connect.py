@@ -7,7 +7,8 @@ r"""
 @Description:
     数据库连接模块
 """
-from swanlab.env import get_db_path
+from typing import Optional
+from swanlab.env import get_swanlog_dir
 import os
 from peewee import SqliteDatabase
 from .table_config import tables, Tag, Experiment, Namespace, Chart
@@ -75,3 +76,13 @@ def connect(autocreate=False) -> SqliteDatabase:
             add_sort(SqliteDatabase(path))
         binded = True
     return swandb
+
+
+# ---------------------------------- 工具函数 ----------------------------------
+
+
+def get_db_path() -> Optional[str]:
+    """
+    获取数据库路径，这是一个计算变量，每次调用都会重新计算
+    """
+    return os.path.join(get_swanlog_dir(), "runs.swanlab")
