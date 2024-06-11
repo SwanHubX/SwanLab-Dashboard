@@ -11,20 +11,15 @@ r"""
 """
 from tutils.config import SWANLAB_LOG_DIR
 from swanboard.db import connect
-from swanboard.app import app
 import os
 from swanboard import run
-from swanlab.env import get_server_host, get_server_port
-from swanlab.cli.utils import URL
+import time
 
 os.environ["SWANLAB_LOG_DIR"] = SWANLAB_LOG_DIR
 
 connect()
 
 
-def main():
-    return app
-
-
 if __name__ == "__main__":
-    run()
+    start = time.time()
+    run(start)

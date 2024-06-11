@@ -13,18 +13,14 @@ import time
 
 # swanlab
 from swanlab.utils import FONT
-from swanlab.package import get_package_version, version_limit
+from swanlab.package import get_package_version
 from swanlab.log import swanlog as swl
-from swanlab.env import get_swanlog_dir
 
 # swanboard
-from swanboard.db.db_connect import connect
 from swanboard.app import app
 
 
-def run(log_level: str = "info"):
-    start = time.time()
-
+def run(start):
     # ---------------------------------- 服务地址处理 ----------------------------------
     # 当前服务地址
     host = get_server_host()
@@ -32,19 +28,6 @@ def run(log_level: str = "info"):
     port = get_server_port()
     # 所有可用ip
     ipv4 = URL.get_all_ip()
-
-    log_dir = get_swanlog_dir()
-    version_limit(log_dir, mode="watch")
-
-    # debug一下当前日志文件夹的位置
-    swl.debug("Try to explore the swanlab experiment logs in: " + FONT.bold(log_dir))
-    try:
-        connect()
-    except FileNotFoundError:
-        swl.error("Can not find the swanlab db in: " + FONT.bold(log_dir))
-
-    # ---------------------------------- 日志等级处理 ----------------------------------
-    swl.set_level(log_level)
 
     # ---------------------------------- 日志打印 ----------------------------------
     # 耗时
