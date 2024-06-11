@@ -11,6 +11,9 @@ from typing import MutableMapping, Optional
 import os
 from swanboard.utils.file import is_port, is_ipv4
 from swanlab.utils import FONT
+import psutil
+import socket
+
 
 # ---------------------------------- 环境变量相关 ----------------------------------
 
@@ -85,9 +88,6 @@ def get_server_host(env: Optional[Env] = None) -> Optional[str]:
 
 
 # ---------------------------------- 工具类 ----------------------------------
-
-import psutil
-import socket
 
 
 class URL(object):

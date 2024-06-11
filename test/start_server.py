@@ -21,5 +21,4 @@ connect()
 
 
 if __name__ == "__main__":
-    start = time.time()
-    run(start)
+    run("info")
