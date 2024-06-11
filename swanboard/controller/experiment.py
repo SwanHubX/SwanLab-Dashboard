@@ -189,14 +189,6 @@ def get_tag_data(experiment_id: int, tag: str) -> dict:
     # 如果数据为空，返回空列表
     if len(tag_data) == 0:
         return SUCCESS_200(data={"sum": 0, "list": [], "experiment_id": experiment_id})
-    # COMPAT 如果第一个数据没有index，就循环每个数据，加上index
-    if tag_data[0].get("index") is None:
-        for index, data in enumerate(tag_data):
-            data["index"] = str(index + 1)
-    # COMPAT 如果第一个数据的index不是int，改为int
-    if not isinstance(tag_data[0]["index"], int):
-        for data in tag_data:
-            data["index"] = int(data["index"])
     # 根据index升序排序
     tag_data.sort(key=lambda x: int(x["index"]))
     # tag_data 的 最后一个数据增加一个字段_last = True

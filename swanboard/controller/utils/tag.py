@@ -43,7 +43,7 @@ def read_tag_data(file_path: str) -> List[dict]:
 
 def get_tag_files(tag_path: str, exclude=None) -> List[str]:
     """
-    获取实验数据，并且做向下兼容，在v0.2.4版本以前的实验日志数据将转换为新的格式
+    获取实验数据
 
     Parameters
     ----------
@@ -61,19 +61,8 @@ def get_tag_files(tag_path: str, exclude=None) -> List[str]:
     if exclude is None:
         exclude = []
     files: list = os.listdir(tag_path)
-    previous_logs = [f for f in files if f.endswith(".json") and f not in exclude]
     current_logs = [f for f in files if f.endswith(".log")]
     current_logs.sort()
-    # COMPAT 如果目标文件夹不存在*.log文件但存在*.json文件，说明是之前的日志格式，需要转换
-    if len(current_logs) == 0 and len(previous_logs) > 0:
-        for file in previous_logs:
-            with open(os.path.join(tag_path, file), "r") as f:
-                data = ujson.load(f)
-                with open(os.path.join(tag_path, file.replace(".json", ".log")), "a") as i:
-                    for d in data["data"]:
-                        i.write(ujson.dumps(d) + "\n")
-        current_logs = [f for f in os.listdir(tag_path) if f.endswith(".log")]
-        current_logs.sort()
     return current_logs
 
 
@@ -94,7 +83,7 @@ def _sample_a_bucket(bucket: List[dict]) -> dict:
     # 计算每个点到直线的距离
     max_distance_p = (0, 0)  # (d, i)
     for i in range(1, len(bucket) - 1):
-        distance = abs(k * bucket[i]["index"] + b - bucket[i]["data"]) / math.sqrt(k ** 2 + 1)
+        distance = abs(k * bucket[i]["index"] + b - bucket[i]["data"]) / math.sqrt(k**2 + 1)
         if distance > max_distance_p[0]:
             max_distance_p = (distance, i)
     return bucket[max_distance_p[1]]
