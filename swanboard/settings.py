@@ -24,7 +24,6 @@ TEMPLATE_PATH = os.path.join(FILEPATH, "template")
 ASSETS = os.path.join(TEMPLATE_PATH, "assets")
 INDEX = os.path.join(TEMPLATE_PATH, "index.html")
 # swanlog文件夹路径
-# TODO 怎么获取swanlog文件夹路径
 SWANLOG_DIR = get_swanlog_dir()
 
 
