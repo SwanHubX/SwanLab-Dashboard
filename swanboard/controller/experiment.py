@@ -42,7 +42,6 @@ from .utils import (
     LOGS_CONFIGS,
     lttb,
 )
-from ..compat.server.controller.experiment import compat_text
 
 __to_list = Experiment.search2list
 
@@ -190,19 +189,6 @@ def get_tag_data(experiment_id: int, tag: str) -> dict:
     # 如果数据为空，返回空列表
     if len(tag_data) == 0:
         return SUCCESS_200(data={"sum": 0, "list": [], "experiment_id": experiment_id})
-    # COMPAT 如果第一个数据没有index，就循环每个数据，加上index
-    if tag_data[0].get("index") is None:
-        for index, data in enumerate(tag_data):
-            data["index"] = str(index + 1)
-    # COMPAT 如果第一个数据的index不是int，改为int
-    if not isinstance(tag_data[0]["index"], int):
-        for data in tag_data:
-            data["index"] = int(data["index"])
-    # COMPAT 如果当前tag的类型为text，并且在media文件夹下存在相同名文件夹
-    texts = compat_text(experiment_id, tag)
-    # 如果需要兼容，进行重新赋值，直接获取文本内容
-    if texts:
-        tag_data = texts
     # 根据index升序排序
     tag_data.sort(key=lambda x: int(x["index"]))
     # tag_data 的 最后一个数据增加一个字段_last = True
@@ -283,11 +269,7 @@ def get_experiment_summary(experiment_id: int) -> dict:
     tag_list = [tag["name"] for tag in __to_list(experiment.tags)]
     experiment_path = __get_logs_dir_by_id(experiment_id)
     # 通过目录结构获取所有正常的tag
-    tags = [
-        f
-        for f in os.listdir(experiment_path)
-        if os.path.isdir(os.path.join(experiment_path, f))
-    ]
+    tags = [f for f in os.listdir(experiment_path) if os.path.isdir(os.path.join(experiment_path, f))]
     # 实验总结数据
     summaries = []
     for tag in tag_list:
@@ -361,9 +343,7 @@ def get_recent_logs(experiment_id):
     total: int = len(consoles)
     # # 如果 total 大于 1, 按照时间排序
     if total > 1:
-        consoles = sorted(
-            consoles, key=lambda x: datetime.strptime(x[:-4], "%Y-%m-%d"), reverse=True
-        )
+        consoles = sorted(consoles, key=lambda x: datetime.strptime(x[:-4], "%Y-%m-%d"), reverse=True)
     logs = []
     # # current_page = total
     for index, f in enumerate(consoles, start=1):
@@ -567,9 +547,7 @@ def change_experiment_visibility(experiment_id: int, show: bool):
     try:
         experiment = Experiment.get_by_id(experiment_id)
     except NotExistedError:
-        return NOT_FOUND_404(
-            "Experiment with id {} does not exist.".format(experiment_id)
-        )
+        return NOT_FOUND_404("Experiment with id {} does not exist.".format(experiment_id))
 
     if show:
         experiment.show = 1
