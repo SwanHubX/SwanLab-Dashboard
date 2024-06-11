@@ -290,12 +290,11 @@ def get_experiment_summary(experiment_id: int) -> dict:
             summaries.append({"key": tag, "value": last_data["data"]})
     # 获取数据库记录时在实验下的排序
     sorts = {item["name"]: item["sort"] for item in __to_list(experiment.tags)}
-    # COMPAT 如果 sorts 中的值不都为 0，说明是新版添加排序后的 tag，这里进行排序 (如果是旧版没有排序的tag，直接按照数据库顺序即可)
-    if not all(value == 0 for value in sorts.values()):
-        temp = [0] * len(summaries)
-        for item in summaries:
-            temp[sorts[item["key"]]] = item
-        summaries = temp
+    # 新版添加排序后的 tag，这里进行排序
+    temp = [0] * len(summaries)
+    for item in summaries:
+        temp[sorts[item["key"]]] = item
+    summaries = temp
     return SUCCESS_200({"summaries": summaries})
 
 
