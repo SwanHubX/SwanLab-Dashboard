@@ -13,7 +13,6 @@ from tutils.config import SWANLAB_LOG_DIR
 from swanboard.db import connect
 import os
 from swanboard import run
-import time
 
 os.environ["SWANLAB_LOG_DIR"] = SWANLAB_LOG_DIR
 
@@ -21,4 +20,4 @@ connect()
 
 
 if __name__ == "__main__":
-    run("info")
+    run("debug")
