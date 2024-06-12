@@ -20,7 +20,7 @@ import time
 import os
 
 # swanlab
-from swanlab.utils import FONT, file
+from swanlab.utils import FONT
 from swanlab.package import get_package_version, version_limit
 from swanlab.log import swanlog as swl
 from swanlab.env import get_swanlog_dir
@@ -28,6 +28,7 @@ from swanlab.env import get_swanlog_dir
 # swanboard
 from swanboard.app import app
 from swanboard.db import connect
+from .utils import is_ipv4, is_port
 
 
 class SwanBoardRun:
@@ -48,7 +49,7 @@ class SwanBoardRun:
         """
         if ip is None:
             return
-        if not file.is_ipv4(ip):
+        if not is_ipv4(ip):
             raise ValueError("Invalid ip address: " + ip)
         os.environ[HOST] = ip
 
@@ -67,7 +68,7 @@ class SwanBoardRun:
         """
         if port is None:
             return
-        if not file.is_port(port):
+        if not is_port(port):
             raise ValueError("Invalid port number: " + str(port))
         os.environ[PORT] = str(port)
 
