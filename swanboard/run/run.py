@@ -34,7 +34,7 @@ class SwanBoardRun:
     """swanboard 面板启动类"""
 
     @staticmethod
-    def is_valid_ip(ctx, param, ip: str) -> None:
+    def is_valid_ip(self, ctx, param, ip: str) -> None:
         """检测输入的是否是合法的ip地址,完成环境变量的注入
 
         Parameters
@@ -53,7 +53,7 @@ class SwanBoardRun:
         os.environ[HOST] = ip
 
     @staticmethod
-    def is_valid_port(ctx, param, port: int) -> int:
+    def is_valid_port(self, ctx, param, port: int) -> int:
         """检测是否是合法的端口号
 
         Parameters
@@ -72,7 +72,7 @@ class SwanBoardRun:
         os.environ[PORT] = str(port)
 
     @staticmethod
-    def is_valid_root_dir(ctx, param, log_dir: str) -> str:
+    def is_valid_root_dir(self, ctx, param, log_dir: str) -> str:
         """检测是否是合法的日志目录，保证其可读且存在
 
         Parameters
