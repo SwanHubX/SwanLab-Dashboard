@@ -9,11 +9,10 @@ r"""
 """
 from typing import MutableMapping, Optional
 import os
-from swanboard.utils.file import is_port, is_ipv4
-from swanlab.utils import FONT, file
+from swanlab.utils import FONT
 import psutil
 import socket
-import click
+import re
 
 
 # ---------------------------------- 环境变量相关 ----------------------------------
@@ -31,6 +30,64 @@ HOST = "SWANLAB_SERVER_HOST"
 
 ROOT = "SWANLAB_LOG_DIR"
 """命令执行目录SWANLAB_LOG_DIR，日志文件存放在这个目录下，如果自动生成，则最后的目录名为swanlog，第一次调用时如果路径不存在，会自动创建路径"""
+
+# ---------------------------------- 格式检查 ----------------------------------
+
+
+def is_ipv4(string: str) -> bool:
+    """判断字符串是否是一个ipv4地址
+
+    Parameters
+    ----------
+    string : str
+        待检查的字符串
+
+    Returns
+    -------
+    bool
+        如果是ipv4地址，返回True，否则返回False
+    """
+    pattern = re.compile(r"^((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\d\d?)$")
+    return isinstance(string, str) and pattern.match(string)
+
+
+def is_port(string: str) -> bool:
+    """判断字符串是否是一个端口号
+
+    Parameters
+    ----------
+    string : str
+        待检查的字符串
+
+    Returns
+    -------
+    bool
+        如果是端口号，返回True，否则返回False
+    """
+    if not is_int(string):
+        return False
+    port = int(string)
+    return 0 <= port <= 65535
+
+
+def is_int(string: str) -> bool:
+    """判断字符串是否可以转换为整数
+
+    Parameters
+    ----------
+    string : str
+        待检查的字符串
+
+    Returns
+    -------
+    bool
+        如果可以转换为整数，返回True，否则返回False
+    """
+    try:
+        int(string)
+        return True
+    except ValueError:
+        return False
 
 
 # ---------------------------------- 工具函数 ----------------------------------
@@ -159,75 +216,3 @@ class URL(object):
         ipv4.sort(key=lambda x: (x != "127.0.0.1", x), reverse=True)
         ipv4.reverse()
         return ipv4
-
-
-class options_rule:
-    """swanlab watch 参数检测"""
-
-    def is_valid_ip(ctx, param, ip: str) -> None:
-        """检测输入的是否是合法的ip地址,完成环境变量的注入
-
-        Parameters
-        ----------
-        ctx : click.Context
-            上下文
-        param : click.Parameter
-            参数
-        ip : str
-            带检测的字符串
-        """
-        if ip is None:
-            return
-        if not file.is_ipv4(ip):
-            raise click.BadParameter("Invalid ip address: " + ip)
-        os.environ[HOST] = ip
-
-    def is_valid_port(ctx, param, port: int) -> int:
-        """检测是否是合法的端口号
-
-        Parameters
-        ----------
-        ctx : click.Context
-            上下文
-        param : click.Parameter
-            参数
-        port : int
-            带检测的端口号
-        """
-        if port is None:
-            return
-        if not file.is_port(port):
-            raise click.BadParameter("Invalid port number: " + str(port))
-        os.environ[PORT] = str(port)
-
-    def is_valid_root_dir(ctx, param, log_dir: str) -> str:
-        """检测是否是合法的日志目录，保证其可读且存在
-
-        Parameters
-        ----------
-        ctx : click.Context
-            上下文
-        param : click.Parameter
-            参数
-        log_dir : str
-            带检测的日志目录
-        """
-        # 将日志目录注入环境变量，在这之前先转换为绝对路径
-
-        if log_dir is None:
-            return
-
-        # 将传入的路径转换为绝对路径
-        log_dir = os.path.abspath(log_dir)
-
-        # 必须是一个绝对路径
-        if not os.path.isabs(log_dir):
-            raise click.BadParameter("Log dir must be an absolute path: " + log_dir)
-        # 路径必须存在
-        if not os.path.isdir(log_dir):
-            raise click.BadParameter("Log dir is not a directory: " + log_dir)
-        # 路径必须可读
-        if not os.access(log_dir, os.R_OK):
-            raise click.BadParameter("Log dir is not readable: " + log_dir)
-
-        os.environ[ROOT] = log_dir
