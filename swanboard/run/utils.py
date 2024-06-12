@@ -26,7 +26,7 @@ PORT = "SWANLAB_SERVER_PORT"
 """服务端口SWANLAB_SERVER_PORT，服务端口"""
 
 HOST = "SWANLAB_SERVER_HOST"
-"""服务端口SWANLAB_SERVER_PORT，服务地址"""
+"""服务端口SWANLAB_SERVER_HOST，服务地址"""
 
 # ---------------------------------- 格式检查 ----------------------------------
 
