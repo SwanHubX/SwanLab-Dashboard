@@ -28,9 +28,6 @@ PORT = "SWANLAB_SERVER_PORT"
 HOST = "SWANLAB_SERVER_HOST"
 """服务端口SWANLAB_SERVER_PORT，服务地址"""
 
-ROOT = "SWANLAB_LOG_DIR"
-"""命令执行目录SWANLAB_LOG_DIR，日志文件存放在这个目录下，如果自动生成，则最后的目录名为swanlog，第一次调用时如果路径不存在，会自动创建路径"""
-
 # ---------------------------------- 格式检查 ----------------------------------
 
 
