@@ -14,7 +14,6 @@ from .utils import (
     URL,
     PORT,
     HOST,
-    ROOT,
 )
 import time
 import os
