@@ -10,14 +10,11 @@ r"""
 import uvicorn
 from .utils import URL, is_ipv4, is_port
 import time
-
-# swanlab
 from swanlab.utils import FONT
 from swanlab.package import get_package_version, version_limit
 from swanlab.log import swanlog as swl
-
-# swanboard
 from swanboard.db import connect
+import sys
 
 
 class SwanBoardRun:
@@ -107,5 +104,7 @@ class SwanBoardRun:
                     host, port
                 )
                 swl.critical(critical)
+                sys.exit(7)
             else:
                 swl.critical("Unhandled Exit Code: {}".format(code))
+                sys.exit(1)
