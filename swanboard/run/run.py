@@ -17,7 +17,6 @@ from swanlab.package import get_package_version, version_limit
 from swanlab.log import swanlog as swl
 
 # swanboard
-from swanboard.app import app
 from swanboard.db import connect
 
 
@@ -97,6 +96,8 @@ class SwanBoardRun:
         # ---------------------------------- 启动服务 ----------------------------------
         # 使用 uvicorn 启动 FastAPI 应用，关闭原生日志
         # 使用try except 捕获退出，涉及端口占用等
+        from swanboard.app import app
+
         try:
             uvicorn.run(app, host=host, port=port, log_level="critical")
         except SystemExit as e:
