@@ -14,20 +14,6 @@ import psutil
 import socket
 import re
 
-
-# ---------------------------------- 环境变量相关 ----------------------------------
-
-Env = Optional[MutableMapping]
-
-_env = dict()
-"""运行时环境变量参数存储，实际上就是一个字典"""
-
-PORT = "SWANLAB_SERVER_PORT"
-"""服务端口SWANLAB_SERVER_PORT，服务端口"""
-
-HOST = "SWANLAB_SERVER_HOST"
-"""服务端口SWANLAB_SERVER_HOST，服务地址"""
-
 # ---------------------------------- 格式检查 ----------------------------------
 
 
@@ -85,64 +71,6 @@ def is_int(string: str) -> bool:
         return True
     except ValueError:
         return False
-
-
-# ---------------------------------- 工具函数 ----------------------------------
-
-
-def get_server_port(env: Optional[Env] = None) -> Optional[int]:
-    """获取服务端口
-
-    Parameters
-    ----------
-    env : Optional[Env], optional
-        环境变量map,可以是任意实现了MutableMapping的对象, 默认将使用os.environ
-
-    Returns
-    -------
-    Optional[int]
-        服务端口
-    """
-    # 第一次调用时，从环境变量中提取，之后就不再提取，而是从缓存中提取
-    if _env.get(PORT) is not None:
-        return _env.get(PORT)
-    # 否则从环境变量中提取
-    if env is None:
-        env = os.environ
-    default: Optional[int] = 5092
-    port = env.get(PORT, default=default)
-    # 必须可以转换为整数，且在0-65535之间
-    if not is_port(port):
-        raise ValueError('SWANLAB_SERVER_PORT must be a port, now is "{port}"'.format(port=port))
-    _env[PORT] = int(port)
-    return _env.get(PORT)
-
-
-def get_server_host(env: Optional[Env] = None) -> Optional[str]:
-    """获取服务端口
-
-    Parameters
-    ----------
-    env : Optional[Env], optional
-        环境变量map,可以是任意实现了MutableMapping的对象, 默认将使用os.environ
-
-    Returns
-    -------
-    Optional[int]
-        服务端口
-    """
-    default: Optional[str] = "127.0.0.1"
-    # 第一次调用时，从环境变量中提取，之后就不再提取，而是从缓存中提取
-    if _env.get(HOST) is not None:
-        return _env.get(HOST)
-    # 否则从环境变量中提取
-    if env is None:
-        env = os.environ
-    _env[HOST] = env.get(HOST, default=default)
-    # 必须是一个ipv4地址
-    if not is_ipv4(_env.get(HOST)):
-        raise ValueError('SWANLAB_SERVER_HOST must be an ipv4 address, now is "{host}"'.format(host=_env.get(HOST)))
-    return _env.get(HOST)
 
 
 # ---------------------------------- 工具类 ----------------------------------
