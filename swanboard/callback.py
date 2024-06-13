@@ -1,5 +1,6 @@
 from swanlab.data.run.callback import SwanLabRunCallback, ColumnInfo
 from swanlab.log import swanlog
+from swanlab.env import get_swanlog_dir
 from .db.models import *
 from .db.utils.chart import add_multi_chart
 from .db.db_connect import connect
@@ -79,9 +80,9 @@ class SwanBoardCallback(SwanLabRunCallback):
     def __str__(self) -> str:
         return "SwanBoardCallback"
 
-    def on_init(self, proj_name: str, workspace: str, logdir: str):
+    def on_init(self, proj_name: str, *args, **kwargs):
         # 连接本地数据库，要求路径必须存在，但是如果数据库文件不存在，会自动创建
-        connect(autocreate=True, path=logdir)
+        connect(autocreate=True, path=get_swanlog_dir())
         # 初始化项目数据库
         Project.init(proj_name)
 
