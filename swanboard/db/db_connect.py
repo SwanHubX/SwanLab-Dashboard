@@ -61,14 +61,12 @@ def connect(path: str = None, autocreate: bool = False) -> SqliteDatabase:
         raise FileNotFoundError(f"DB file {db_path} not found")
     # 启用外键约束
     swandb = SqliteDatabase(db_path, pragmas={"foreign_keys": 1})
-    # 不存在，且设置为自动创建，则创建
-    if not db_exists:
+    if not bound:
         # 动态绑定数据库
         swandb.connect()
         swandb.bind(tables)
         swandb.create_tables(tables)
         swandb.close()
-    if not bound:
         # 完成数据迁移，如果chart表中没有status字段，则添加
         if not Chart.field_exists("status"):
             # 不启用外键约束
