@@ -1,5 +1,6 @@
 from swanlab.data.run.callback import SwanLabRunCallback, ColumnInfo
 from swanlab.log import swanlog
+from swanlab.env import get_swanlog_dir
 from .db.models import *
 from .db.utils.chart import add_multi_chart
 from .db.db_connect import connect
@@ -20,9 +21,7 @@ class SwanBoardCallback(SwanLabRunCallback):
         self.exp: Optional[Experiment] = None
 
     @staticmethod
-    def __get_exp_name(
-        experiment_name: str = None, suffix: str = None
-    ) -> Tuple[str, str]:
+    def __get_exp_name(experiment_name: str = None, suffix: str = None) -> Tuple[str, str]:
         """
         预处理实验名称，如果实验名称过长，截断
 
@@ -61,9 +60,7 @@ class SwanBoardCallback(SwanLabRunCallback):
 
         # suffix必须是字符串
         if not isinstance(suffix, str):
-            raise TypeError(
-                "The suffix must be a string, but got {}".format(type(suffix))
-            )
+            raise TypeError("The suffix must be a string, but got {}".format(type(suffix)))
 
         # 如果suffix_checked为default，则设置为默认后缀
         if suffix.lower().strip() == "default":
@@ -85,7 +82,7 @@ class SwanBoardCallback(SwanLabRunCallback):
 
     def on_init(self, proj_name: str, *args, **kwargs):
         # 连接本地数据库，要求路径必须存在，但是如果数据库文件不存在，会自动创建
-        connect(autocreate=True)
+        connect(autocreate=True, path=get_swanlog_dir())
         # 初始化项目数据库
         Project.init(proj_name)
 
@@ -111,24 +108,18 @@ class SwanBoardCallback(SwanLabRunCallback):
             experiment_name, exp_name = self.__get_exp_name(old, suffix)
             try:
                 # 获得数据库实例
-                self.exp = Experiment.create(
-                    name=exp_name, run_id=run_id, description=description, num=num
-                )
+                self.exp = Experiment.create(name=exp_name, run_id=run_id, description=description, num=num)
                 break
             except ExistedError:
                 # 如果suffix名为default，说明是自动生成的后缀，需要重新生成后缀
                 if isinstance(suffix, str) and suffix.lower().strip() == "default":
-                    swanlog.debug(
-                        f"Experiment {exp_name} has existed, try another name..."
-                    )
+                    swanlog.debug(f"Experiment {exp_name} has existed, try another name...")
                     time.sleep(0.5)
                     continue
                 # 其他情况下，说明是用户自定义的后缀，需要报错
                 else:
                     Experiment.purely_delete(run_id=run_id)
-                    raise ExistedError(
-                        f"Experiment {exp_name} has existed in local, please try another name."
-                    )
+                    raise ExistedError(f"Experiment {exp_name} has existed in local, please try another name.")
         # 执行相关设置
         setter(experiment_name, self.exp.light, self.exp.dark, self.exp.description)
 
@@ -158,9 +149,7 @@ class SwanBoardCallback(SwanLabRunCallback):
         # 需要指定sort，default命名空间的sort为0，其他命名空间的sort为None，表示默认添加到最后
         namespace = column_info.namespace
         try:
-            n = Namespace.create(
-                name=namespace, experiment_id=self.exp.id, sort=column_info.sort
-            )
+            n = Namespace.create(name=namespace, experiment_id=self.exp.id, sort=column_info.sort)
             swanlog.debug(f"Namespace {namespace} created, id: {n.id}")
         except ExistedError:
             n: Namespace = Namespace.get(name=namespace, experiment_id=self.exp.id)
@@ -184,9 +173,7 @@ class SwanBoardCallback(SwanLabRunCallback):
         try:
             add_multi_chart(tag_id=tag.id, chart_id=chart.id)
         except ChartTypeError:
-            swanlog.warning(
-                "In the multi-experiment chart, the current type of tag is not as expected."
-            )
+            swanlog.warning("In the multi-experiment chart, the current type of tag is not as expected.")
 
     def on_stop(self, error: str = None):
         # 更新数据库中的实验状态

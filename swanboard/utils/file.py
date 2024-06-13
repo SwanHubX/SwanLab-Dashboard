@@ -15,64 +15,6 @@ import yaml
 # ---------------------------------- 一些格式检查的工具函数 ----------------------------------
 
 
-def is_ipv4(string: str) -> bool:
-    """判断字符串是否是一个ipv4地址
-
-    Parameters
-    ----------
-    string : str
-        待检查的字符串
-
-    Returns
-    -------
-    bool
-        如果是ipv4地址，返回True，否则返回False
-    """
-    pattern = re.compile(
-        r"^((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\d\d?)$"
-    )
-    return isinstance(string, str) and pattern.match(string)
-
-
-def is_port(string: str) -> bool:
-    """判断字符串是否是一个端口号
-
-    Parameters
-    ----------
-    string : str
-        待检查的字符串
-
-    Returns
-    -------
-    bool
-        如果是端口号，返回True，否则返回False
-    """
-    if not is_int(string):
-        return False
-    port = int(string)
-    return 0 <= port <= 65535
-
-
-def is_int(string: str) -> bool:
-    """判断字符串是否可以转换为整数
-
-    Parameters
-    ----------
-    string : str
-        待检查的字符串
-
-    Returns
-    -------
-    bool
-        如果可以转换为整数，返回True，否则返回False
-    """
-    try:
-        int(string)
-        return True
-    except ValueError:
-        return False
-
-
 def check_string(target: str) -> bool:
     """
     检查是否为字符串，且不能全空格，也不能为空字符串
@@ -109,9 +51,7 @@ def _auto_cut(name: str, value: str, max_len: int, cut: bool) -> str:
         if cut:
             value = value[:max_len]
         else:
-            raise IndexError(
-                f"Name: {name} is too long, which must be less than {max_len} characters"
-            )
+            raise IndexError(f"Name: {name} is too long, which must be less than {max_len} characters")
     return value
 
 

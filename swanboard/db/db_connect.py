@@ -7,30 +7,32 @@ r"""
 @Description:
     数据库连接模块
 """
-from typing import Optional
-from swanlab.env import get_swanlog_dir
 import os
 from peewee import SqliteDatabase
 from .table_config import tables, Tag, Experiment, Namespace, Chart
 from .migrate import *
 
-# 判断是否已经binded了
-binded = False
+db_path = None
+"""
+全局挂载的数据库路径，当autocreate设置为True时，必须指定此路路径
+可用于判断数据库是否已经创建
+"""
 
 
-def connect(autocreate=False) -> SqliteDatabase:
+def connect(path: str = None, autocreate: bool = False) -> SqliteDatabase:
     """
     连接数据库，只有调用此方法以后，数据库才会被创建，所有导出的类才可用
-    这样设计的原因是因为路径问题，这里需要动态导入settings
-    第一次调用此方法时会创建数据库，返回None，以后调用此方法会返回数据库实例，通过其自身的`connect`方法连接数据库
-    完成复杂的数据库操作后，需要调用其`close`方法关闭数据库连接
+
 
     Parameters:
     ----------
-    existed : bool
-        是否指定创建数据库，如果为True，则会自动创建数据库，否则不会自动创建数据库
-        设置为False时，如果目标数据库不存在，则会抛出FileNotFoundError异常
-        但是即使设置为true，文件夹不存在的情况下也会抛出FileNotFoundError异常
+    path : str
+        数据库路径，第一次连接时必须指定数据库路径
+        后续使用如果不指定，会使用第一次指定的路径，如果再次指定，会覆盖第一次指定的路径
+    autocreate : bool
+        是否自动创建数据库，如果设置为True，当数据库不存在时，会自动创建数据库
+        如果设置为False，当数据库不存在时，会抛出FileNotFoundError异常
+        设置此参数是为了严格控制数据库创建行为，避免误操作
 
     Return:
     -------
@@ -40,19 +42,26 @@ def connect(autocreate=False) -> SqliteDatabase:
     Raises:
     -------
     FileNotFoundError :
-        如果数据库不存在且existed为False，则会抛出FileNotFoundError异常
-        或者路径不存在，也会抛出FileNotFoundError异常
+        如果数据库不存在，并且autocreate为False，则会抛出FileNotFoundError异常
+    ValueError :
+        如果指定了路径但是没有设置autocreate为True，则会抛出ValueError异常
     """
-    global binded
-    path = get_db_path()
-    # 判断数据库是否存在
-    db_exists = os.path.exists(path)
-    path_exists = os.path.exists(os.path.dirname(path))
-    if not path_exists or (not db_exists and not autocreate):
-        raise FileNotFoundError(f"DB file {path} not found")
+    global db_path
+    bound = True
+    # 覆盖全局变量后需要重新创建数据库
+    if not path and not db_path:
+        raise ValueError("First time connect must specify the path")
+    elif path:
+        # 覆盖全局变量
+        db_path = os.path.join(path, "runs.swanlab")
+        bound = False
+    # 检查数据库是否存在，不存在就创建
+    db_exists = os.path.exists(db_path)
+    if not db_exists and not autocreate:
+        raise FileNotFoundError(f"DB file {db_path} not found")
     # 启用外键约束
-    swandb = SqliteDatabase(path, pragmas={"foreign_keys": 1})
-    if not binded:
+    swandb = SqliteDatabase(db_path, pragmas={"foreign_keys": 1})
+    if not bound:
         # 动态绑定数据库
         swandb.connect()
         swandb.bind(tables)
@@ -61,28 +70,17 @@ def connect(autocreate=False) -> SqliteDatabase:
         # 完成数据迁移，如果chart表中没有status字段，则添加
         if not Chart.field_exists("status"):
             # 不启用外键约束
-            add_status(SqliteDatabase(path))
+            add_status(SqliteDatabase(db_path))
         # 完成数据迁移，如果namespace表中没有opened字段，则添加
         if not Namespace.field_exists("opened"):
             # 不启用外键约束
-            add_opened(SqliteDatabase(path))
+            add_opened(SqliteDatabase(db_path))
         # 完成数据迁移，如果experiment表中没有finish_time字段，则添加
         if not Experiment.field_exists("finish_time"):
             # 不启用外键约束
-            add_finish_time(SqliteDatabase(path))
+            add_finish_time(SqliteDatabase(db_path))
         # 完成数据迁移，如果tag表中没有sort字段，则添加
         if not Tag.field_exists("sort"):
             # 不启用外键约束
-            add_sort(SqliteDatabase(path))
-        binded = True
+            add_sort(SqliteDatabase(db_path))
     return swandb
-
-
-# ---------------------------------- 工具函数 ----------------------------------
-
-
-def get_db_path() -> Optional[str]:
-    """
-    获取数据库路径，这是一个计算变量，每次调用都会重新计算
-    """
-    return os.path.join(get_swanlog_dir(), "runs.swanlab")

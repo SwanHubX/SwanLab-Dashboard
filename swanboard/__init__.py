@@ -1,2 +1,2 @@
 from .callback import SwanBoardCallback
-from .run import run
+from .run import SwanBoardRun
