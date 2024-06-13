@@ -47,18 +47,20 @@ def connect(path: str = None, autocreate: bool = False) -> SqliteDatabase:
         如果指定了路径但是没有设置autocreate为True，则会抛出ValueError异常
     """
     global db_path
+    bound = True
     # 覆盖全局变量后需要重新创建数据库
     if not path and not db_path:
         raise ValueError("First time connect must specify the path")
     elif path:
         # 覆盖全局变量
         db_path = os.path.join(path, "runs.swanlab")
+        bound = False
     # 检查数据库是否存在，不存在就创建
     db_exists = os.path.exists(db_path)
     if not db_exists and not autocreate:
-        raise FileNotFoundError(f"DB file {path} not found")
+        raise FileNotFoundError(f"DB file {db_path} not found")
     # 启用外键约束
-    swandb = SqliteDatabase(path, pragmas={"foreign_keys": 1})
+    swandb = SqliteDatabase(db_path, pragmas={"foreign_keys": 1})
     # 不存在，且设置为自动创建，则创建
     if not db_exists:
         # 动态绑定数据库
@@ -66,20 +68,21 @@ def connect(path: str = None, autocreate: bool = False) -> SqliteDatabase:
         swandb.bind(tables)
         swandb.create_tables(tables)
         swandb.close()
+    if not bound:
         # 完成数据迁移，如果chart表中没有status字段，则添加
         if not Chart.field_exists("status"):
             # 不启用外键约束
-            add_status(SqliteDatabase(path))
+            add_status(SqliteDatabase(db_path))
         # 完成数据迁移，如果namespace表中没有opened字段，则添加
         if not Namespace.field_exists("opened"):
             # 不启用外键约束
-            add_opened(SqliteDatabase(path))
+            add_opened(SqliteDatabase(db_path))
         # 完成数据迁移，如果experiment表中没有finish_time字段，则添加
         if not Experiment.field_exists("finish_time"):
             # 不启用外键约束
-            add_finish_time(SqliteDatabase(path))
+            add_finish_time(SqliteDatabase(db_path))
         # 完成数据迁移，如果tag表中没有sort字段，则添加
         if not Tag.field_exists("sort"):
             # 不启用外键约束
-            add_sort(SqliteDatabase(path))
+            add_sort(SqliteDatabase(db_path))
     return swandb
