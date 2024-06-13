@@ -14,11 +14,14 @@ from peewee import SqliteDatabase
 from .table_config import tables, Tag, Experiment, Namespace, Chart
 from .migrate import *
 
-# 判断是否已经binded了
-binded = False
+db_path = None
+"""
+全局挂载的数据库路径，当autocreate设置为True时，必须指定此路路径
+可用于判断数据库是否已经创建
+"""
 
 
-def connect(autocreate=False) -> SqliteDatabase:
+def connect(autocreate=False, path: str = None) -> SqliteDatabase:
     """
     连接数据库，只有调用此方法以后，数据库才会被创建，所有导出的类才可用
     这样设计的原因是因为路径问题，这里需要动态导入settings
@@ -43,16 +46,19 @@ def connect(autocreate=False) -> SqliteDatabase:
         如果数据库不存在且existed为False，则会抛出FileNotFoundError异常
         或者路径不存在，也会抛出FileNotFoundError异常
     """
-    global binded
-    path = get_db_path()
-    # 判断数据库是否存在
-    db_exists = os.path.exists(path)
-    path_exists = os.path.exists(os.path.dirname(path))
-    if not path_exists or (not db_exists and not autocreate):
+    global db_path
+    if path and not autocreate:
+        raise ValueError("If you specify the path, you must set autocreate to True")
+    else:
+        # 覆盖全局变量
+        db_path = os.path.join(path, "runs.swanlab")
+    db_exists = os.path.exists(db_path)
+    if not db_exists and not autocreate:
         raise FileNotFoundError(f"DB file {path} not found")
     # 启用外键约束
     swandb = SqliteDatabase(path, pragmas={"foreign_keys": 1})
-    if not binded:
+    # 不存在，且设置为自动创建，则创建
+    if not db_exists:
         # 动态绑定数据库
         swandb.connect()
         swandb.bind(tables)
@@ -74,7 +80,6 @@ def connect(autocreate=False) -> SqliteDatabase:
         if not Tag.field_exists("sort"):
             # 不启用外键约束
             add_sort(SqliteDatabase(path))
-        binded = True
     return swandb
 
 

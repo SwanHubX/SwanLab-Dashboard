@@ -114,5 +114,10 @@
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
   "vue-i18n.i18nPaths": "vue/src/i18n",
-  "cSpell.words": ["apipa", "netwo", "psutil"]
+  "cSpell.words": [
+    "apipa",
+    "netwo",
+    "psutil",
+    "swandb"
+  ]
 }
