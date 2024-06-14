@@ -12,12 +12,11 @@ r"""
 from tutils.config import SWANLAB_LOG_DIR
 from swanboard.db import connect
 import os
-from swanboard import run
+from swanboard import SwanBoardRun
 
 os.environ["SWANLAB_LOG_DIR"] = SWANLAB_LOG_DIR
-
-connect()
+connect(SWANLAB_LOG_DIR)
 
 
 if __name__ == "__main__":
-    run("debug")
+    SwanBoardRun.run(path=SWANLAB_LOG_DIR, host="0.0.0.0", port=6092)

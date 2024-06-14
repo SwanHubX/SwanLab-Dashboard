@@ -22,7 +22,9 @@
       python: 'Python Version',
       start_time: 'Start Time',
       swanlab: 'SwanLab Version',
-      workspace: 'Run path'
+      workspace: 'Run path',
+      verbose: 'Python详细信息',
+      pid: 'PID'
     },
     navs: {
       hardware: 'System Hardware',
