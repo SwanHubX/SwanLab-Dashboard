@@ -59,6 +59,10 @@ const overview = computed(() => {
     {
       key: 'OS',
       value: system.os
+    },
+    {
+      key: 'pid',
+      value: system.pid
     }
   ]
 })
@@ -69,6 +73,10 @@ const systems = computed(() => {
     {
       key: 'python',
       value: system.python
+    },
+    {
+      key: 'verbose',
+      value: system.python_verbose
     },
     {
       key: 'executable',

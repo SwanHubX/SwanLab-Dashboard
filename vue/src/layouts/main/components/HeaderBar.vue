@@ -62,11 +62,11 @@ defineProps({
 const links = ref([
   {
     title: 'Docs',
-    link: 'https://geektechstudio.feishu.cn/wiki/space/7310593325374013444?ccm_open_type=lark_wiki_spaceLink&open_tab_from=wiki_home'
+    link: 'https://docs.swanlab.cn/zh/guide_cloud/general/what-is-swanlab.html'
   },
   {
     title: 'Examples',
-    link: 'https://github.com/SwanHubX/SwanLab-examples'
+    link: 'https://docs.swanlab.cn/zh/examples/mnist.html'
   },
   {
     title: 'Feedback',
