@@ -173,7 +173,7 @@ class SwanBoardCallback(SwanLabRunCallback):
         try:
             add_multi_chart(tag_id=tag.id, chart_id=chart.id)
         except ChartTypeError:
-            swanlog.warning("In the multi-experiment chart, the current type of tag is not as expected.")
+            swanlog.debug("In the multi-experiment chart, the current type of tag is not as expected.")
 
     def on_stop(self, error: str = None):
         # 更新数据库中的实验状态
