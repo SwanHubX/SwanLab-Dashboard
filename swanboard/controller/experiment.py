@@ -23,7 +23,7 @@ from ..settings import (
     get_meta_path,
     get_requirements_path,
 )
-from ..utils.time import create_time
+from swanlab.utils import create_time
 import yaml
 from swanlab.log import swanlog
 from .db import (
