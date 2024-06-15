@@ -10,8 +10,6 @@ r"""
 import os
 import json
 
-PACKAGE = "SWANLAB_PACKAGE_PATH"
-
 
 def get_package_version() -> str:
     """获取swanlab的版本号
