@@ -11,16 +11,9 @@ import os
 import json
 import nanoid
 
-__test_path = os.path.join(
-    os.path.dirname(
-        os.path.dirname(
-            os.path.abspath(__file__)
-        )
-    ),
-    "test"
-)
+__test_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "test")
 
-TEMP_PATH = os.path.join(__test_path, "temp")
+TEMP_PATH = os.path.join(__test_path, "temp_fot_test")
 
 SWANLAB_DIR = os.path.join(TEMP_PATH, ".swanlab")
 """
@@ -36,10 +29,6 @@ CONFIG: dict = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__fil
 """
 开发快捷配置
 """
-KEY: str = CONFIG["api-key"]
-"""
-测试时使用的api-key
-"""
 
 PACKAGE_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), "package.mock.json")
 
@@ -49,4 +38,4 @@ os.environ["SWANLAB_PACKAGE_PATH"] = PACKAGE_PATH
 os.environ["SWANLAB_LOG_DIR"] = SWANLAB_LOG_DIR
 os.environ["SWANLAB_HOME"] = TEMP_PATH
 
-__all__ = ["TEMP_PATH", "SWANLAB_LOG_DIR", "CONFIG", "nanoid", "PACKAGE_PATH", "SWANLAB_DIR", "KEY"]
+__all__ = ["TEMP_PATH", "SWANLAB_LOG_DIR", "CONFIG", "nanoid", "PACKAGE_PATH", "SWANLAB_DIR"]

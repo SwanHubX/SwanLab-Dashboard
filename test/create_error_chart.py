@@ -7,10 +7,7 @@ r"""
 @Description:
     创建错误图表
 """
-from tutils import open_dev_mode
 import swanlab
-
-swanlab.login(api_key=open_dev_mode())
 
 swanlab.init(
     description="此实验的图表将出现问题",

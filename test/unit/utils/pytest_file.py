@@ -11,11 +11,8 @@ import pytest
 from nanoid import generate
 
 # noinspection PyProtectedMember
-from swanlab.utils.file import (
-    check_exp_name_format,
-    _auto_cut,
-    check_desc_format,
-)
+from swanboard.utils import check_string, check_desc_format, check_exp_name_format
+from swanboard.utils.file import _auto_cut
 
 
 class TestAutoCut:
@@ -74,9 +71,7 @@ class TestExpName:
         with pytest.raises(TypeError):
             check_exp_name_format(value)
 
-    @pytest.mark.parametrize(
-        "value", ["啊哈哈", "&^%", "/;]x]", generate(size=100), "👨‍💻👨‍💻👨‍💻👨‍💻👨‍"]
-    )
+    @pytest.mark.parametrize("value", ["啊哈哈", "&^%", "/;]x]", generate(size=100), "👨‍💻👨‍💻👨‍💻👨‍💻👨‍"])
     def test_exp_name_value_special(self, value: str):
         """
         测试特殊值
@@ -128,9 +123,7 @@ class TestExpName:
 
 
 class TestDesc:
-    @pytest.mark.parametrize(
-        "value", [generate(size=100), generate(size=1), "-", "_", "👾👾👾👾👾👾"]
-    )
+    @pytest.mark.parametrize("value", [generate(size=100), generate(size=1), "-", "_", "👾👾👾👾👾👾"])
     def test_desc_common(self, value):
         """
         测试正常情况

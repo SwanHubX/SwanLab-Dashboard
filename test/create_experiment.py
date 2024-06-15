@@ -10,14 +10,10 @@ r"""
     测试后的swanlog文件存放于test/temp/swanlog目录下
     WARNING 请勿随意修改此文件，以免影响测试效果
 """
-from tutils import open_dev_mode
 import swanlab
 import time
 import random
 import numpy as np
-
-# 手动登录，所以要求config内写入的是测试环境的配置
-swanlab.login(api_key=open_dev_mode())
 
 epochs = 250
 lr = 0.01
@@ -45,10 +41,7 @@ for epoch in range(2, swanlab.config.epoches):
         test_audio_arr = np.random.randn(2, 100000)
         swanlab.log(
             {
-                "test/audio": [
-                    swanlab.Audio(test_audio_arr, sample_rate, caption="test")
-                ]
-                * (epoch // 10),
+                "test/audio": [swanlab.Audio(test_audio_arr, sample_rate, caption="test")] * (epoch // 10),
             },
             step=epoch,
         )
@@ -56,8 +49,7 @@ for epoch in range(2, swanlab.config.epoches):
         test_image = np.random.randint(0, 255, (100, 100, 3))
         swanlab.log(
             {
-                "test/image": [swanlab.Image(test_image, caption="test")]
-                * (epoch // 10),
+                "test/image": [swanlab.Image(test_image, caption="test")] * (epoch // 10),
             },
             step=epoch,
         )

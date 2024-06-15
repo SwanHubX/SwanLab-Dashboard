@@ -8,10 +8,9 @@ r"""
     tutils模块的初始化文件
 """
 
-from .config import *
-from .utils import *
 import shutil
 import os
+from .config import *
 
 
 def clear():
@@ -29,17 +28,9 @@ def init_db():
     """
     初始化数据库
     """
-    from swanlab.db import connect, Project
+    from swanboard.db import connect, Project
+
     clear()
-    connect(autocreate=True)
+    os.environ["IS_TEST"] = "TRUE"
+    connect(SWANLAB_LOG_DIR, autocreate=True)
     Project.init(name="pytest-swanlab", description="测试swanlab")
-
-
-def open_dev_mode() -> str:
-    """
-    开启开发模式，此时会返回开发环境的api-key并且创建测试目录
-    :return: api-key
-    """
-    # 创建测试目录
-    os.makedirs(SWANLAB_LOG_DIR, exist_ok=True)
-    return CONFIG['api-key']
