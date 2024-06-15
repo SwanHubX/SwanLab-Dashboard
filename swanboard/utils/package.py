@@ -10,6 +10,8 @@ r"""
 import os
 import json
 
+PACKAGE = "SWANLAB_PACKAGE_PATH"
+
 
 def get_package_version() -> str:
     """获取swanlab的版本号
@@ -24,7 +26,10 @@ def get_package_version() -> str:
     str
         swanlab的版本号
     """
-    path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "package.json")
+    if PACKAGE in os.environ:
+        path = os.environ[PACKAGE]
+    else:
+        path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "package.json")
     # 读取package.json文件
     with open(path, "r") as f:
         return json.load(f)["version"]
