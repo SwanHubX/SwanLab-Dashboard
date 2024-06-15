@@ -4,4 +4,10 @@
 
 from .font import generate_color, FONT, COLOR_LIST
 from .time import create_time
-from .file import check_exp_name_format
+from .file import check_exp_name_format, check_desc_format
+from .log import swanlog
+from .package import get_package_version
+
+# ---------------------------------- 一些常用但属于外部的东西 ----------------------------------
+
+from swankit.env import get_swanlog_dir

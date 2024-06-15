@@ -21,10 +21,7 @@ from peewee import (
 )
 from .projects import Project
 from ..error import ExistedError, NotExistedError, ForeignProNotExistedError
-from swanlab.package import get_package_version
-from swanlab.utils import generate_color
-from swanlab.utils import create_time
-from swanlab.env import get_swanlog_dir
+from swanboard.utils import generate_color, create_time, get_swanlog_dir, get_package_version
 import shutil
 
 

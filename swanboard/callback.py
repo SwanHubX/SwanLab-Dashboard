@@ -1,17 +1,13 @@
-from swanlab.data.run.callback import SwanLabRunCallback, ColumnInfo
-from swanlab.log import swanlog
-from swanlab.env import get_swanlog_dir
+from swankit.callback import SwanKitCallback, ColumnInfo
 from .db.models import *
-from .db.utils.chart import add_multi_chart
-from .db.db_connect import connect
-from .db.error import NotExistedError, ExistedError, ChartTypeError
+from .db import add_multi_chart, connect, NotExistedError, ExistedError, ChartTypeError
 from typing import Tuple, Callable, Optional
-from swanlab.utils.file import check_exp_name_format, check_desc_format
+from swanboard.utils import check_exp_name_format, check_desc_format, swanlog, get_swanlog_dir
 from datetime import datetime
 import time
 
 
-class SwanBoardCallback(SwanLabRunCallback):
+class SwanBoardCallback(SwanKitCallback):
     """
     SwanBoardCallback类，swanlab本体与数据库的连接回调函数
     """

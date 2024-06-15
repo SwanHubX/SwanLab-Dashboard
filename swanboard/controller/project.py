@@ -13,15 +13,12 @@ import ujson
 import shutil
 from fastapi import Request
 from urllib.parse import quote
-from swanlab.env import get_swanlog_dir
-from swanlab.utils import COLOR_LIST
-from swanlab.utils.file import check_desc_format
+from swanboard.utils import check_desc_format, get_swanlog_dir, COLOR_LIST, swanlog
 import yaml
 from typing import List
 from ..db.utils.chart import transform_to_multi_exp_charts
 from .db import NotExistedError
 from .utils import get_proj_charts
-from swanlab.log import swanlog
 
 # 自定义响应
 from ..module.resp import (
@@ -179,9 +176,7 @@ def get_project_summary(project_id: int = DEFAULT_PROJECT_ID) -> dict:
 
 
 # 修改项目信息
-async def update_project_info(
-    request: Request, project_id: int = DEFAULT_PROJECT_ID
-) -> dict:
+async def update_project_info(request: Request, project_id: int = DEFAULT_PROJECT_ID) -> dict:
     """修改项目信息
     - 项目名
     - 项目描述
@@ -214,10 +209,7 @@ async def update_project_info(
         project.name = body["name"]
 
     # 检查描述
-    if (
-        "description" in dict_project
-        and dict_project["description"] == body["description"]
-    ):
+    if "description" in dict_project and dict_project["description"] == body["description"]:
         pass
     else:
         project.description = body["description"]
@@ -241,9 +233,7 @@ async def delete_project(project_id: int = DEFAULT_PROJECT_ID):
     """
 
     # 检查是否有正在运行的实验
-    running_exp = Experiment.filter(
-        Experiment.project_id == project_id, Experiment.status == RUNNING_STATUS
-    ).count()
+    running_exp = Experiment.filter(Experiment.project_id == project_id, Experiment.status == RUNNING_STATUS).count()
     if running_exp > 0:
         return CONFLICT_409("Can't delete project since there is experiment running")
 
