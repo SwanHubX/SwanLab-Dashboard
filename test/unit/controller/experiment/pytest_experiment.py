@@ -10,9 +10,22 @@ r"""
 from swanboard.db import Experiment
 from nanoid import generate
 import pytest
+from swanboard.controller.experiment import (
+    get_experiment_info,
+    get_tag_data,
+    get_experiment_status,
+    get_experiment_summary,
+    get_recent_logs,
+    get_experimet_charts,
+    update_experiment_info,
+    delete_experiment,
+    stop_experiment,
+    get_experiment_requirements,
+    change_experiment_visibility,
+)
 
 
-class TestExperimentModel:
+class TestGetExperimentInfo:
 
-    def test_connect(self):
+    def test(self):
         res = Experiment.create(name="test", run_id=generate(size=10))
