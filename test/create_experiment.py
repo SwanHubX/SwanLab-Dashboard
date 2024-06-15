@@ -65,4 +65,4 @@ for epoch in range(2, swanlab.config.epoches):
     else:
         # 测试折线图
         swanlab.log({"t/accuracy": acc, "loss": loss, "loss2": loss2})
-    time.sleep(10)
+    time.sleep(0.5)

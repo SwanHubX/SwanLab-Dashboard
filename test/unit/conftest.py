@@ -7,9 +7,9 @@ r"""
 @Description:
     配置pytest
 """
+import swanlab.env as E
 import pytest
 from tutils import clear, init_db, SWANLAB_DIR, SWANLAB_LOG_DIR, PACKAGE_PATH
-import swanlab.env as E
 import shutil
 import os
 

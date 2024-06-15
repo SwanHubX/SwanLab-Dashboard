@@ -9,10 +9,11 @@ r"""
     事实上在使用中并不是这样的，而是在命令行执行命令完成的，这里只是为了测试和开发
     增加了实际开发中不会用到的热启动功能
 """
-from tutils.config import SWANLAB_LOG_DIR
 from swanboard.db import connect
 import os
 from swanboard import SwanBoardRun
+
+SWANLAB_LOG_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "swanlog")
 
 os.environ["SWANLAB_LOG_DIR"] = SWANLAB_LOG_DIR
 connect(SWANLAB_LOG_DIR)

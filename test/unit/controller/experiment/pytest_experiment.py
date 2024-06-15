@@ -16,4 +16,3 @@ class TestExperimentModel:
 
     def test_connect(self):
         res = Experiment.create(name="test", run_id=generate(size=10))
-        print(res)
