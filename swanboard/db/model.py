@@ -9,7 +9,7 @@ r"""
 """
 from peewee import Model, OperationalError
 from playhouse.shortcuts import model_to_dict
-from swanlab.utils import create_time
+from swanboard.utils import create_time
 from .error import NotExistedError
 import json
 
@@ -108,10 +108,7 @@ class SwanModel(Model):
         经过swanmodel的覆写，insert_many方法自动创建create_time和update_time字段
         """
         current_time = create_time()
-        rows = [
-            {**row, "create_time": current_time, "update_time": current_time}
-            for row in rows
-        ]
+        rows = [{**row, "create_time": current_time, "update_time": current_time} for row in rows]
         return super().insert_many(rows, fields=fields)
 
     @classmethod
