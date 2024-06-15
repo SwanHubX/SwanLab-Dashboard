@@ -31,6 +31,5 @@ def init_db():
     from swanboard.db import connect, Project
 
     clear()
-    os.environ["IS_TEST"] = "TRUE"
     connect(SWANLAB_LOG_DIR, autocreate=True)
-    Project.init(name="pytest-swanlab", description="测试swanlab")
+    Project.init(name="pytest-swanboard", description="test for swanboard")

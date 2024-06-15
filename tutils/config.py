@@ -8,7 +8,6 @@ r"""
     存储一些与单元测试有关的快捷配置
 """
 import os
-import json
 import nanoid
 
 __test_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "test")
