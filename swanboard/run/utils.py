@@ -9,7 +9,7 @@ r"""
 """
 from typing import MutableMapping, Optional
 import os
-from swanlab.utils import FONT
+from swanboard.utils import FONT
 import psutil
 import socket
 import re

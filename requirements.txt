@@ -1,25 +1,14 @@
-# dat process
-soundfile
-pillow
-matplotlib
-numpy
+# swanlab
+swankit==0.1.0b1
 
 # web server
-cos-python-sdk-v5
 fastapi>=0.110.1
 uvicorn>=0.14.0
-requests
-click
 
 
 # database
-ujson
-pyyaml
 peewee
 
 
 # Information collection
 psutil
-pynvml
-watchdog
-
