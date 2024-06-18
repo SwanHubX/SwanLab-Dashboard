@@ -7,7 +7,6 @@ r"""
 @Description:
     配置pytest
 """
-import swankit.env as E
 import pytest
 from tutils import clear, init_db, SWANLAB_DIR, SWANLAB_LOG_DIR, PACKAGE_PATH
 import shutil
@@ -22,12 +21,10 @@ def setup_before_all():
 
 @pytest.fixture(scope="function", autouse=True)
 def setup_before_each():
-    E.reset_env()
     if os.path.exists(SWANLAB_DIR):
         shutil.rmtree(SWANLAB_DIR)
     yield
-    E.reset_env()
     shutil.rmtree(SWANLAB_DIR, ignore_errors=True)
-    os.environ[E.DEV] = "TRUE"
-    os.environ[E.ROOT] = SWANLAB_LOG_DIR
-    os.environ[E.PACKAGE] = PACKAGE_PATH
+    os.environ["SWANLAB_DEV"] = "TRUE"
+    os.environ["SWANLAB_LOG_DIR"] = SWANLAB_LOG_DIR
+    os.environ["SWANLAB_PACKAGE_PATH"] = PACKAGE_PATH

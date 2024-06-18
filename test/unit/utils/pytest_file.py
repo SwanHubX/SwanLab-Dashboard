@@ -11,7 +11,7 @@ import pytest
 from nanoid import generate
 
 # noinspection PyProtectedMember
-from swanboard.utils import check_string, check_desc_format, check_exp_name_format
+from swanboard.utils import check_desc_format, check_exp_name_format
 from swanboard.utils.file import _auto_cut
 
 
