@@ -1,1 +1,1 @@
-from .setup import clear, create_private_db
+from .setup import clear, create_test_dir

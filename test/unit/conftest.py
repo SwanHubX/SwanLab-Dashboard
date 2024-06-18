@@ -8,9 +8,7 @@ r"""
     配置pytest
 """
 import pytest
-import shutil
-import os
-from tutils import clear
+from tutils import clear, create_test_dir
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -18,6 +16,6 @@ def setup_before_all():
     clear()
 
 
-@pytest.fixture(scope="function", autouse=True)
-def setup_before_each():
-    pass
+@pytest.fixture(scope="class", autouse=True)
+def setup_before_class():
+    create_test_dir()

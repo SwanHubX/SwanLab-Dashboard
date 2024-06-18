@@ -14,14 +14,11 @@ def clear():
     os.mkdir(TEMP_PATH)
 
 
-count = 0
-
-
-def create_private_db():
+def create_test_dir(dirname="swan-test"):
     """对于每个单元测试，都独立在 temp 目录下创建一个私有的临时文件夹"""
-    global count
-    count += 1
-    path = os.path.join(TEMP_PATH, str(count))
-    os.mkdir(path)
-    connect(path, autocreate=True)
-    return path
+    test_path = os.path.join(TEMP_PATH, dirname)
+    if os.path.exists(test_path):
+        shutil.rmtree(test_path)
+    os.mkdir(test_path)
+    connect(test_path, autocreate=True)
+    return test_path

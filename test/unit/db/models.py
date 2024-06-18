@@ -7,30 +7,49 @@ from swanboard.db import (
     Source,
     Display,
 )
-from tutils import create_private_db
+from tutils import create_test_dir
+import nanoid
 
 
-class TestModels:
-    def setup_method(self):
-        create_private_db()
+class TestProject:
 
-    def test_project(self):
+    def test_init(self):
+        name = nanoid.generate(size=10)
+        p = Project.init(name)
+        assert p.name == name
+
+
+class TestExperiment:
+
+    def test_create(self):
         pass
 
-    def test_experiment(self):
+
+class TestTag:
+
+    def test_create(self):
         pass
 
-    def test_tag(self):
+
+class TestChart:
+
+    def test_create(self):
         pass
 
-    def test_chart(self):
+
+class TestNamespace:
+
+    def test_create(self):
         pass
 
-    def test_namespace(self):
+
+class TestSource:
+
+    def test_create(self):
         pass
 
-    def test_source(self):
-        pass
 
-    def test_display(self):
+class TestDisplay:
+
+    def test_create(self):
         pass
