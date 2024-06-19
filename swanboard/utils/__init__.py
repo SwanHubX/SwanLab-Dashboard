@@ -3,7 +3,6 @@
 """
 
 from .font import generate_color, FONT, COLOR_LIST
-from .time import create_time
 from .file import check_exp_name_format, check_desc_format
 from .log import swanlog
 from .package import get_package_version

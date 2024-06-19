@@ -9,7 +9,7 @@ r"""
 """
 from peewee import Model, OperationalError
 from playhouse.shortcuts import model_to_dict
-from swanboard.utils import create_time
+from swankit.env import create_time
 from .error import NotExistedError
 import json
 
