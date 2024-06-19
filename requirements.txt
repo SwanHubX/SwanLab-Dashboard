@@ -1,5 +1,5 @@
 # swanlab
-swankit==0.1.0b1
+swankit==0.1.0b8
 
 # web server
 fastapi>=0.110.1
