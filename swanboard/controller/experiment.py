@@ -23,9 +23,8 @@ from ..settings import (
     get_meta_path,
     get_requirements_path,
 )
-from ..utils.time import create_time
 import yaml
-from swanboard.utils import swanlog
+from swanboard.utils import swanlog, create_time
 from .db import (
     Project,
     Experiment,

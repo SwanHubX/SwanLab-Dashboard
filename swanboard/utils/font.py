@@ -61,12 +61,7 @@ class FONT:
 
     @staticmethod
     def loading(
-        s: str,
-        func: Callable,
-        args: Tuple = (),
-        interval: float = 0.4,
-        prefix: str = None,
-        brush_length: int = 100
+        s: str, func: Callable, args: Tuple = (), interval: float = 0.4, prefix: str = None, brush_length: int = 100
     ):
         """
         实现终端打印的加载效果，输入的字符串会在开头出现loading效果以等待传入的函数执行完毕
