@@ -71,7 +71,10 @@ class SwanBoardRun:
         start = time.time()
         # debug一下当前日志文件夹的位置
         swl.debug("Try to explore the swanlab experiment logs in: " + FONT.bold(path))
-        connect(path=path)
+        try:
+            connect(path=path)
+        except FileNotFoundError:
+            swl.error("Can not find the swanlab db in: " + FONT.bold(path))
         # ---------------------------------- 日志打印 ----------------------------------
         # 可用URL
         ipv4 = URL.get_all_ip()
