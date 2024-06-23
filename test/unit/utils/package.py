@@ -1,7 +1,5 @@
 from swanboard.utils.package import get_package_version
-import pytest
 import pkg_resources
-from unittest.mock import patch, MagicMock
 
 
 class TestGetPackageVersion:
