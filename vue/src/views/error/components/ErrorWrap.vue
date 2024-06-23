@@ -27,7 +27,7 @@ import { formatTime } from '@swanlab-vue/utils/time'
 import { inject } from 'vue'
 
 const time = formatTime(new Date().getTime() - 8 * 60 * 60 * 1000)
-const document = 'https://geektechstudio.feishu.cn/wiki/UInBw9eaziv17IkwfrOcHCZ1nbc'
+const document = 'https://docs.swanlab.cn/zh/guide_cloud/self_host/offline-board.html'
 
 const error_code = inject('error_code')
 </script>
