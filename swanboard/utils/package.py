@@ -7,8 +7,7 @@ r"""
 @Description:
     包相关的工具函数
 """
-import os
-import json
+import pkg_resources
 
 
 def get_package_version() -> str:
@@ -24,7 +23,8 @@ def get_package_version() -> str:
     str
         swanlab的版本号
     """
-    path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "package.json")
-    # 读取package.json文件
-    with open(path, "r") as f:
-        return json.load(f)["version"]
+    try:
+        version = pkg_resources.get_distribution("swanlab").version
+        return version
+    except pkg_resources.DistributionNotFound:
+        return "swanlab package is not installed"
