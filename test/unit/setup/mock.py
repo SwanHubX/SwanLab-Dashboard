@@ -4,7 +4,8 @@ from tutils import mock_project, mock_experiment
 class TestMock:
 
     def test_mock_project(self):
-        mock_project()
+        proj_id = mock_project()
+        assert proj_id == 1
 
     def test_mock_experiment(self):
         exp1_id = mock_experiment(1, name="exp1")

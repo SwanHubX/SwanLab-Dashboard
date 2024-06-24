@@ -10,18 +10,31 @@ r"""
 from nanoid import generate
 from swanboard.db import Project, Experiment, Tag, Chart, Namespace, Source, Display
 from swankit.env import create_time
-from tutils.setup import db
 from swanboard.utils import generate_color
 
 
 def mock_project(name=generate(size=10), description=""):
     """模拟生成项目"""
-    return Project.create(
-        name=name,
-        description=description,
-        more="",
-        version="test",
+
+    raw_sql = """
+        INSERT INTO project (name, description, sum, charts, pinned_opened, hidden_opened, more, version, create_time, update_time)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """
+    params = (
+        name,  # name
+        description,  # description
+        0,  # sum
+        0,  # charts
+        1,  # pinned_opened
+        0,  # hidden_opened
+        "",  # more
+        "test",  # version
+        create_time(),  # create_time
+        create_time(),  # update_time
     )
+
+    wrapper = Project.raw(raw_sql, *params).execute()
+    return wrapper.cursor.lastrowid
 
 
 def mock_experiment(project_id, name=None, description=""):
