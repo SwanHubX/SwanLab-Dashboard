@@ -7,8 +7,24 @@ from swanboard.db import (
     Source,
     Display,
 )
-from tutils import create_test_dir
+from swanboard.db.model import SwanModel
 import nanoid
+
+
+class TestSwanModel:
+    """测试各个表模型的基础父类"""
+
+    def test_search2dict(self):
+        pass
+
+    def test_search2list(self):
+        pass
+
+    def test_json2dict(self):
+        pass
+
+    def test_dict2json(self):
+        pass
 
 
 class TestProject:
