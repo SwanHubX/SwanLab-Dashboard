@@ -13,6 +13,9 @@ from swankit.env import create_time
 from swanboard.utils import generate_color
 
 
+DEFAULT_PROJECT_ID = 1
+
+
 def mock_project(name=generate(size=10), description=""):
     """模拟生成项目"""
 
@@ -37,7 +40,7 @@ def mock_project(name=generate(size=10), description=""):
     return wrapper.cursor.lastrowid
 
 
-def mock_experiment(project_id, name=None, description=""):
+def mock_experiment(project_id=DEFAULT_PROJECT_ID, name=None, description=""):
     """模拟生成实验"""
 
     if name is None:
