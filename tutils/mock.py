@@ -11,6 +11,8 @@ from nanoid import generate
 from swanboard.db import Project, Experiment, Tag, Chart, Namespace, Source, Display
 from swankit.env import create_time
 from swanboard.utils import generate_color
+from .env import get_test_path
+import os
 
 
 DEFAULT_PROJECT_ID = 1
@@ -75,3 +77,14 @@ def mock_experiment(project_id=DEFAULT_PROJECT_ID, name=None, description=""):
 
     wrapper = Experiment.raw(raw_sql, *params).execute()
     return wrapper.cursor.lastrowid
+
+
+def mock_folder_with_run_id(run_id):
+    """在 temp 文件夹下生成 run_id 对应的文件夹
+
+    Parameters
+    ----------
+    run_id : string
+        以实验唯一标识为名的目录
+    """
+    return os.makedirs(os.path.join(get_test_path(), run_id), exist_ok=True)

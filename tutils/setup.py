@@ -14,7 +14,7 @@ def clear():
     os.mkdir(TEMP_PATH)
 
 
-def create_test_dir(dirname="swan-test"):
+def create_test_dir(dirname=TEST_DIR):
     """对于每个单元测试，都独立在 temp 目录下创建一个私有的临时文件夹"""
     test_path = os.path.join(TEMP_PATH, dirname)
     if os.path.exists(test_path):
