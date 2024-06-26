@@ -16,8 +16,11 @@ from swanboard.utils import generate_color
 DEFAULT_PROJECT_ID = 1
 
 
-def mock_project(name=generate(size=10), description=""):
+def mock_project(name=None, description=""):
     """模拟生成项目"""
+
+    if name is None:
+        name = generate(size=10)
 
     raw_sql = """
         INSERT INTO project (name, description, sum, charts, pinned_opened, hidden_opened, more, version, create_time, update_time)
