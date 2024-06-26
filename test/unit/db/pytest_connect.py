@@ -1,14 +1,24 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+r"""
+@DATE: 2024-06-26 15:49:02
+@File: test/unit/db/pytest_connect.py
+@IDE: vscode
+@Description:
+    测试数据库连接函数
+"""
+
 from swanboard.db import connect, tables
 from tutils import create_test_dir
 import os
 import shutil
-import pytest
 
 
 class TestConnectDB:
-    @pytest.fixture(scope="class")
-    def setup_before_class(self):
-        pass
+    """
+    因为在每个单元测试开启之前都会自动在默认目录下连接数据库
+    所以若要对数据库的创建/连接情况进行测试，需要重新创建目录
+    """
 
     def test_create_db(self):
         path = create_test_dir("test_for_connect")
