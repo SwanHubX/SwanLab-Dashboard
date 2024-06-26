@@ -1,8 +1,17 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+r"""
+@DATE: 2024-06-26 15:49:02
+@File: test/unit/db/pytest_connect.py
+@IDE: vscode
+@Description:
+    测试数据库连接函数
+"""
+
 from swanboard.db import connect, tables
 from tutils import create_test_dir
 import os
 import shutil
-import pytest
 
 
 class TestConnectDB:

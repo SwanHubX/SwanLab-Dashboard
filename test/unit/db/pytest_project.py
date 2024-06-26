@@ -9,7 +9,6 @@ r"""
 """
 from tutils import mock_project
 from swanboard.db import Project
-import pytest
 import nanoid
 
 
