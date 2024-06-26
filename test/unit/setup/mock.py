@@ -1,4 +1,9 @@
-from tutils import mock_project, mock_experiment, mock_folder_with_run_id
+from tutils import (
+    mock_project,
+    mock_experiment,
+    mock_folder_with_run_id,
+    mock_experiment_with_folder,
+)
 import os
 import nanoid
 
@@ -21,4 +26,12 @@ def test_mock_experiment():
 def test_mock_folder_with_run_id():
     """在测试目录下创建目录"""
     path = mock_folder_with_run_id(nanoid.generate(size=10))
+    assert os.path.exists(path)
+
+
+def test_mock_experiment_with_folder(project_id=1):
+    """创建实验记录和对应的运行目录"""
+    project_id = mock_project()
+    exp_id, path = mock_experiment_with_folder(project_id)
+    assert exp_id == 1
     assert os.path.exists(path)

@@ -90,3 +90,11 @@ def mock_folder_with_run_id(run_id):
     path = os.path.join(TEST_PATH, run_id)
     os.makedirs(path, exist_ok=True)
     return path
+
+
+def mock_experiment_with_folder(project_id=DEFAULT_PROJECT_ID, name=None, description=""):
+    """创建一个实验记录，并附带创建对应的文件夹"""
+    exp_id = mock_experiment(project_id, name, description)
+    run_id = Experiment.get(Experiment.id == exp_id).run_id
+    path = mock_folder_with_run_id(run_id)
+    return exp_id, path
