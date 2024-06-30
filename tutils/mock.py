@@ -79,7 +79,7 @@ def mock_experiment(project_id=DEFAULT_PROJECT_ID, name=None, description=""):
     return wrapper.cursor.lastrowid
 
 
-def mock_folder_with_run_id(run_id):
+def mock_folder_with_run_id(run_id, path=TEST_PATH):
     """在 temp 文件夹下生成 run_id 对应的文件夹
 
     Parameters
@@ -87,7 +87,7 @@ def mock_folder_with_run_id(run_id):
     run_id : string
         以实验唯一标识为名的目录
     """
-    path = os.path.join(TEST_PATH, run_id)
+    path = os.path.join(path, run_id)
     os.makedirs(path, exist_ok=True)
     return path
 
