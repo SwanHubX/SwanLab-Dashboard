@@ -141,6 +141,7 @@ class SwanBoardCallback(SwanKitCallback):
             reference=column_info.reference,
             config=column_info.config,
         )
+        column_info.id
         # 创建命名空间，如果命名空间已经存在，会抛出ExistedError异常，捕获不处理即可
         # 需要指定sort，default命名空间的sort为0，其他命名空间的sort为None，表示默认添加到最后
         namespace = column_info.namespace

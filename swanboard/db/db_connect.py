@@ -66,4 +66,5 @@ def connect(path: str = None, autocreate: bool = False) -> SqliteDatabase:
         swandb.bind(tables)
         swandb.create_tables(tables)
         swandb.close()
+
     return swandb
