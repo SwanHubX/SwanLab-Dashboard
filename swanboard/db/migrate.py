@@ -9,6 +9,8 @@ r"""
 """
 from peewee import SqliteDatabase, CharField
 from playhouse.migrate import migrate, SqliteMigrator
+from swanboard.db import Tag
+from urllib.parse import quote
 
 
 def compat_tag_key(db):
@@ -23,3 +25,8 @@ def compat_tag_key(db):
     migrator = SqliteMigrator(db)
     folder = CharField(default="")
     migrate(migrator.add_column("tag", "folder", folder))
+
+    with db.atomic():
+        for tag in Tag.select():
+            tag.folder = quote(tag.name, safe="")
+            tag.save()

@@ -34,7 +34,7 @@ class Tag(SwanModel):
     """tag对应的实验id，代表这个tag由谁创建"""
     name = CharField(max_length=255, null=False)
     """tag名称，同一个实验下，tag名称不能重复"""
-    # folder = CharField(max_length=255, null=True)
+    folder = CharField(max_length=255, null=True)
     """tag目录名"""
     type = CharField(max_length=10, null=False)
     """tag的类型"""
@@ -68,6 +68,7 @@ class Tag(SwanModel):
         cls,
         experiment_id: int,
         name: str,
+        folder: str,
         type: str,
         description="",
         system: int = 0,

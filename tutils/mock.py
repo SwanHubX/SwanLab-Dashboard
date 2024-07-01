@@ -98,3 +98,28 @@ def mock_experiment_with_folder(project_id=DEFAULT_PROJECT_ID, name=None, descri
     run_id = Experiment.get(Experiment.id == exp_id).run_id
     path = mock_folder_with_run_id(run_id)
     return exp_id, path
+
+
+def mock_tag(experiment_id: int):
+    """模拟创建一个 tag 记录"""
+    # 向 experiment 下添加 tag
+    raw_sql = """
+        INSERT INTO tag (experiment_id, name, folder, type, description, system, sort, more, create_time, update_time)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """
+    # 计算当前实验下有多少个 tag
+    tag_count = Tag.select().where(Tag.experiment_id == experiment_id).count()
+    time = create_time()
+    params = (
+        experiment_id,  # experiment_id
+        "test_tag",  # name
+        tag_count,  # folder
+        "default",  # type
+        "test_description",  # description
+        0,  # system
+        0,  # sort
+        "",  # more
+        time,  # create_time
+        time,  # update_time
+    )
+    wrapper = Tag.raw(raw_sql, *params).execute()
