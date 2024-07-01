@@ -8,18 +8,15 @@ r"""
     测试兼容性迁移脚本
 """
 from swanboard.db.migrate import compat_tag_key
-from swanboard.db import connect
 from peewee import SqliteDatabase
-from tutils import create_test_dir, mock_experiment, mock_folder_with_run_id
+from tutils import create_test_dir, mock_experiment
 from swanboard.db import (
     Project,
-    Experiment,
     Tag,
 )
 from swankit.env import create_time
 from urllib.parse import quote
 import os
-import shutil
 import nanoid
 
 
@@ -59,12 +56,6 @@ def mock_tag_data(experiment_id: int, name: str):
 
 
 class TestMigrateForTag:
-
-    def test_create_db(self):
-        db_path = create_test_dir("test_migrate")
-        assert os.path.exists(db_path)
-        if os.path.exists(db_path):
-            shutil.rmtree(db_path)
 
     def test_compat_tag_key(self):
         db_path = create_test_dir("test_migrate")

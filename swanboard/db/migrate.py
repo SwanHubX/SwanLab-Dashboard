@@ -7,7 +7,7 @@ r"""
 @Description:
     可能需要对之前的版本进行兼容
 """
-from peewee import SqliteDatabase, CharField
+from peewee import CharField
 from playhouse.migrate import migrate, SqliteMigrator
 from swanboard.db import Tag
 from urllib.parse import quote
