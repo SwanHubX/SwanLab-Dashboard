@@ -1,9 +1,16 @@
 import axios from 'axios'
 
+// 获取动态子路径并构建 base URL
+const getBaseURL = () => {
+  let pathname = window.location.pathname;
+  pathname = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
+  return `${pathname}/${import.meta.env.VITE_BASE_URL}`; // 根据实际情况调整
+}
+
 // axios对象实例
 const http = axios.create({
   // baseURL不设置，会自动使用当前域名
-  baseURL: import.meta.env.VITE_BASE_URL,
+  baseURL: getBaseURL(),
   timeout: 60000
 })
 
