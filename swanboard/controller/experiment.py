@@ -172,9 +172,10 @@ def get_tag_data(experiment_id: int, tag: str) -> dict:
         表单标签，路径传参，已经进行了 URIComponent 编码
     """
     # ---------------------------------- 前置处理 ----------------------------------
+    tag_folder = Tag.filter(Tag.name == tag).first().folder
     # 获取tag对应的存储目录
     try:
-        tag_path: str = os.path.join(__get_logs_dir_by_id(experiment_id), tag)
+        tag_path: str = os.path.join(__get_logs_dir_by_id(experiment_id), tag_folder)
     except NotExistedError:
         return NOT_FOUND_404("experiment not found")
     if not os.path.exists(tag_path):
@@ -266,19 +267,19 @@ def get_experiment_summary(experiment_id: int) -> dict:
 
     experiment = Experiment.get_by_id(experiment_id)
     # 通过外键反链获取实验下的所有tag
-    tag_list = [tag["name"] for tag in __to_list(experiment.tags)]
+    tag_list = [(tag["folder"], tag["name"]) for tag in __to_list(experiment.tags)]
     experiment_path = __get_logs_dir_by_id(experiment_id)
     # 通过目录结构获取所有正常的tag
     tags = [f for f in os.listdir(experiment_path) if os.path.isdir(os.path.join(experiment_path, f))]
     # 实验总结数据
     summaries = []
-    for tag in tag_list:
+    for tag_key, tag_name in tag_list:
         # 如果 tag 记录在数据库，但是没有对应目录，说明 tag 有问题
         # 所以 tags 是 tag_list 的子集，出现异常的 tag 会记录在数据库但不会添加到目录结构中
-        if quote(tag, safe="") not in tags:
-            summaries.append({"key": tag, "value": "TypeError"})
+        if tag_key not in tags:
+            summaries.append({"key": tag_name, "value": "TypeError"})
             continue
-        tag_path = os.path.join(experiment_path, quote(tag, safe=""))
+        tag_path = os.path.join(experiment_path, tag_key)
         # 获取 tag 目录下的所有存储的日志文件
         logs = get_tag_files(tag_path, LOGS_CONFIGS)
         # 打开 tag 目录下最后一个存储文件，获取最后一条数据
@@ -287,7 +288,7 @@ def get_experiment_summary(experiment_id: int) -> dict:
             # 最后一行数据，如果为空，取倒数第二行
             data = lines[-1] if len(lines[-1]) else lines[-2]
             last_data = ujson.loads(data)
-            summaries.append({"key": tag, "value": last_data["data"]})
+            summaries.append({"key": tag_name, "value": last_data["data"]})
     # 获取数据库记录时在实验下的排序
     sorts = {item["name"]: item["sort"] for item in __to_list(experiment.tags)}
     # 新版添加排序后的 tag，这里进行排序
