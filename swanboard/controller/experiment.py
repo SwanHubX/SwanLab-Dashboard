@@ -172,7 +172,7 @@ def get_tag_data(experiment_id: int, tag: str) -> dict:
         表单标签，路径传参，已经进行了 URIComponent 编码
     """
     # ---------------------------------- 前置处理 ----------------------------------
-    tag_folder = Tag.filter(Tag.name == tag).first().folder
+    tag_folder = Tag.filter(Tag.name == tag, Tag.experiment_id == experiment_id).first().folder
     # 获取tag对应的存储目录
     try:
         tag_path: str = os.path.join(__get_logs_dir_by_id(experiment_id), tag_folder)
