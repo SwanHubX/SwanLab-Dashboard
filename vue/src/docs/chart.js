@@ -62,3 +62,16 @@
  * @param {number} [maxHeight=800] 图表的最大高度, 单位px, 默认为800
  * @param {number} [minHeight=200] 图表的最小高度, 单位px, 默认为200
  */
+
+// ---------------------------------- chart store ----------------------------------
+
+/**
+ * @typedef {Object} Section 图表分组
+ * @property {String} type 分组类型 - [PUBLIC, PINNED, HIDDEN]
+ * @property {String} index 分组 ID
+ * @property {String} name 分组名
+ * @property {Boolean} pinned 是否固定
+ * @property {Boolean} folded 是否折叠
+ * @property {Object} config 分组配置
+ * @property {Array<String>} chartsIndex 分组内的图表 ID 列表
+ */

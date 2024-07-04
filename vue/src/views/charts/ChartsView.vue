@@ -22,12 +22,18 @@
  * @since: 2024-01-27 13:05:27
  **/
 import http from '@swanlab-vue/api/http'
-import { useProjectStore } from '@swanlab-vue/store'
+import { useProjectStore, useChartStore } from '@swanlab-vue/store'
 import { ref } from 'vue'
 import ChartsPage from './components/ChartsPage.vue'
 import { onUnmounted } from 'vue'
+
 const projectStore = useProjectStore()
+const chartStore = useChartStore()
+
+// ---------------------------------- 请求数据 ----------------------------------
+
 http.get('/project/charts').then(({ data }) => {
+  chartStore.setData(data, true)
   // 将namespaces转换为groups
   charts.value = data.charts
   namespaces.value = data.namespaces

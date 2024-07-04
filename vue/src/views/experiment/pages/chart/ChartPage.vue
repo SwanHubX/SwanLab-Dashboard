@@ -22,7 +22,7 @@
  * @file: ChartPage.vue
  * @since: 2023-12-25 15:34:51
  **/
-import { useExperimentStore, useProjectStore } from '@swanlab-vue/store'
+import { useExperimentStore, useProjectStore, useChartStore } from '@swanlab-vue/store'
 import http from '@swanlab-vue/api/http'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
@@ -31,6 +31,7 @@ import { updateChartStatus, updateNamespaceStatus, media } from '@swanlab-vue/ap
 import ChartsDashboard from '@swanlab-vue/charts/ChartsDashboard.vue'
 const projectStore = useProjectStore()
 const experimentStore = useExperimentStore()
+const chartStore = useChartStore()
 const route = useRoute()
 
 // ---------------------------------- 颜色配置，注入色盘 ----------------------------------
@@ -52,6 +53,7 @@ const status = ref('initing')
 ;(async function () {
   const { data } = await http.get(`/experiment/${experimentStore.id}/chart`)
   // 遍历完了，此时cnMap拿到了,模版部分可以依据这些东西渲染了
+  chartStore.setData(data, true)
   parseCharts(data)
   // console.log(cnMap)
 })().then(() => {
