@@ -18,7 +18,7 @@
       "name": "后端开发",
       "type": "debugpy",
       "request": "launch",
-      "program": "${workspaceFolder}/playground/start_server.py",
+      "program": "${workspaceFolder}/test/start_server.py",
       "console": "integratedTerminal",
       "justMyCode": true,
       "cwd": "${workspaceFolder}",
