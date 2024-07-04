@@ -30,7 +30,7 @@
       "name": "开启一个实验",
       "type": "debugpy",
       "request": "launch",
-      "program": "${workspaceFolder}/test/create_experiment.py",
+      "program": "${workspaceFolder}/playground/create_experiment.py",
       "console": "integratedTerminal",
       "justMyCode": true,
       "cwd": "${workspaceFolder}",

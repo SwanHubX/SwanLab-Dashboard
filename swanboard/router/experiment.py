@@ -61,7 +61,6 @@ def _(experiment_id: int, tag: str) -> dict:
     tag: str
         表单标签，路径传参，使用时需要 URIComponent 编码
     """
-    tag = quote(tag, safe="")
 
     return get_tag_data(experiment_id, tag)
 
