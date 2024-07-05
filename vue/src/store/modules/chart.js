@@ -94,8 +94,7 @@ export const useChartStore = defineStore('chart', () => {
     // actions
     updateNamespaceStatus,
     updateChartStatus,
-    init,
-    setData
+    init
   }
 })
 
