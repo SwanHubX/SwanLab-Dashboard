@@ -53,7 +53,9 @@ export const useChartStore = defineStore('chart', () => {
    * @param { Boolean } local 是否是本地数据，若为本地数据则启动本地数据格式化
    */
   const init = (data, mediaHandler, local = false) => {
+    // 本地版数据格式化
     if (local) [sections.value, charts.value] = _formatLocalData(data)
+    // 云端版数据格式化
     else [sections.value, charts.value] = data
     _mediaHandler = mediaHandler
   }
@@ -111,10 +113,10 @@ const _generateXAxis = () => {
 const _generateYAxis = (key, name, type) => {
   return {
     class: 'CUSTOM',
-    error: null,
     key,
     name,
-    type
+    type,
+    error: null
   }
 }
 
@@ -158,7 +160,7 @@ const _formatLocalData = ({ namespaces, charts }) => {
       metrics: []
     }
     if (temp.type === 'DEFAULT') temp.type = 'LINE'
-    const yAxis = _generateYAxis(temp.title, temp.title, temp.type)
+    const yAxis = _generateYAxis(temp.title, temp.title, temp.type === 'LINE' ? 'FLOAT' : temp.type)
     const xAxis = _generateXAxis()
     if (temp.type === 'LINE') {
       temp.config = {
@@ -167,16 +169,16 @@ const _formatLocalData = ({ namespaces, charts }) => {
         yAxis: [yAxis],
         yTitle: chart.name
       }
+      temp.metrics.push({
+        axis: 'X',
+        column: xAxis,
+        colors: [],
+        name: 'summary'
+      })
     }
-    temp.metrics.push({
-      axis: 'X',
-      column: xAxis,
-      colors: [],
-      name: 'summary'
-    })
     chart.source.forEach((m) => {
       temp.metrics.push({
-        axis: 'Y',
+        axis: temp.type === 'LINE' ? 'Y' : 'X',
         colors: [],
         expId: chart.source_map[m],
         name: m,
@@ -185,6 +187,5 @@ const _formatLocalData = ({ namespaces, charts }) => {
     })
     return temp
   })
-
   return [temp_sections, temp_charts]
 }
