@@ -33,7 +33,7 @@ const chartStore = useChartStore()
 // ---------------------------------- 请求数据 ----------------------------------
 
 http.get('/project/charts').then(({ data }) => {
-  chartStore.setData(data, true)
+  chartStore.init(data, () => {}, true)
   // 将namespaces转换为groups
   charts.value = data.charts
   namespaces.value = data.namespaces

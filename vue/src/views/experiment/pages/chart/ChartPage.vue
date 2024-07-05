@@ -53,7 +53,7 @@ const status = ref('initing')
 ;(async function () {
   const { data } = await http.get(`/experiment/${experimentStore.id}/chart`)
   // 遍历完了，此时cnMap拿到了,模版部分可以依据这些东西渲染了
-  chartStore.setData(data, true)
+  chartStore.init(data, () => {}, true)
   parseCharts(data)
   // console.log(cnMap)
 })().then(() => {
