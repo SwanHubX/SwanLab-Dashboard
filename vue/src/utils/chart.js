@@ -2,7 +2,7 @@
  * 图表相关
  */
 
-const _generateXAxis = () => {
+const generateXAxis = () => {
   return {
     class: 'SYSTEM',
     error: null,
@@ -12,7 +12,7 @@ const _generateXAxis = () => {
   }
 }
 
-const _generateYAxis = (key, name, type) => {
+const generateYAxis = (key, name, type) => {
   return {
     class: 'CUSTOM',
     key,
@@ -23,19 +23,12 @@ const _generateYAxis = (key, name, type) => {
 }
 
 /**
- * @typedef { Object } FormatData 转化后的本地数据
- * @property { Section[] } sections 分组列表
- * @property { Chart[] } charts 图表列表
- */
-
-/**
  * 针对本地版进行数据格式化
- * @param { object } data
- * @param { Array } data.namespaces 命名空间
- * @param { Array } data.charts 图表
- * @returns { FormatData } 格式化后的数据
+ * @param { OriginalData } data
+ * @returns { [ Section[], Chart[]] } 格式化后的数据
  */
-export const formatLocalData = ({ namespaces, charts }) => {
+export const formatLocalData = (data) => {
+  const { namespaces, charts } = data
   const temp_sections = namespaces.map((ns) => {
     const temp = {
       type: ns.type,
@@ -62,8 +55,8 @@ export const formatLocalData = ({ namespaces, charts }) => {
       metrics: []
     }
     if (temp.type === 'DEFAULT') temp.type = 'LINE'
-    const yAxis = _generateYAxis(temp.title, temp.title, temp.type === 'LINE' ? 'FLOAT' : temp.type)
-    const xAxis = _generateXAxis()
+    const yAxis = generateYAxis(temp.title, temp.title, temp.type === 'LINE' ? 'FLOAT' : temp.type)
+    const xAxis = generateXAxis()
     if (temp.type === 'LINE') {
       temp.config = {
         xAxis,
@@ -89,5 +82,42 @@ export const formatLocalData = ({ namespaces, charts }) => {
     })
     return temp
   })
-  return [temp_sections, temp_charts]
+  return { sections: temp_sections, charts: temp_charts }
 }
+
+/**
+ * @typedef { Object } OriginalData
+ * @property { Namespace[] } namespaces 命名空间
+ * @property { OriginalChart[] } charts 图表
+ */
+
+/**
+ * @typedef { Object } Namespace
+ * @property { Number } id 命名空间ID，-1表示置顶，-2表示隐藏
+ * @property { String } name 命名空间名称
+ * @property { String } description 命名空间描述
+ * @property { Number } sort 排序
+ * @property { Object | null } more 更多信息
+ * @property { Object | null } experiment_id 所属实验信息(多实验图表时为 null)
+ * @property { Object | null } project_id 所属项目信息(单实验图表时为 null)
+ * @property { Int[] } charts 图表ID数组
+ * @property { Number } opened 0表示收起，1表示展开
+ * @property { String } created_time 创建时间
+ * @property { String } update_time 更新时间
+ */
+
+/**
+ * @typedef { Object } OriginalChart
+ * @property { Number } id 图表ID
+ * @property { 'default' | 'line' | 'image' | 'audio' | 'text' } type 图表类型
+ * @property { String } name 图表名称
+ * @property { String } description 图表描述
+ * @property { Boolean } multi 是否是多实验图表
+ * @property { String } reference 实验进度参考
+ * @property { String[] } source 图表数据来源列表，当前为实验名
+ * @property { Object<String, Number> } source_map 图表数据来源映射，当前为实验ID
+ * @property { Object | null } experiment_id 所属实验信息(多实验图表时为 null)
+ * @property { Object | null } project_id 所属项目信息(单实验图表时为 null)
+ * @property { String } created_time 创建时间
+ * @property { String } update_time 更新时间
+ */
