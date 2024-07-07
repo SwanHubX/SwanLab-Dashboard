@@ -8,7 +8,7 @@
 
 /**
  * @typedef {Object} Section 图表分组
- * @property {PUBLIC | PINNED | HIDDEN} type 分组类型 - [PUBLIC, PINNED, HIDDEN]
+ * @property {'PUBLIC' | 'PINNED' | 'HIDDEN'} type 分组类型 - [PUBLIC, PINNED, HIDDEN]
  * @property {IndexId} index 分组 ID
  * @property {String} name 分组名
  * @property {Boolean} pinned 是否固定
@@ -22,8 +22,7 @@
  * @property {IndexId} index 图表 ID
  * @property {String} title 图表名
  * @property {Object} config 图表配置
- * @property {LINE | TEXT | IMAGE | AUDIO} type 图表类型 - [LINE, TEXT, IMAGE, AUDIO]
- * @property {String} size 图表尺寸
+ * @property {'LINE' | 'TEXT' | 'IMAGE' | 'AUDIO'} type 图表类型 - [LINE, TEXT, IMAGE, AUDIO]
  * @property {Metric[]} metrics 指标 ID 列表，对应 tag 名
  */
 
@@ -38,11 +37,11 @@
 
 /**
  * @typedef {Object} Column 指标列数据
- * @property {String} class 类型 - [SYSTEM, CUSTOM]
+ * @property {'SYSTEM' | 'CUSTOM'} class 类型 - [SYSTEM, CUSTOM]
  * @property {String | null} error 错误信息, 字符串
  * @property {ColumnKey} key tag key，在项目下唯一，同一个 key 可以出现在多个实验中
  * @property {String} name tag 名称，一般和 key 相同
- * @property {String} type tag 类型 - [LINE, TEXT, IMAGE, AUDIO]
+ * @property {'LINE' | 'TEXT' | 'IMAGE' | 'AUDIO'} type tag 类型 - [LINE, TEXT, IMAGE, AUDIO]
  */
 
 /**
