@@ -1,8 +1,4 @@
 /**
- * @typedef {String} IndexId 唯一id，在前端作为数据查找标识
- */
-
-/**
  * @typedef {IndexId} ExperimentId 实验id
  */
 
