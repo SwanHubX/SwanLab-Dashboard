@@ -63,7 +63,7 @@
  * @param {number} [minHeight=200] 图表的最小高度, 单位px, 默认为200
  */
 
-// ---------------------------------- chart store ----------------------------------
+// ---------------------------------- new chart model ----------------------------------
 
 /**
  * @typedef {String} ExperimentId 实验id
@@ -81,7 +81,7 @@
  * @property {Boolean} pinned 是否固定
  * @property {Boolean} folded 是否折叠
  * @property {Object} config 分组配置
- * @property {String[]} chartIndex 分组内的图表 ID 列表
+ * @property {String[]} chartIndex 分组内的图表 ID 列表，用于排序
  */
 
 /**
@@ -97,10 +97,10 @@
 /**
  * @typedef {Object} Metric 图表指标配置
  * @property {'X' | 'Y'} axis 指标轴 - [X, Y]
- * @property {String} name 图表中展示的指标名 - 单实验下为指标key，多实验下为实验名
+ * @property {String} name 图表中展示的指标名，用于前端显示的指标名称 - 默认情况下，单实验下为指标key，多实验下为实验名
  * @property {String} expId 指标对应的实验 ID
- * @property {String[]} colors 指标颜色
- * @property {Column} column 列数据
+ * @property {String[]} colors 指标颜色，用于前端展示，长度为2，第一个为白天模式，第二个为夜间模式
+ * @property {Column} column 列数据，指标实际存储指向
  */
 
 /**
@@ -116,7 +116,7 @@
  * 指标数据存储对象
  * @typedef {Object} ScalarData
  * @property {ExperimentId} experimentId 实验 ID
- * @property {ColumnKey} key 指标名
+ * @property {ColumnKey} key 检索的指标名
  * @property {ScalarDetail[]} metrics 指标数据列表
  */
 
@@ -142,6 +142,7 @@
  * @typedef {Object} MediaDetail
  * @property {Number} index 步数
  * @property {String[]} data 指标数据
+ * @property {Object[] | String[] | undefined} more 指标数据的更多信息，不同类型的数据结构不同，具体结构由图表决定
  */
 
 /**
