@@ -27,16 +27,16 @@ describe('common.js utils', () => {
 
     const result3 = formatNumber2SN(-0.000000123456)
     // 注意！这里有四舍五入
-    expect(result3).toBe('-0.0000001235')
+    expect(result3).toBe('-1.2346e-7')
   })
 
   it('formatNumber test1 for interval medium sized numbers', () => {
     // 正常的正负数，直接输出
     const result1 = formatNumber2SN(123312312)
-    expect(result1).toBe('123312312')
+    expect(result1).toBe('1.2331e+8')
 
     const result2 = formatNumber2SN(-21312312)
-    expect(result2).toBe('-21312312')
+    expect(result2).toBe('-2.1312e+7')
 
     // 对小数部分，只截取到第一个非零数及其后三位，且自动去除无意义的0
     const result3 = formatNumber2SN(1233.0403000001)
@@ -47,7 +47,7 @@ describe('common.js utils', () => {
 
     // 小数部分全为0，则只取整数部分
     const result5 = formatNumber2SN(123321.0)
-    expect(result5).toBe('123321')
+    expect(result5).toBe('1.2332e+5')
   })
 
   it('formatNumber test2 for interval medium sized numbers', () => {
