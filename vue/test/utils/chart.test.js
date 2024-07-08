@@ -2,6 +2,13 @@ import { describe, expect, it } from 'vitest'
 import { formatLocalData } from '@swanlab-vue/utils/chart'
 import { nanoid, customAlphabet } from 'nanoid'
 
+/// <reference path="../../src/docs/chart.js" />
+
+/**
+ * @type { OriginalChart } c
+ */
+const c = {}
+
 /**
  * 随机生成一个数组，长度在1-20之间，元素值在1-200之间
  * @returns { number[] | string[] } array
@@ -51,7 +58,7 @@ const mockOriginalNamespace = (id = 1, name = 'test', opened = 1) => {
 const mockOriginalChart = (type = 'default', multi = false, name, reference = 'step') => {
   name = name || nanoid(5)
   const time = new Date().toISOString()
-  const source = generateRandomArray('string', 1)
+  const source = generateRandomArray('string', multi ? null : 1)
   const source_map = {}
   source.forEach((item) => {
     source_map[item] = customAlphabet('123456789', 4)()
@@ -109,6 +116,11 @@ describe('formatLocalData => sections', () => {
 })
 
 describe('formatLocalData => charts', () => {
+  /**
+   *
+   * @param { OriginalChart[] } charts
+   * @param {*} originalCharts
+   */
   const checkCharts = (charts, originalCharts) => {
     charts.forEach((chart, index) => {
       const oc = originalCharts[index]
@@ -129,11 +141,21 @@ describe('formatLocalData => charts', () => {
         } else expect(chart.metrics.length).toEqual(1)
       }
       chart.metrics.forEach((metric) => {
-        console.log(metric)
-        console.log('=====')
+        expect(metric).toMatchObject({
+          axis: expect.enum(['X', 'Y']),
+          colors: expect.any(Array),
+          expId: expect.any(String),
+          name: expect.any(String)
+        })
+        // expect(metric)
+        // if(!chart.multi) {
+        //   // 如果是单实验，那么 metric 的
+        // }
       })
     })
   }
+
+  const typeList = ['default', 'LINE', 'IMAGE', 'TEXT', 'AUDIO']
 
   it('empty charts', () => {
     const charts = formatLocalData({ namespaces: [], charts: [] })[1]
@@ -141,12 +163,16 @@ describe('formatLocalData => charts', () => {
   })
 
   it('charts with single mode', () => {
-    const originalCharts = [mockOriginalChart(), mockOriginalChart('LINE'), mockOriginalChart('IMAGE')]
+    const originalCharts = []
+    typeList.forEach((type) => originalCharts.push(mockOriginalChart(type)))
     const charts = formatLocalData({ namespaces: [], charts: originalCharts })[1]
     checkCharts(charts, originalCharts)
   })
 
   it('charts with multi mode', () => {
-    const originalCharts = [mockOriginalChart('default', true), mockOriginalChart('LINE', true)]
+    const originalCharts = []
+    typeList.forEach((type) => originalCharts.push(mockOriginalChart(type, true)))
+    const charts = formatLocalData({ namespaces: [], charts: originalCharts })[1]
+    checkCharts(charts, originalCharts)
   })
 })
