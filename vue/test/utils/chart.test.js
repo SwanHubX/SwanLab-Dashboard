@@ -4,7 +4,7 @@ import { nanoid, customAlphabet } from 'nanoid'
 
 /**
  * 随机生成一个数组，长度在1-20之间，元素值在1-200之间
- * @returns {number[] | string[]} array
+ * @returns { number[] | string[] } array
  */
 const generateRandomArray = (type = 'number', length) => {
   const arrayLength = length || Math.floor(Math.random() * 20) + 1
@@ -18,12 +18,12 @@ const generateRandomArray = (type = 'number', length) => {
 
 /**
  * 生成一个本地后端返回的原始 namespace 数据
- * @param {number} id
- * @param {string} name
- * @param {boolean} opened
- * @returns {object} namespace
+ * @param { number } id
+ * @param { string } name
+ * @param { boolean } opened
+ * @returns { Namespace } namespace
  */
-const originalNamespace = (id = 1, name = 'test', opened = 1) => {
+const mockOriginalNamespace = (id = 1, name = 'test', opened = 1) => {
   const time = new Date().toISOString()
   return {
     charts: generateRandomArray(),
@@ -40,7 +40,16 @@ const originalNamespace = (id = 1, name = 'test', opened = 1) => {
   }
 }
 
-const originalChart = (type = 'default', name = 'test', multi = false, reference = 'step') => {
+/**
+ * 生成原始 chart 数据
+ * @param { 'default' | 'LINE' | 'IMAGE' | 'TEXT' | 'IMAGE' } type
+ * @param { boolean } multi
+ * @param { string } name
+ * @param { string } reference
+ * @returns
+ */
+const mockOriginalChart = (type = 'default', multi = false, name, reference = 'step') => {
+  name = name || nanoid(5)
   const time = new Date().toISOString()
   const source = generateRandomArray('string', 1)
   const source_map = {}
@@ -81,19 +90,19 @@ describe('formatLocalData => sections', () => {
   })
 
   it('sections without hide or pin', () => {
-    const namespaces = [originalNamespace(), originalNamespace(1, 'test', 0), originalNamespace()]
+    const namespaces = [mockOriginalNamespace(), mockOriginalNamespace(1, 'test', 0), mockOriginalNamespace()]
     const [sections] = formatLocalData({ namespaces, charts: [] })
     checkSections(sections, namespaces)
   })
 
   it('pinned namespace', () => {
-    const namespaces = [originalNamespace(-1, 'pinned', 1), originalNamespace(2, 'test', 1)]
+    const namespaces = [mockOriginalNamespace(-1, 'pinned', 1), mockOriginalNamespace(2, 'test', 1)]
     const [sections] = formatLocalData({ namespaces, charts: [] })
     checkSections(sections, namespaces)
   })
 
   it('hidden namespace', () => {
-    const namespaces = [originalNamespace(-2, 'hidden', 0), originalNamespace(2, 'test', 1)]
+    const namespaces = [mockOriginalNamespace(-2, 'hidden', 0), mockOriginalNamespace(2, 'test', 1)]
     const [sections] = formatLocalData({ namespaces, charts: [] })
     checkSections(sections, namespaces)
   })
@@ -107,7 +116,22 @@ describe('formatLocalData => charts', () => {
       expect(chart.type).toEqual(oc.type === 'default' ? 'LINE' : oc.type)
       expect(chart.title).toEqual(oc.name)
 
-      chart.metrics.forEach((metric, index) => {})
+      /**
+       * 如果是单实验
+       * 1. 折线图：有两个指标，以 X 标识进度坐标,以 Y 标识指标值
+       * 2. 其他图表：只有一个指标，即当前tag，以 X 标识
+       */
+      if (!originalCharts[index].multi) {
+        if (chart.type === 'LINE') {
+          expect(chart.metrics.length).toEqual(2)
+          // 在 metrics 中含有以 X 标识的指标
+          expect(chart.metrics.some((metric) => metric.axis === 'X')).toBe(true)
+        } else expect(chart.metrics.length).toEqual(1)
+      }
+      chart.metrics.forEach((metric) => {
+        console.log(metric)
+        console.log('=====')
+      })
     })
   }
 
@@ -116,10 +140,13 @@ describe('formatLocalData => charts', () => {
     expect(charts).to.deep.equal([])
   })
 
-  it('charts in experiment page', () => {
-    const originalCharts = [originalChart(), originalChart('LINE'), originalChart('IMAGE')]
+  it('charts with single mode', () => {
+    const originalCharts = [mockOriginalChart(), mockOriginalChart('LINE'), mockOriginalChart('IMAGE')]
     const charts = formatLocalData({ namespaces: [], charts: originalCharts })[1]
-    console.log(charts)
     checkCharts(charts, originalCharts)
+  })
+
+  it('charts with multi mode', () => {
+    const originalCharts = [mockOriginalChart('default', true), mockOriginalChart('LINE', true)]
   })
 })
