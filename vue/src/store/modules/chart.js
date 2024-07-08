@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import http from '@swanlab-vue/api/http'
 import { formatLocalData } from '@swanlab-vue/utils/chart'
 

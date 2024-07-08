@@ -34,13 +34,15 @@ export const formatLocalData = (data) => {
       type: ns.type,
       name: ns.name,
       chartIndex: ns.charts,
-      pinned: ns.opened === 1,
+      pinned: false,
       folded: ns.opened === 0,
       config: ns.more,
       index: ns.id
     }
-    if (ns.name === 'pinned' && ns.id === -1) temp.type = 'PINNED'
-    else if (ns.name === 'hidden' && ns.id === -2) temp.type = 'HIDDEN'
+    if (ns.name === 'pinned' && ns.id === -1) {
+      temp.type = 'PINNED'
+      temp.pinned = true
+    } else if (ns.name === 'hidden' && ns.id === -2) temp.type = 'HIDDEN'
     else temp.type = 'PUBLIC'
     return temp
   })
@@ -82,7 +84,7 @@ export const formatLocalData = (data) => {
     })
     return temp
   })
-  return { sections: temp_sections, charts: temp_charts }
+  return [temp_sections, temp_charts]
 }
 
 /**
