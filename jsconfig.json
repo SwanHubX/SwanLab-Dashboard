@@ -4,11 +4,12 @@
     "module": "commonjs",
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./",
+    "checkJs": true,
     "paths": {
       "@swanlab-vue/*": ["vue/src/*"]
     },
     "resolveJsonModule": true
   },
   "exclude": ["node_modules", "dist", "vue/public"],
-  "include": ["vue/src/**/*.js", "vue/src/**/*.vue", "vue/auto-imports.d.ts"]
+  "include": ["vue/src/**/*.js", "vue/src/**/*.vue", "vue/auto-imports.d.ts", "vue/test/**/*.test.js"]
 }
