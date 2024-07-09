@@ -102,10 +102,10 @@
  * @property { Object | null } more 更多信息
  * @property { Object | null } experiment_id 所属实验信息(多实验图表时为 null)
  * @property { Object | null } project_id 所属项目信息(单实验图表时为 null)
- * @property { Int[] } charts 图表ID数组
+ * @property { Array<Number> } charts 图表ID数组
  * @property { Number } opened 0表示收起，1表示展开
  * @property { String } created_time 创建时间
- * @property { String } update_time 更新时间
+ * @property { String } updated_time 更新时间
  */
 
 /**
@@ -116,10 +116,10 @@
  * @property { String } description 图表描述
  * @property { Boolean } multi 是否是多实验图表
  * @property { String } reference 实验进度参考
- * @property { String[] } source 图表数据来源列表，当前为实验名
+ * @property { Array<String> } source 图表数据来源列表，当前为实验名
  * @property { Object<String, Number> } source_map 图表数据来源映射，当前为实验ID
  * @property { Object | null } experiment_id 所属实验信息(多实验图表时为 null)
  * @property { Object | null } project_id 所属项目信息(单实验图表时为 null)
  * @property { String } created_time 创建时间
- * @property { String } update_time 更新时间
+ * @property { String } updated_time 更新时间
  */

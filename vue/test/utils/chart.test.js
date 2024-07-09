@@ -2,21 +2,18 @@ import { describe, expect, it } from 'vitest'
 import { formatLocalData } from '@swanlab-vue/utils/chart'
 import { nanoid, customAlphabet } from 'nanoid'
 
-/// <reference path="../../src/docs/chart.js" />
-
-/**
- * @type { OriginalChart } c
- */
-const c = {}
-
 /**
  * 随机生成一个数组，长度在1-20之间，元素值在1-200之间
- * @returns { number[] | string[] } array
+ * @param { 'number' | 'string' } type
+ * @param { number } length
+ * @returns {RandomArray} array
  */
 const generateRandomArray = (type = 'number', length) => {
   const arrayLength = length || Math.floor(Math.random() * 20) + 1
+  /** @type {RandomArray} */
   const array = []
   for (let i = 0; i < arrayLength; i++) {
+    /** @type {string | number} */
     const value = type === 'number' ? Math.floor(Math.random() * 200) + 1 : nanoid(10)
     array.push(value)
   }
@@ -27,14 +24,14 @@ const generateRandomArray = (type = 'number', length) => {
  * 生成一个本地后端返回的原始 namespace 数据
  * @param { number } id
  * @param { string } name
- * @param { boolean } opened
+ * @param { number } opened
  * @returns { Namespace } namespace
  */
 const mockOriginalNamespace = (id = 1, name = 'test', opened = 1) => {
   const time = new Date().toISOString()
   return {
     charts: generateRandomArray(),
-    create_time: time,
+    created_time: time,
     description: nanoid(),
     experiment_id: {},
     id,
@@ -43,7 +40,7 @@ const mockOriginalNamespace = (id = 1, name = 'test', opened = 1) => {
     opened,
     project_id: null,
     sort: 1,
-    update_time: time
+    updated_time: time
   }
 }
 
@@ -73,8 +70,8 @@ const mockOriginalChart = (type = 'default', multi = false, name, reference = 's
     source_map,
     experiment_id: multi ? null : {},
     project_id: multi ? {} : null,
-    create_time: time,
-    update_time: time
+    created_time: time,
+    updated_time: time
   }
 }
 
@@ -117,9 +114,9 @@ describe('formatLocalData => sections', () => {
 
 describe('formatLocalData => charts', () => {
   /**
-   *
-   * @param { OriginalChart[] } charts
-   * @param {*} originalCharts
+   * 检查转化后的图标数据是否合规
+   * @param { Chart[] } charts
+   * @param { OriginalChart[] } originalCharts
    */
   const checkCharts = (charts, originalCharts) => {
     charts.forEach((chart, index) => {
@@ -127,7 +124,8 @@ describe('formatLocalData => charts', () => {
       expect(chart.index).toEqual(oc.id)
       expect(chart.type).toEqual(oc.type === 'default' ? 'LINE' : oc.type)
       expect(chart.title).toEqual(oc.name)
-
+      /** @type { Metric[] } */
+      const metrics = chart.metrics
       /**
        * 如果是单实验
        * 1. 折线图：有两个指标，以 X 标识进度坐标,以 Y 标识指标值
@@ -135,27 +133,29 @@ describe('formatLocalData => charts', () => {
        */
       if (!originalCharts[index].multi) {
         if (chart.type === 'LINE') {
-          expect(chart.metrics.length).toEqual(2)
+          expect(metrics.length).toEqual(2)
           // 在 metrics 中含有以 X 标识的指标
-          expect(chart.metrics.some((metric) => metric.axis === 'X')).toBe(true)
-        } else expect(chart.metrics.length).toEqual(1)
+          expect(metrics.some((metric) => metric.axis === 'X')).toBe(true)
+        } else expect(metrics.length).toEqual(1)
       }
-      chart.metrics.forEach((metric) => {
+      // 遍历指标数据
+      metrics.forEach((metric) => {
         expect(metric).toMatchObject({
-          axis: expect.enum(['X', 'Y']),
+          axis: expect.stringMatching(new RegExp(`^(X|Y)$`)),
           colors: expect.any(Array),
-          expId: expect.any(String),
           name: expect.any(String)
         })
-        // expect(metric)
-        // if(!chart.multi) {
-        //   // 如果是单实验，那么 metric 的
-        // }
+        // 如果是这线图，并且分类为X，那么该指标没有expId
+        if (chart.type === 'LINE' && metric.axis === 'X') expect(metric.expId).toBeUndefined()
+        // 别的情况都有 expId,需要以此为索引之一寻找数据源
+        else expect(metric.expId).toEqual(expect.any(String))
       })
     })
   }
 
-  const typeList = ['default', 'LINE', 'IMAGE', 'TEXT', 'AUDIO']
+  const mockOriginalCharts = () => {
+    return ['default', 'LINE', 'IMAGE', 'TEXT', 'AUDIO'].map((type) => mockOriginalChart(type))
+  }
 
   it('empty charts', () => {
     const charts = formatLocalData({ namespaces: [], charts: [] })[1]
@@ -163,16 +163,18 @@ describe('formatLocalData => charts', () => {
   })
 
   it('charts with single mode', () => {
-    const originalCharts = []
-    typeList.forEach((type) => originalCharts.push(mockOriginalChart(type)))
+    const originalCharts = mockOriginalCharts()
     const charts = formatLocalData({ namespaces: [], charts: originalCharts })[1]
     checkCharts(charts, originalCharts)
   })
 
   it('charts with multi mode', () => {
-    const originalCharts = []
-    typeList.forEach((type) => originalCharts.push(mockOriginalChart(type, true)))
+    const originalCharts = mockOriginalCharts()
     const charts = formatLocalData({ namespaces: [], charts: originalCharts })[1]
     checkCharts(charts, originalCharts)
   })
 })
+
+/**
+ * @typedef { Array<number | string> } RandomArray
+ */
