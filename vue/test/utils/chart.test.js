@@ -8,7 +8,7 @@ import { nanoid, customAlphabet } from 'nanoid'
  * @param { number } length
  * @returns {RandomArray} array
  */
-const generateRandomArray = (type = 'number', length) => {
+const generateRandomArray = (type = 'number', length = undefined) => {
   const arrayLength = length || Math.floor(Math.random() * 20) + 1
   /** @type {RandomArray} */
   const array = []
@@ -30,7 +30,7 @@ const generateRandomArray = (type = 'number', length) => {
 const mockOriginalNamespace = (id = 1, name = 'test', opened = 1) => {
   const time = new Date().toISOString()
   return {
-    charts: generateRandomArray(),
+    charts: generateRandomArray().map((item) => Number(item)),
     created_time: time,
     description: nanoid(),
     experiment_id: {},
@@ -46,24 +46,23 @@ const mockOriginalNamespace = (id = 1, name = 'test', opened = 1) => {
 
 /**
  * 生成原始 chart 数据
- * @param { 'default' | 'LINE' | 'IMAGE' | 'TEXT' | 'IMAGE' } type
+ * @param { ChartType } type
  * @param { boolean } multi
- * @param { string } name
  * @param { string } reference
- * @returns
+ * @returns { OriginalChart }
  */
-const mockOriginalChart = (type = 'default', multi = false, name, reference = 'step') => {
-  name = name || nanoid(5)
+const mockOriginalChart = (type = 'default', multi = false, reference = 'step') => {
   const time = new Date().toISOString()
-  const source = generateRandomArray('string', multi ? null : 1)
+  const source = generateRandomArray('string', multi ? null : 1).map((item) => String(item))
   const source_map = {}
   source.forEach((item) => {
     source_map[item] = customAlphabet('123456789', 4)()
   })
   return {
-    id: nanoid(4),
+    id: Number(customAlphabet('123456789', 4)()),
     type,
-    name,
+    name: type,
+    description: nanoid(),
     multi,
     reference,
     source,
@@ -115,14 +114,14 @@ describe('formatLocalData => sections', () => {
 describe('formatLocalData => charts', () => {
   /**
    * 检查转化后的图标数据是否合规
-   * @param { Chart[] } charts
-   * @param { OriginalChart[] } originalCharts
+   * @param { Chart[] } charts 转化之后的图表
+   * @param { OriginalChart[] } originalCharts 原始图表
    */
   const checkCharts = (charts, originalCharts) => {
     charts.forEach((chart, index) => {
       const oc = originalCharts[index]
       expect(chart.index).toEqual(oc.id)
-      expect(chart.type).toEqual(oc.type === 'default' ? 'LINE' : oc.type)
+      expect(chart.type).toEqual(oc.type === 'default' ? 'LINE' : oc.type.toUpperCase())
       expect(chart.title).toEqual(oc.name)
       /** @type { Metric[] } */
       const metrics = chart.metrics
@@ -140,21 +139,39 @@ describe('formatLocalData => charts', () => {
       }
       // 遍历指标数据
       metrics.forEach((metric) => {
+        // ---------------------------------- metric 相关 ----------------------------------
         expect(metric).toMatchObject({
           axis: expect.stringMatching(new RegExp(`^(X|Y)$`)),
           colors: expect.any(Array),
           name: expect.any(String)
         })
-        // 如果是这线图，并且分类为X，那么该指标没有expId
-        if (chart.type === 'LINE' && metric.axis === 'X') expect(metric.expId).toBeUndefined()
-        // 别的情况都有 expId,需要以此为索引之一寻找数据源
+        // 如果是这线图，并且分类为X，那么该指标没有expId，且名字为 summary
+        if (chart.type === 'LINE' && metric.axis === 'X') {
+          expect(metric.expId).toBeUndefined()
+          expect(metric.name).toEqual('summary')
+        }
+        // 如果是多媒体图标，那么只有 X 标识，没有 Y 标识
+        else if (chart.type === 'IMAGE' || chart.type === 'TEXT' || chart.type === 'AUDIO') {
+          expect(metric.axis).toEqual('X')
+        }
+        // 除了这线图的系统指标，都有 expId，需要以此为索引之一寻找数据源
         else expect(metric.expId).toEqual(expect.any(String))
+        // ---------------------------------- column 相关 ----------------------------------
+        // 如果是这线图，则有一个以 X 标识的指标，其中 class 为 SYSTEM，key 为 step
+        // 且这线图的所有指标都是 FLOAT 类型
+        const isSys = chart.type === 'LINE' && metric.axis === 'X'
+        expect(metric.column.class).toEqual(isSys ? 'SYSTEM' : 'CUSTOM')
+        expect(metric.column.error).toEqual(null)
+        expect(metric.column.key).toEqual(isSys ? 'step' : chart.title)
+        expect(metric.column.type).toEqual(chart.type === 'LINE' ? 'FLOAT' : chart.type)
       })
     })
   }
 
+  // 生成各个类别的原始图表数据
   const mockOriginalCharts = () => {
-    return ['default', 'LINE', 'IMAGE', 'TEXT', 'AUDIO'].map((type) => mockOriginalChart(type))
+    const types = ['default', 'line', 'image', 'text', 'audio']
+    return types.map((/** @type {ChartType} */ type) => mockOriginalChart(type))
   }
 
   it('empty charts', () => {
@@ -178,3 +195,5 @@ describe('formatLocalData => charts', () => {
 /**
  * @typedef { Array<number | string> } RandomArray
  */
+
+/** @typedef {"default" | "line" | "image" | "text" | "audio"} ChartType */
