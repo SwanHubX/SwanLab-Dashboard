@@ -68,6 +68,7 @@ const mockOriginalChart = (type = 'default', multi = false, reference = 'step') 
     sort: 1,
     status: 0,
     system: multi ? 0 : 1,
+    error: null,
     multi,
     reference,
     source,
@@ -83,11 +84,11 @@ describe('formatLocalData => sections', () => {
   const checkSections = (sections, namespaces) => {
     sections.forEach((section, index) => {
       const ns = namespaces[index]
-      expect(section.index).toEqual(ns.id)
+      expect(section.index).toEqual(String(ns.id))
       expect(section.name).toEqual(ns.name)
       expect(section.pinned).toEqual(ns.id === -1 && ns.name === 'pinned')
       expect(section.folded).toEqual(ns.opened === 0)
-      expect(section.chartIndex).toEqual(ns.charts)
+      expect(section.chartIndex).toEqual(ns.charts.map((item) => String(item)))
       expect(section.config).toEqual(ns.more)
     })
   }
@@ -125,7 +126,7 @@ describe('formatLocalData => charts', () => {
   const checkCharts = (charts, originalCharts) => {
     charts.forEach((chart, index) => {
       const oc = originalCharts[index]
-      expect(chart.index).toEqual(oc.id)
+      expect(chart.index).toEqual(String(oc.id))
       expect(chart.type).toEqual(oc.type === 'default' ? 'LINE' : oc.type.toUpperCase())
       expect(chart.title).toEqual(oc.name)
       /** @type { Metric[] } */
@@ -198,6 +199,51 @@ describe('formatLocalData => charts', () => {
     const originalCharts = mockOriginalCharts(true)
     const charts = formatLocalData({ namespaces: [], charts: originalCharts })[1]
     checkCharts(charts, originalCharts)
+  })
+
+  /**
+   * 给图表模拟错误信息
+   * @param { import('@swanlab-vue/utils/chart').OriginalChart } oc
+   */
+  const mockErrorChart = (oc) => {
+    oc.source.forEach((s) => {
+      oc.error = {
+        ...(oc.error || {}), // error 可能为obj或null
+        [s]: {
+          data_class: nanoid(5),
+          excepted: nanoid(5)
+        }
+      }
+    })
+  }
+
+  /**
+   * 检查转化后的图标数据是否合规
+   * @param { Chart[] } charts 转化之后的图表
+   * @param { import('@swanlab-vue/utils/chart').OriginalChart[] } originalCharts 原始图表
+   */
+  const checkErrorCharts = (charts, originalCharts) => {
+    charts.forEach((chart) => {
+      const oc = originalCharts.find((c) => c.id === Number(chart.index))
+      Object.keys(oc.error).forEach((key) => {
+        const metric = chart.metrics.find((m) => m.name === key)
+        expect(metric.column.error).toEqual(oc.error[key])
+      })
+    })
+  }
+
+  it('error chart with single experiment', () => {
+    const originalCharts = mockOriginalCharts(false)
+    originalCharts.forEach(mockErrorChart)
+    const charts = formatLocalData({ namespaces: [], charts: originalCharts })[1]
+    checkErrorCharts(charts, originalCharts)
+  })
+
+  it('error chart with multi experiment', () => {
+    const originalCharts = mockOriginalCharts(true)
+    originalCharts.forEach(mockErrorChart)
+    const charts = formatLocalData({ namespaces: [], charts: originalCharts })[1]
+    checkErrorCharts(charts, originalCharts)
   })
 })
 
