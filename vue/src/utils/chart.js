@@ -84,8 +84,16 @@ export const formatLocalData = (data) => {
         colors: [],
         expId: chart.source_map[m],
         name: m,
-        column: yAxis
+        column: JSON.parse(JSON.stringify(yAxis)) // 深拷贝，防止在下一步错误处理中添加错误时让所有 metric 都报错
       })
+    })
+    // ---------------------------------- 错误相关 ----------------------------------
+    const error = chart.error
+    if (!error || Object.keys(error).length === 0) return temp
+    // 遍历error,找到对应的metric，设置error
+    Object.keys(error).forEach((key) => {
+      const target = temp.metrics.find((v) => v.name === key)
+      target.column.error = error[key]
     })
     return temp
   })
@@ -126,6 +134,7 @@ export const formatLocalData = (data) => {
  * @property { Object | null } config 图表配置
  * @property { Object | null } more 更多信息
  * @property { Number | null } sort 排序
+ * @property { Object | null } error 错误信息
  * @property { Number } status 图表状态
  * @property { Number } system 0 为系统自动生成的多试验图表，1 为某实验所属图表
  * @property { Array<String> } source 图表数据来源列表，当前为实验名
