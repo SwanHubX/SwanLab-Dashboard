@@ -25,7 +25,7 @@ const generateRandomArray = (type = 'number', length = undefined) => {
  * @param { number } id
  * @param { string } name
  * @param { number } opened
- * @returns { Namespace } namespace
+ * @returns { import('@swanlab-vue/utils/chart').Namespace } namespace
  */
 const mockOriginalNamespace = (id = 1, name = 'test', opened = 1) => {
   const time = new Date().toISOString()
@@ -49,7 +49,7 @@ const mockOriginalNamespace = (id = 1, name = 'test', opened = 1) => {
  * @param { ChartType } type
  * @param { boolean } multi
  * @param { string } reference
- * @returns { OriginalChart }
+ * @returns { import('@swanlab-vue/utils/chart').OriginalChart }
  */
 const mockOriginalChart = (type = 'default', multi = false, reference = 'step') => {
   const time = new Date().toISOString()
@@ -63,6 +63,11 @@ const mockOriginalChart = (type = 'default', multi = false, reference = 'step') 
     type,
     name: type,
     description: nanoid(),
+    config: null,
+    more: null,
+    sort: 1,
+    status: 0,
+    system: multi ? 0 : 1,
     multi,
     reference,
     source,
@@ -115,7 +120,7 @@ describe('formatLocalData => charts', () => {
   /**
    * 检查转化后的图标数据是否合规
    * @param { Chart[] } charts 转化之后的图表
-   * @param { OriginalChart[] } originalCharts 原始图表
+   * @param { import('@swanlab-vue/utils/chart').OriginalChart[] } originalCharts 原始图表
    */
   const checkCharts = (charts, originalCharts) => {
     charts.forEach((chart, index) => {
@@ -168,10 +173,14 @@ describe('formatLocalData => charts', () => {
     })
   }
 
-  // 生成各个类别的原始图表数据
-  const mockOriginalCharts = () => {
+  /**
+   * 生成各个类别的原始图表数据
+   * @param { Boolean } multi 是否是多试验图表
+   * @returns { import('@swanlab-vue/utils/chart').OriginalChart[] } 原始图表数据
+   */
+  const mockOriginalCharts = (multi) => {
     const types = ['default', 'line', 'image', 'text', 'audio']
-    return types.map((/** @type {ChartType} */ type) => mockOriginalChart(type))
+    return types.map((/** @type {ChartType} */ type) => mockOriginalChart(type, multi))
   }
 
   it('empty charts', () => {
@@ -179,14 +188,14 @@ describe('formatLocalData => charts', () => {
     expect(charts).to.deep.equal([])
   })
 
-  it('charts with single mode', () => {
-    const originalCharts = mockOriginalCharts()
+  it('charts with single experiment', () => {
+    const originalCharts = mockOriginalCharts(false)
     const charts = formatLocalData({ namespaces: [], charts: originalCharts })[1]
     checkCharts(charts, originalCharts)
   })
 
-  it('charts with multi mode', () => {
-    const originalCharts = mockOriginalCharts()
+  it('charts with multi experiments', () => {
+    const originalCharts = mockOriginalCharts(true)
     const charts = formatLocalData({ namespaces: [], charts: originalCharts })[1]
     checkCharts(charts, originalCharts)
   })

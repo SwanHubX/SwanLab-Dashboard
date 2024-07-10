@@ -29,16 +29,19 @@ const generateYAxis = (key, name, type) => {
  */
 export const formatLocalData = (data) => {
   const { namespaces, charts } = data
-  const temp_sections = namespaces.map((ns) => {
+  // ---------------------------------- section 相关 ----------------------------------
+  /** @type { Section[] } */
+  const temp_sections = namespaces.map((/** @type {Namespace} */ ns) => {
     const temp = {
-      type: ns.type,
       name: ns.name,
-      chartIndex: ns.charts,
+      chartIndex: ns.charts.map((v) => String(v)),
       pinned: false,
       folded: ns.opened === 0,
       config: ns.more,
-      index: ns.id
+      index: String(ns.id),
+      type: null
     }
+    // 处理图表分类块的类别：[PUBLIC, PINNED, HIDDEN]
     if (ns.name === 'pinned' && ns.id === -1) {
       temp.type = 'PINNED'
       temp.pinned = true
@@ -46,19 +49,21 @@ export const formatLocalData = (data) => {
     else temp.type = 'PUBLIC'
     return temp
   })
-
+  // ---------------------------------- chart 相关 ----------------------------------
+  /** @type { Chart[] } */
   const temp_charts = charts.map((chart) => {
     const temp = {
-      index: chart.id,
+      index: String(chart.id),
       title: chart.name,
-      size: chart.size || null,
       config: chart.config,
       type: chart.type.toUpperCase(),
       metrics: []
     }
     if (temp.type === 'DEFAULT') temp.type = 'LINE'
+    // ---------------------------------- metric 相关 ----------------------------------
     const yAxis = generateYAxis(temp.title, temp.title, temp.type === 'LINE' ? 'FLOAT' : temp.type)
     const xAxis = generateXAxis()
+    // 这线图需要添加配置信息，且metric中添加系统生成的X轴
     if (temp.type === 'LINE') {
       temp.config = {
         xAxis,
@@ -118,6 +123,11 @@ export const formatLocalData = (data) => {
  * @property { String } description 图表描述
  * @property { Boolean } multi 是否是多实验图表
  * @property { String } reference 实验进度参考
+ * @property { Object | null } config 图表配置
+ * @property { Object | null } more 更多信息
+ * @property { Number | null } sort 排序
+ * @property { Number } status 图表状态
+ * @property { Number } system 0 为系统自动生成的多试验图表，1 为某实验所属图表
  * @property { Array<String> } source 图表数据来源列表，当前为实验名
  * @property { Object<String, Number> } source_map 图表数据来源映射，当前为实验ID
  * @property { Object | null } experiment_id 所属实验信息(多实验图表时为 null)
