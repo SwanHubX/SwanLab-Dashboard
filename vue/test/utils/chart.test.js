@@ -84,7 +84,7 @@ describe('formatLocalData => sections', () => {
   /**
    * 检测转化后的 section 数据
    * @param { Section[] } sections
-   * @param { Namespace[] } namespaces
+   * @param { import('@swanlab-vue/utils/chart').Namespace[] } namespaces
    */
   const checkSections = (sections, namespaces) => {
     sections.forEach((section, index) => {
