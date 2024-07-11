@@ -1,5 +1,44 @@
 /**
- * 图表相关
+ * @typedef { Object } OriginalChartData 本地版图表初始化接口返回的原始数据类型
+ * @property { Namespace[] } namespaces 命名空间
+ * @property { OriginalChart[] } charts 图表
+ */
+
+/**
+ * @typedef { Object } Namespace
+ * @property { Number } id 命名空间ID，-1表示置顶，-2表示隐藏
+ * @property { String } name 命名空间名称
+ * @property { String } description 命名空间描述
+ * @property { Number } sort 排序
+ * @property { Object | null } more 更多信息
+ * @property { Object | null } experiment_id 所属实验信息(多实验图表时为 null)
+ * @property { Object | null } project_id 所属项目信息(单实验图表时为 null)
+ * @property { Array<Number> } charts 图表ID数组
+ * @property { Number } opened 0表示收起，1表示展开
+ * @property { String } created_time 创建时间
+ * @property { String } updated_time 更新时间
+ */
+
+/**
+ * @typedef { Object } OriginalChart
+ * @property { Number } id 图表ID
+ * @property { 'default' | 'line' | 'image' | 'audio' | 'text' } type 图表类型
+ * @property { String } name 图表名称
+ * @property { String } description 图表描述
+ * @property { Boolean } multi 是否是多实验图表
+ * @property { String } reference 实验进度参考
+ * @property { Object | null } config 图表配置
+ * @property { Object | null } more 更多信息
+ * @property { Number | null } sort 排序
+ * @property { Object | null } error 错误信息
+ * @property { Number } status 图表状态
+ * @property { Number } system 0 为系统自动生成的多试验图表，1 为某实验所属图表
+ * @property { Array<String> } source 图表数据来源列表，当前为实验名
+ * @property { Object<String, Number> } source_map 图表数据来源映射，当前为实验ID
+ * @property { Object | null } experiment_id 所属实验信息(多实验图表时为 null)
+ * @property { Object | null } project_id 所属项目信息(单实验图表时为 null)
+ * @property { String } created_time 创建时间
+ * @property { String } updated_time 更新时间
  */
 
 const generateXAxis = () => {
@@ -99,48 +138,3 @@ export const formatLocalData = (data) => {
   })
   return [temp_sections, temp_charts]
 }
-
-// ---------------------------------- 本地版后端的原始数据结构 ----------------------------------
-
-/**
- * @typedef { Object } OriginalChartData
- * @property { Namespace[] } namespaces 命名空间
- * @property { OriginalChart[] } charts 图表
- */
-
-/**
- * @typedef { Object } Namespace
- * @property { Number } id 命名空间ID，-1表示置顶，-2表示隐藏
- * @property { String } name 命名空间名称
- * @property { String } description 命名空间描述
- * @property { Number } sort 排序
- * @property { Object | null } more 更多信息
- * @property { Object | null } experiment_id 所属实验信息(多实验图表时为 null)
- * @property { Object | null } project_id 所属项目信息(单实验图表时为 null)
- * @property { Array<Number> } charts 图表ID数组
- * @property { Number } opened 0表示收起，1表示展开
- * @property { String } created_time 创建时间
- * @property { String } updated_time 更新时间
- */
-
-/**
- * @typedef { Object } OriginalChart
- * @property { Number } id 图表ID
- * @property { 'default' | 'line' | 'image' | 'audio' | 'text' } type 图表类型
- * @property { String } name 图表名称
- * @property { String } description 图表描述
- * @property { Boolean } multi 是否是多实验图表
- * @property { String } reference 实验进度参考
- * @property { Object | null } config 图表配置
- * @property { Object | null } more 更多信息
- * @property { Number | null } sort 排序
- * @property { Object | null } error 错误信息
- * @property { Number } status 图表状态
- * @property { Number } system 0 为系统自动生成的多试验图表，1 为某实验所属图表
- * @property { Array<String> } source 图表数据来源列表，当前为实验名
- * @property { Object<String, Number> } source_map 图表数据来源映射，当前为实验ID
- * @property { Object | null } experiment_id 所属实验信息(多实验图表时为 null)
- * @property { Object | null } project_id 所属项目信息(单实验图表时为 null)
- * @property { String } created_time 创建时间
- * @property { String } updated_time 更新时间
- */

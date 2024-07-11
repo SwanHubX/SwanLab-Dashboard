@@ -2,6 +2,10 @@ import { describe, expect, it } from 'vitest'
 import { formatLocalData } from '@swanlab-vue/utils/chart'
 import { nanoid, customAlphabet } from 'nanoid'
 
+/** @typedef { Array<number | string> } RandomArray */
+
+/** @typedef {"default" | "line" | "image" | "text" | "audio"} ChartType */
+
 /**
  * 随机生成一个数组，长度在1-20之间，元素值在1-200之间
  * @param { 'number' | 'string' } type
@@ -251,9 +255,3 @@ describe('formatLocalData => charts', () => {
     checkErrorCharts(charts, originalCharts)
   })
 })
-
-/**
- * @typedef { Array<number | string> } RandomArray
- */
-
-/** @typedef {"default" | "line" | "image" | "text" | "audio"} ChartType */
