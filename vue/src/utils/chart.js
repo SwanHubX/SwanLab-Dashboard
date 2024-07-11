@@ -24,7 +24,7 @@ const generateYAxis = (key, name, type) => {
 
 /**
  * 针对本地版进行数据格式化
- * @param { OriginalData } data
+ * @param { OriginalChartData } data
  * @returns { [ Section[], Chart[]] } 格式化后的数据
  */
 export const formatLocalData = (data) => {
@@ -103,7 +103,7 @@ export const formatLocalData = (data) => {
 // ---------------------------------- 本地版后端的原始数据结构 ----------------------------------
 
 /**
- * @typedef { Object } OriginalData
+ * @typedef { Object } OriginalChartData
  * @property { Namespace[] } namespaces 命名空间
  * @property { OriginalChart[] } charts 图表
  */
