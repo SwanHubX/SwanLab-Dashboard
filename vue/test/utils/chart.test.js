@@ -81,6 +81,11 @@ const mockOriginalChart = (type = 'default', multi = false, reference = 'step') 
 }
 
 describe('formatLocalData => sections', () => {
+  /**
+   * 检测转化后的 section 数据
+   * @param { Section[] } sections
+   * @param { Namespace[] } namespaces
+   */
   const checkSections = (sections, namespaces) => {
     sections.forEach((section, index) => {
       const ns = namespaces[index]

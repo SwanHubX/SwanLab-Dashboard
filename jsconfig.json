@@ -11,5 +11,11 @@
     "resolveJsonModule": true
   },
   "exclude": ["node_modules", "dist", "vue/public"],
-  "include": ["vue/src/**/*.js", "vue/src/**/*.vue", "vue/auto-imports.d.ts", "vue/test/**/*.test.js"]
+  "include": [
+    "vue/docs/**/*.js",
+    "vue/src/**/*.js",
+    "vue/src/**/*.vue",
+    "vue/auto-imports.d.ts",
+    "vue/test/**/*.test.js"
+  ]
 }
