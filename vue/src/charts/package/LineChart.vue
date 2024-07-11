@@ -62,7 +62,6 @@ import makeSmooth from './smooth'
 import { needSmooth } from './smooth'
 import LineChartTooltip from '../components/LineChartTooltip.vue'
 import LineChartLegend from '../components/LineChartLegend.vue'
-import '@swanlab-vue/docs'
 
 // ---------------------------------- 配置 ----------------------------------
 const props = defineProps({
@@ -152,7 +151,7 @@ const colorField = 'type'
  * @param { HTMLElement } dom 图表挂载的dom
  * @param { Array } data 图表数据
  * @param { Object } config 图表的一些其他配置
- * @param { bool } zoom 是否放大
+ * @param { Boolean } zoom 是否放大
  */
 const createChart = (dom, data, config = {}, zoom = false) => {
   if (!dom) return
@@ -571,7 +570,7 @@ let nowThickenColor = null
 /**
  * 加粗指定tag的线段
  * @param { Object } plot plot对象，chartObj或者zoomChartObj
- * @param { bool } zoom 是否放大
+ * @param { Boolean } zoom 是否放大
  * @param { string } tag 实验标签
  */
 const thickenByTag = (plot, zoom, tag, color) => {
@@ -612,7 +611,7 @@ const thickenByTag = (plot, zoom, tag, color) => {
 /**
  * 将指定颜色的线段恢复原状
  * @param { Object } plot plot对象，chartObj或者zoomChartObj
- * @param { bool } zoom 是否放大
+ * @param { Boolean } zoom 是否放大
  * @param { string } tag 实验标签
  */
 const restoreByTag = (plot, zoom, tag, color) => {
@@ -646,7 +645,7 @@ const restoreByTag = (plot, zoom, tag, color) => {
 /**
  * 用于交给其他图表联动调用来加粗线段
  * @param { Object } plot plot对象，chartObj或者zoomChartObj
- * @param { bool } zoom 是否放大
+ * @param { Boolean } zoom 是否放大
  * @param { string } color 颜色
  */
 const thickenByTagLinkage = (zoom, tag, color) => {
