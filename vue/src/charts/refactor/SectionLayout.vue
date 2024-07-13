@@ -1,6 +1,9 @@
 <template>
   <Collapse v-model:activeKey="activeKeys" ghost>
     <CollapsePanel v-for="section in sections" :key="section.index" :header="section.name" class="panel">
+      <template #extra>
+        <div class="px-3 py-0.5 border rounded-full text-xs bg-highest">{{ section.chartIndex.length || 0 }}</div>
+      </template>
       <SectionBlock></SectionBlock>
     </CollapsePanel>
   </Collapse>
@@ -32,6 +35,11 @@ watch(
 
 <style lang="scss" scoped>
 .panel {
-  @apply w-full;
+  @apply w-full border-b py-2 relative;
+
+  &::before {
+    @apply w-full border-b border-default absolute bottom-0;
+    content: '';
+  }
 }
 </style>

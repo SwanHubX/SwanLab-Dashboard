@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-60 border"></div>
+  <div class="w-full h-60 px-4"></div>
 </template>
 
 <script setup>
