@@ -35,7 +35,12 @@ export const useChartStore = defineStore('chart', () => {
   /**
    * @type { Section[] } 分组信息
    */
-  const sections = ref([])
+  const sections = ref([
+    { index: '1', name: 'section1', pinned: false, folded: false, chartIndex: ['1', '2'], config: {} },
+    { index: '2', name: 'section2', pinned: false, folded: false, chartIndex: ['3', '4'], config: {} },
+    { index: '3', name: 'section3', pinned: false, folded: true, chartIndex: ['5', '6'], config: {} },
+    { index: '4', name: 'section4', pinned: false, folded: true, chartIndex: ['7', '8'], config: {} }
+  ])
   /**
    * @type { Chart[] } 图表信息
    */

@@ -7,6 +7,7 @@
     </div>
     <SmoothButton @smooth="handleSmooth" :default-method-id="1" />
   </div>
+  <TestRefactor />
   <!-- 每一个namespace对应一个图表容器 -->
   <ChartsContainer
     v-for="(group, index) in nowChartsGroupList"
@@ -38,6 +39,7 @@ import SmoothButton from './components/SmoothButton.vue'
 import { debounces } from '@swanlab-vue/utils/common'
 import SLSearch from '@swanlab-vue/components/SLSearch.vue'
 import { provide } from 'vue'
+import TestRefactor from './refactor/TestRefactor.vue'
 
 const props = defineProps({
   // 整个图表列表集合
