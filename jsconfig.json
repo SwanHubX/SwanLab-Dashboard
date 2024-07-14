@@ -12,7 +12,7 @@
   },
   "exclude": ["node_modules", "dist", "vue/public"],
   "include": [
-    "vue/docs/**/*.js",
+    "vue/docs/**/*.d.js",
     "vue/src/**/*.js",
     "vue/src/**/*.vue",
     "vue/auto-imports.d.ts",
