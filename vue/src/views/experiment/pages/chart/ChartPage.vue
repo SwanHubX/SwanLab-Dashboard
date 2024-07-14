@@ -1,7 +1,7 @@
 <template>
   <!-- 图表容器 -->
   <div class="chart-page" v-if="status === 'success'">
-    <ChartsBoard />
+    <ChartsBoard :sections="originalSections" :charts="originalCharts" />
     <!-- 图表不存在 -->
     <p class="font-semibold pt-5 text-center" v-if="groups.length === 0">Empty Chart</p>
   </div>
@@ -20,6 +20,7 @@ import { useRoute } from 'vue-router'
 import { onUnmounted } from 'vue'
 import { updateChartStatus, updateNamespaceStatus, media } from '@swanlab-vue/api/chart'
 import ChartsBoard from '@swanlab-vue/board/ChartsBoard.vue'
+import { formatLocalData } from '@swanlab-vue/utils/chart'
 const projectStore = useProjectStore()
 const experimentStore = useExperimentStore()
 const route = useRoute()
@@ -40,8 +41,14 @@ let cnMap = new Map()
 let charts = []
 const groups = ref([])
 const status = ref('initing')
+/** 暂时先这么放着,后面可能放到 store 里 */
+const originalSections = ref()
+const originalCharts = ref()
 ;(async function () {
   const { data } = await http.get(`/experiment/${experimentStore.id}/chart`)
+  const res = formatLocalData(data)
+  originalSections.value = res[0]
+  originalCharts.value = res[1]
   // 遍历完了，此时cnMap拿到了,模版部分可以依据这些东西渲染了
   parseCharts(data)
   // console.log(cnMap)

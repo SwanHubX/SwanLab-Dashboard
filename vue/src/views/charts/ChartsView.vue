@@ -1,14 +1,6 @@
 <template>
   <div class="flex flex-col min-h-full bg-higher">
-    <!-- <ChartsPage
-      :groups="groups"
-      :charts="charts"
-      :default-color="defaultColor"
-      :get-color="getColor"
-      :key="chartsPageKey"
-      v-if="groups.length"
-    /> -->
-    <ChartsBoard v-if="groups.length" />
+    <ChartsBoard :sections="originalSections" :charts="originalCharts" v-if="groups.length" />
     <!-- 图表不存在 -->
     <p class="font-semibold pt-5 text-center" v-else-if="ready">Empty Charts</p>
   </div>
@@ -28,11 +20,18 @@ import { ref } from 'vue'
 // import ChartsPage from './components/ChartsPage.vue'
 import ChartsBoard from '@swanlab-vue/board/ChartsBoard.vue'
 import { onUnmounted } from 'vue'
+import { formatLocalData } from '@swanlab-vue/utils/chart'
 
 const projectStore = useProjectStore()
+
+const originalSections = ref()
+const originalCharts = ref()
 // ---------------------------------- 请求数据 ----------------------------------
 
 http.get('/project/charts').then(({ data }) => {
+  const res = formatLocalData(data)
+  originalSections.value = res[0]
+  originalCharts.value = res[1]
   // 将namespaces转换为groups
   charts.value = data.charts
   namespaces.value = data.namespaces
