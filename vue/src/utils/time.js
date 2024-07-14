@@ -2,7 +2,6 @@ import moment from 'moment'
 import { t } from '@swanlab-vue/i18n'
 /**
  * 时间格式转换，转换为相对时间，转换结果由i18n提供
- * 相对时间只管显示，不管时区，如果需要时区转换，请使用convertUtcToLocal
  * @param { number } timestamp - 时间戳,单位为秒
  * @returns { string } "5 months ago"
  */
@@ -33,49 +32,13 @@ export function transTime(time) {
 }
 
 /**
- * 将 UTC 时间转换为当前浏览器时区的时间。
- *
- * @param {string} utcTime - UTC 时间字符串，使用 ISO 8601 格式。
- * @returns {Date} 格式化的本地时间
- * @throws {Error} 如果输入的时间字符串格式不正确。
- *
- * @example
- * // 使用示例
- * const utcTime = "2023-01-01T12:00:00Z";
- * const localTime = convertUtcToLocal(utcTime);
- * console.log("本地时间:", localTime);
- */
-export function convertUtcToLocal(utcTime) {
-  // 创建 UTC 时间的 Date 对象
-  var utcDate = new Date(utcTime)
-
-  // 获取本地时区的时间偏移（分钟）
-  var localTimeZoneOffset = new Date().getTimezoneOffset()
-
-  // 计算 UTC 时间与本地时间的时间差（毫秒）
-  var timeZoneDifference = localTimeZoneOffset * 60 * 1000
-
-  // 计算本地时间
-  var localTime = new Date(utcDate.getTime() - timeZoneDifference)
-
-  // 检查结果是否有效
-  if (isNaN(localTime.getTime())) {
-    throw new Error('Invalid UTC time format')
-  }
-
-  return localTime
-}
-
-/**
  * 格式化时间，接收一个时间戳，转化当前浏览器当前时区下的时间，输入时间为UTC时间
  * 例如：上海时区下，2023-12-04T04:44:33.026550Z转换为"2023/12/04 12:44:33"
  * @param {string} time - 时间字符串
  */
 
 export const formatTime = (time) => {
-  // 判断是否携带时区信息
-  const zone = typeof time === 'string' && time.endsWith('Z')
-  let { year, month, day, hour, minute, second } = getTimes(time, zone)
+  let { year, month, day, hour, minute, second } = getTimes(time)
   // 如果minute是个位数，转换成两位数
   if (month < 10) month = '0' + month
 
@@ -93,18 +56,11 @@ export const formatTime = (time) => {
 /**
  * 获取年月日时分秒
  * @param {string} time - 时间字符串
- * @param {boolean} zone - 是否需要时区转换，为true意味着携带时区信息，不需要时区转换
  */
-export const getTimes = (time, zone = true) => {
+export const getTimes = (time) => {
   let localDate
-  if (!zone) {
-    const date = new Date(time)
-    const timezoneOffset = new Date().getTimezoneOffset()
-    const localTime = date.getTime() - timezoneOffset * 60 * 1000
-    localDate = new Date(localTime)
-  } else {
-    localDate = new Date(time)
-  }
+  localDate = new Date(time)
+
   const year = localDate.getFullYear()
   let month = localDate.getMonth() + 1
   let day = localDate.getDate()
