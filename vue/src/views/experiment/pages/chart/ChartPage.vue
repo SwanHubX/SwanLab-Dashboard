@@ -28,7 +28,7 @@ import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { onUnmounted } from 'vue'
 import { updateChartStatus, updateNamespaceStatus, media } from '@swanlab-vue/api/chart'
-import ChartsDashboard from '@swanlab-vue/charts/ChartsDashboard.vue'
+import ChartsDashboard from '@swanlab-vue/dashboard/ChartsDashboard.vue'
 const projectStore = useProjectStore()
 const experimentStore = useExperimentStore()
 const chartStore = useChartStore()

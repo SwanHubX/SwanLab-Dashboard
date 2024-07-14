@@ -20,7 +20,7 @@
 import { useProjectStore } from '@swanlab-vue/store'
 import { onUnmounted } from 'vue'
 import http from '@swanlab-vue/api/http'
-import ChartsDashboard from '@swanlab-vue/charts/ChartsDashboard.vue'
+import ChartsDashboard from '@swanlab-vue/dashboard/ChartsDashboard.vue'
 import { updateChartStatus, updateNamespaceStatus, media } from '@swanlab-vue/api/chart'
 const props = defineProps({
   // 图表组
