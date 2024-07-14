@@ -1,16 +1,7 @@
 <template>
   <!-- 图表容器 -->
   <div class="chart-page" v-if="status === 'success'">
-    <ChartsDashboard
-      :groups="groups"
-      :update-chart-status="updateChartStatus"
-      :update-namespace-status="updateNamespaceStatus"
-      :media="media"
-      :default-color="defaultColor"
-      :get-color="getColor"
-      :subscribe="on"
-      :unsubscribe="off"
-    />
+    <ChartsBoard />
     <!-- 图表不存在 -->
     <p class="font-semibold pt-5 text-center" v-if="groups.length === 0">Empty Chart</p>
   </div>
@@ -22,16 +13,15 @@
  * @file: ChartPage.vue
  * @since: 2023-12-25 15:34:51
  **/
-import { useExperimentStore, useProjectStore, useChartStore } from '@swanlab-vue/store'
+import { useExperimentStore, useProjectStore } from '@swanlab-vue/store'
 import http from '@swanlab-vue/api/http'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { onUnmounted } from 'vue'
 import { updateChartStatus, updateNamespaceStatus, media } from '@swanlab-vue/api/chart'
-import ChartsDashboard from '@swanlab-vue/dashboard/ChartsDashboard.vue'
+import ChartsBoard from '@swanlab-vue/board/ChartsBoard.vue'
 const projectStore = useProjectStore()
 const experimentStore = useExperimentStore()
-const chartStore = useChartStore()
 const route = useRoute()
 
 // ---------------------------------- 颜色配置，注入色盘 ----------------------------------
@@ -53,7 +43,6 @@ const status = ref('initing')
 ;(async function () {
   const { data } = await http.get(`/experiment/${experimentStore.id}/chart`)
   // 遍历完了，此时cnMap拿到了,模版部分可以依据这些东西渲染了
-  chartStore.init(data, () => {}, true)
   parseCharts(data)
   // console.log(cnMap)
 })().then(() => {

@@ -1,4 +1,9 @@
-<template></template>
+<template>
+  <div>
+    <div class="chart-header">搜索和顺滑度</div>
+    <div>sections</div>
+  </div>
+</template>
 
 <script setup>
 /**
@@ -14,4 +19,8 @@
 const props = defineProps(['sections', 'charts'])
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.chart-header {
+  @apply border-b px-6 py-3;
+}
+</style>
