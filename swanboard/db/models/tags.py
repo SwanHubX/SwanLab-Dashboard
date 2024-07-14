@@ -114,6 +114,7 @@ class Tag(SwanModel):
             return super().create(
                 experiment_id=experiment_id,
                 name=name,
+                folder=folder,
                 type=type,
                 description=description,
                 system=system,
