@@ -4,7 +4,7 @@
       <template #extra>
         <div class="px-3 py-0.5 border rounded-full text-xs bg-highest">{{ section.chartIndex.length || 0 }}</div>
       </template>
-      <SectionBlock></SectionBlock>
+      <SectionBlock :index="section.index" />
     </CollapsePanel>
   </Collapse>
 </template>
