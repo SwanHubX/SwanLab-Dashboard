@@ -10,6 +10,8 @@
  * @property {String} name 分组名
  * @property {Boolean} folded 是否折叠
  * @property {Object} [config] 分组配置
+ * @property {7 | 6 | 4 | 3 | 2 | 1} cols 分组内部图表列数（一行最多显示几个图表）
+ * @property { Number } rowHeight 分组内部图表行高
  * @property {IndexId[]} chartIndex 分组内的图表 ID 列表，用于排序，每个元素为唯一识别的图表 {@link IndexId}
  */
 
