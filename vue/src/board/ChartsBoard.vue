@@ -1,7 +1,7 @@
 <template>
   <section>
     <SectionPuzzle
-      v-for="section in showSections"
+      v-for="section in nowSections"
       :key="section.index"
       :section="section"
       :charts="filterChartsBySection(section)"
@@ -31,7 +31,7 @@ const nowCharts = computed(() => {
 /**
  * 当前显示的所有section
  */
-const showSections = computed(() => {
+const nowSections = computed(() => {
   return props.sections
 })
 
