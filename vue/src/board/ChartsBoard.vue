@@ -1,13 +1,11 @@
 <template>
   <Collapse v-model:activeKey="activeKeys" ghost>
-    <CollapsePanel v-for="section in showSections" :key="section.index" :header="section.name" class="panel">
-      <template #extra>
-        <div class="px-3 py-0.5 border rounded-full text-xs bg-highest grow">
-          {{ section.chartIndex.length || 0 }}
-        </div>
-      </template>
-      <SectionPuzzle :section="section" :charts="filterChartsBySection(section)" />
-    </CollapsePanel>
+    <SectionPuzzle
+      v-for="section in showSections"
+      :key="section.index"
+      :section="section"
+      :charts="filterChartsBySection(section)"
+    />
   </Collapse>
 </template>
 
@@ -17,7 +15,7 @@
  * @file: ChartsBoard.vue
  * @since: 2024-07-14 20:43:37
  **/
-import { Collapse, CollapsePanel } from 'ant-design-vue'
+import { Collapse } from 'ant-design-vue'
 import SectionPuzzle from './puzzle/SectionPuzzle.vue'
 
 /**
@@ -61,15 +59,6 @@ watch(
 <style lang="scss">
 .chart-header {
   @apply border-b px-6 py-3 flex justify-between;
-}
-
-.panel {
-  @apply w-full border-b py-2 relative;
-
-  &::before {
-    @apply w-full border-b border-default absolute bottom-0;
-    content: '';
-  }
 }
 
 .ant-collapse-header {
