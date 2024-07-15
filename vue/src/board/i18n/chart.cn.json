@@ -60,5 +60,11 @@
   "unpin": "取消置顶",
   "more": "更多操作",
   "hide": "隐藏",
-  "unhide": "取消隐藏"
+  "unhide": "取消隐藏",
+  "default-name": {
+    "text": "文本",
+    "image": "图像",
+    "audio": "音频",
+    "default": "图表"
+  }
 }

@@ -60,5 +60,11 @@
   "unpin": "Unpin",
   "more": "More actions",
   "hide": "Hide",
-  "unhide": "Unhide"
+  "unhide": "Unhide",
+  "default-name": {
+    "Text": "Text",
+    "Image": "Image",
+    "Audio": "Audio",
+    "default": "Charts"
+  }
 }

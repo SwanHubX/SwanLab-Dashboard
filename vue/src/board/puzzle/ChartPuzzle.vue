@@ -1,5 +1,15 @@
 <template>
-  <div>{{ chart.type }}</div>
+  <div class="w-full">
+    <div class="h-6 px-2 flex justify-end items-center text-xs">图表工具</div>
+    <!-- 错误 -->
+    <div v-if="error">{{ error }}</div>
+    <!-- 主体 -->
+    <component :is="charts[chart.type.toLocaleLowerCase()]" v-else></component>
+    <!-- 放大 -->
+    <div v-if="false">
+      <component :is="charts[chart.type.toLocaleLowerCase()]"></component>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -27,6 +37,17 @@ const props = defineProps({
     type: Boolean,
     default: false
   }
+})
+
+// 错误信息
+const error = computed(() => {
+  let e = null
+  props.chart.metrics.forEach((metric) => {
+    if (metric.column.error) {
+      e = metric.column.error
+    }
+  })
+  return e
 })
 </script>
 
