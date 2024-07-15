@@ -1,5 +1,6 @@
 <template>
-  <CollapsePanel :header="section.name" class="panel" v-if="charts.length">
+  <CollapsePanel class="panel" v-if="charts.length">
+    <template #header> {{ section.name }} </template>
     <template #extra>
       <div class="px-3 py-0.5 border rounded-full text-xs bg-highest grow">
         {{ section.chartIndex.length || 0 }}
