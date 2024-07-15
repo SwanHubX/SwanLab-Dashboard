@@ -7,9 +7,7 @@
       </div>
     </template>
     <!-- 标准布局/可移动布局 -->
-    <component :is="layout" :charts="charts"></component>
-    <!-- 分页器 -->
-    <div class="w-full py-4 flex justify-end"><Pagination v-model:current="current" simple :total="50" /></div>
+    <component :is="nowLayout" :charts="charts" :section="section" />
   </CollapsePanel>
 </template>
 
@@ -19,7 +17,7 @@
  * @file: SectionFlow.vue
  * @since: 2024-07-14 20:54:09
  **/
-import { CollapsePanel, Pagination } from 'ant-design-vue'
+import { CollapsePanel } from 'ant-design-vue'
 import StandardLayout from './layout/StandardLayout.vue'
 import MobileLayout from './layout/MobileLayout.vue'
 import { t } from '@swanlab-vue/i18n'
@@ -29,25 +27,24 @@ import { t } from '@swanlab-vue/i18n'
 // @ts-ignore
 const props = defineProps(['section', 'charts'])
 
-// section名称，对某些特殊名称需要特殊处理
+/**
+ * 此section的名称，对某些特殊名称需要特殊处理
+ */
 const sectionName = computed(() => {
   const name = props.section.name
-  if (['default', 'Image', 'Audio', 'Text', 'Text'].includes(name)) return t(`chart.default-name.${name}`)
+  if (['default', 'Image', 'Audio', 'Text', 'Media', 'pinned', 'hidden'].includes(name))
+    return t(`chart.section.name.${name}`)
   return name
 })
 
-const layout = computed(() => {
-  return 0 < props.charts.length ? StandardLayout : MobileLayout
-})
-
-const current = ref(1)
+const nowLayout = shallowRef(StandardLayout)
 </script>
 
 <style lang="scss" scoped>
 .panel {
   @apply w-full border-b py-2 relative;
 
-  &::before {
+  &:not(:last-child)::before {
     @apply w-full border-b border-default absolute bottom-0;
     content: '';
   }

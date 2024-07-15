@@ -1,15 +1,5 @@
 <template>
-  <div class="w-full">
-    <div class="h-6 px-2 flex justify-end items-center text-xs">图表工具</div>
-    <!-- 错误 -->
-    <div v-if="error">{{ error }}</div>
-    <!-- 主体 -->
-    <component :is="charts[chart.type.toLocaleLowerCase()]" v-else></component>
-    <!-- 放大 -->
-    <div v-if="false">
-      <component :is="charts[chart.type.toLocaleLowerCase()]"></component>
-    </div>
-  </div>
+  <div class="w-full bg-white-default border rounded"></div>
 </template>
 
 <script setup>
