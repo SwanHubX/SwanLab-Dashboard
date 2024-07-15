@@ -1,4 +1,8 @@
-<template>图表</template>
+<template>
+  <div>
+    {{ chart.type }}
+  </div>
+</template>
 
 <script setup>
 /**
@@ -6,7 +10,7 @@
  * @file: ChartPuzzle.vue
  * @since: 2024-07-14 20:57:49
  **/
-import charts from '@swanlab-vue/board/charts'
+// import charts from '@swanlab-vue/board/charts'
 /**
  * @typedef {Object} ChartPuzzleProps
  * @property {Chart} chart - 图表配置

@@ -5,7 +5,18 @@
         {{ section.chartIndex.length || 0 }}
       </div>
     </template>
-    <div>{{ section }}</div>
+    <Row :gutter="[24, 24]">
+      <Col
+        v-for="chart in charts"
+        :key="chart.index"
+        :md="24"
+        :lg="isMedia(chart.type) ? 24 : 12"
+        :xl="isMedia(chart.type) ? 24 : 8"
+      >
+        {{ isMedia(chart.type) }}
+        <ChartPuzzle :chart="chart" class="border" />
+      </Col>
+    </Row>
   </CollapsePanel>
 </template>
 
@@ -15,12 +26,17 @@
  * @file: SectionFlow.vue
  * @since: 2024-07-14 20:54:09
  **/
-import { CollapsePanel } from 'ant-design-vue'
+import { CollapsePanel, Row, Col } from 'ant-design-vue'
+import ChartPuzzle from './ChartPuzzle.vue'
 /**
  * @type {{section: Section, charts: Chart[]}} Props
  */
 // @ts-ignore
 const props = defineProps(['section', 'charts'])
+
+const isMedia = (type) => {
+  return ['image', 'audio', 'text'].includes(type.toLowerCase())
+}
 </script>
 
 <style lang="scss" scoped>
