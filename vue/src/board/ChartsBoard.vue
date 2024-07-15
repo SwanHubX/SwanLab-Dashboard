@@ -1,12 +1,11 @@
 <template>
   <section>
-    <div class="chart-header">
-      <div class="w-60 mr-2">
-        <SLSearch :placeholder="$t('chart.search.placeholder')" reverse @search="search" @input="search" />
-      </div>
-      <SLButton theme="primary" class="px-3 py-1 rounded-lg">顺滑 </SLButton>
-    </div>
-    <SectionPuzzle :section="section" v-for="section in sections" :key="section.index" />
+    <SectionPuzzle
+      v-for="section in showSections"
+      :key="section.index"
+      :section="section"
+      :charts="filterChartsBySection(section)"
+    />
   </section>
 </template>
 
@@ -16,27 +15,32 @@
  * @file: ChartsBoard.vue
  * @since: 2024-07-14 20:43:37
  **/
-import SLButton from '@swanlab-vue/components/SLButton.vue'
-import SLSearch from '@swanlab-vue/components/SLSearch.vue'
 import SectionPuzzle from './puzzle/SectionPuzzle.vue'
-import { useBoardStore } from './store'
 
 /**
- * @type {Object} Props
- * @property {Section[]} sections
- * @property {Chart[]} charts
+ * @type {{sections: Section[], charts: Chart[]}} Props
  */
+// @ts-ignore
 const props = defineProps(['sections', 'charts'])
-
-const boardStore = useBoardStore()
-
-onMounted(() => {
-  boardStore.init(props.sections, props.charts)
+/**
+ * 当前显示在前端的所有图表（包括分页）
+ */
+const nowCharts = computed(() => {
+  return props.charts
 })
-// ---------------------------------- 搜索相关 ----------------------------------
+/**
+ * 当前显示的所有section
+ */
+const showSections = computed(() => {
+  return props.sections
+})
 
-const search = (value) => {
-  console.log(value)
+/**
+ * 根据section过滤图表，获取到这个section包含的所有图表
+ * @param {Section} section section配置
+ */
+const filterChartsBySection = (section) => {
+  return nowCharts.value.filter((chart) => section.chartIndex.includes(chart.index))
 }
 </script>
 

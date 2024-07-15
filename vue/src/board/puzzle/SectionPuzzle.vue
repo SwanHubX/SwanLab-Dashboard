@@ -1,7 +1,5 @@
 <template>
-  <div>
-    {{ section }}
-  </div>
+  <div v-if="charts.length"></div>
 </template>
 
 <script setup>
@@ -12,10 +10,10 @@
  **/
 
 /**
- * @type {Object} Props
- * @property {Section[]} sections
+ * @type {{section: Section, charts: Chart[]}} Props
  */
-const props = defineProps(['section'])
+// @ts-ignore
+const props = defineProps(['section', 'charts'])
 </script>
 
 <style lang="scss" scoped></style>
