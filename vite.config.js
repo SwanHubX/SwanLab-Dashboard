@@ -3,7 +3,6 @@ import { defineConfig, loadEnv } from 'vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
-import json5Plugin from 'vite-plugin-json5'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
 // https://vitejs.dev/config/
@@ -21,7 +20,6 @@ export default defineConfig(({ mode }) => {
   return {
     // 服务插件
     plugins: [
-      json5Plugin(),
       vue(),
       // 自动化导入
       AutoImport({
