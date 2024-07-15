@@ -126,7 +126,7 @@ export const formatLocalData = (data) => {
       temp.metrics.push({
         axis: temp.type === 'LINE' ? 'Y' : 'X',
         colors: [],
-        expId: chart.source_map[m],
+        expId: String(chart.source_map[m]),
         name: m,
         column: JSON.parse(JSON.stringify(yAxis)) // 深拷贝，防止在下一步错误处理中添加错误时让所有 metric 都报错
       })
