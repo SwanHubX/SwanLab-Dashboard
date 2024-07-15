@@ -5,18 +5,10 @@
         {{ section.chartIndex.length || 0 }}
       </div>
     </template>
-    <Row :gutter="[24, 24]">
-      <Col
-        v-for="chart in charts"
-        :key="chart.index"
-        :md="24"
-        :lg="isMedia(chart.type) ? 24 : 12"
-        :xl="isMedia(chart.type) ? 24 : 8"
-      >
-        {{ isMedia(chart.type) }}
-        <ChartPuzzle :chart="chart" class="border" />
-      </Col>
-    </Row>
+    <!-- 标准布局/可移动布局 -->
+    <component :is="layout" :charts="charts"></component>
+    <!-- 分页器 -->
+    <div class="w-full py-4 flex justify-end"><Pagination v-model:current="current" simple :total="50" /></div>
   </CollapsePanel>
 </template>
 
@@ -26,17 +18,20 @@
  * @file: SectionFlow.vue
  * @since: 2024-07-14 20:54:09
  **/
-import { CollapsePanel, Row, Col } from 'ant-design-vue'
-import ChartPuzzle from './ChartPuzzle.vue'
+import { CollapsePanel, Pagination } from 'ant-design-vue'
+import StandardLayout from './layout/StandardLayout.vue'
+import MobileLayout from './layout/MobileLayout.vue'
 /**
  * @type {{section: Section, charts: Chart[]}} Props
  */
 // @ts-ignore
 const props = defineProps(['section', 'charts'])
 
-const isMedia = (type) => {
-  return ['image', 'audio', 'text'].includes(type.toLowerCase())
-}
+const layout = computed(() => {
+  return 0 < props.charts.length ? StandardLayout : MobileLayout
+})
+
+const current = ref(1)
 </script>
 
 <style lang="scss" scoped>
