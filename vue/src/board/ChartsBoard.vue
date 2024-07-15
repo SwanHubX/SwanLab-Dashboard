@@ -1,12 +1,12 @@
 <template>
-  <section>
-    <SectionPuzzle
-      v-for="section in showSections"
-      :key="section.index"
-      :section="section"
-      :charts="filterChartsBySection(section)"
-    />
-  </section>
+  <Collapse v-model:activeKey="activeKeys" ghost>
+    <CollapsePanel v-for="section in showSections" :key="section.index" :header="section.name" class="panel">
+      <template #extra>
+        <div class="px-3 py-0.5 border rounded-full text-xs bg-highest">{{ section.chartIndex.length || 0 }}</div>
+      </template>
+      <SectionPuzzle :section="section" :charts="filterChartsBySection(section)" />
+    </CollapsePanel>
+  </Collapse>
 </template>
 
 <script setup>
@@ -15,6 +15,7 @@
  * @file: ChartsBoard.vue
  * @since: 2024-07-14 20:43:37
  **/
+import { Collapse, CollapsePanel } from 'ant-design-vue'
 import SectionPuzzle from './puzzle/SectionPuzzle.vue'
 
 /**
@@ -42,10 +43,30 @@ const showSections = computed(() => {
 const filterChartsBySection = (section) => {
   return nowCharts.value.filter((chart) => section.chartIndex.includes(chart.index))
 }
+
+// ---------------------------------- 展开/折叠 ----------------------------------
+
+const activeKeys = ref([])
+watch(
+  () => props.sections,
+  () => {
+    activeKeys.value = props.sections.filter((s) => !s.folded).map((s) => s.index)
+  },
+  { immediate: true }
+)
 </script>
 
 <style lang="scss" scoped>
 .chart-header {
   @apply border-b px-6 py-3 flex justify-between;
+}
+
+.panel {
+  @apply w-full border-b py-2 relative;
+
+  &::before {
+    @apply w-full border-b border-default absolute bottom-0;
+    content: '';
+  }
 }
 </style>

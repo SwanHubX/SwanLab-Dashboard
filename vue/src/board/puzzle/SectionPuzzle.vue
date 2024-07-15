@@ -1,7 +1,5 @@
 <template>
-  <div v-if="charts.length">
-    {{ section }}
-  </div>
+  <div v-if="charts.length">{{ section }}</div>
 </template>
 
 <script setup>
