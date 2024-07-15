@@ -2,7 +2,9 @@
   <Collapse v-model:activeKey="activeKeys" ghost>
     <CollapsePanel v-for="section in showSections" :key="section.index" :header="section.name" class="panel">
       <template #extra>
-        <div class="px-3 py-0.5 border rounded-full text-xs bg-highest">{{ section.chartIndex.length || 0 }}</div>
+        <div class="px-3 py-0.5 border rounded-full text-xs bg-highest grow">
+          {{ section.chartIndex.length || 0 }}
+        </div>
       </template>
       <SectionPuzzle :section="section" :charts="filterChartsBySection(section)" />
     </CollapsePanel>
@@ -56,7 +58,7 @@ watch(
 )
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .chart-header {
   @apply border-b px-6 py-3 flex justify-between;
 }
@@ -68,5 +70,16 @@ watch(
     @apply w-full border-b border-default absolute bottom-0;
     content: '';
   }
+}
+
+.ant-collapse-header {
+  align-items: center !important;
+}
+
+.ant-collapse-header-text {
+  flex: none !important;
+  margin-inline-end: unset !important;
+  padding-inline-end: 1rem;
+  @apply text-base;
 }
 </style>
