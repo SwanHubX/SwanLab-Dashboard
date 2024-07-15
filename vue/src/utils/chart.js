@@ -69,36 +69,41 @@ const generateYAxis = (key, name, type) => {
 export const formatLocalData = (data) => {
   const { namespaces, charts } = data
   // ---------------------------------- section 相关 ----------------------------------
-  /** @type { Section[] } */
-  const temp_sections = namespaces.map((/** @type {Namespace} */ ns) => {
+  /** @type {Section[]} */
+  const tempSections = namespaces.map((/** @type {Namespace} */ ns) => {
     const temp = {
       name: ns.name,
       chartIndex: ns.charts.map((v) => String(v)),
-      pinned: false,
       folded: ns.opened === 0,
       config: ns.more,
       index: String(ns.id),
-      type: null
+      type: null,
+      rowHeight: 400,
+      cols: /** @type {7 | 6 | 4 | 3 | 2 | 1} */ (3)
     }
     // 处理图表分类块的类别：[PUBLIC, PINNED, HIDDEN]
-    if (ns.name === 'pinned' && ns.id === -1) {
-      temp.type = 'PINNED'
-      temp.pinned = true
-    } else if (ns.name === 'hidden' && ns.id === -2) temp.type = 'HIDDEN'
+    if (ns.name === 'pinned' && ns.id === -1) temp.type = 'PINNED'
+    else if (ns.name === 'hidden' && ns.id === -2) temp.type = 'HIDDEN'
     else temp.type = 'PUBLIC'
+    // 媒体类型的空间默认 1 列,高度300
+    if (['image', 'audio', 'text', 'media'].includes(temp.name.toLowerCase())) {
+      temp.cols = 1
+      temp.rowHeight = 300
+    }
     return temp
   })
   // ---------------------------------- chart 相关 ----------------------------------
-  /** @type { Chart[] } */
-  const temp_charts = charts.map((chart) => {
+  /** @type {Chart[]} */
+  const tempCharts = charts.map((chart) => {
+    const type = chart.type.toUpperCase()
     const temp = {
       index: String(chart.id),
       title: chart.name,
       config: chart.config,
-      type: chart.type.toUpperCase(),
+      color: /** @type {'#528d59'} */ ('#528d59'),
+      type: /** @type {'LINE' | 'TEXT' | 'IMAGE' | 'AUDIO'} */ (type === 'DEFAULT' ? 'LINE' : type),
       metrics: []
     }
-    if (temp.type === 'DEFAULT') temp.type = 'LINE'
     // ---------------------------------- metric 相关 ----------------------------------
     const yAxis = generateYAxis(temp.title, temp.title, temp.type === 'LINE' ? 'FLOAT' : temp.type)
     const xAxis = generateXAxis()
@@ -136,5 +141,5 @@ export const formatLocalData = (data) => {
     })
     return temp
   })
-  return [temp_sections, temp_charts]
+  return [tempSections, tempCharts]
 }

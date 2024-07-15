@@ -95,7 +95,6 @@ describe('formatLocalData => sections', () => {
       const ns = namespaces[index]
       expect(section.index).toEqual(String(ns.id))
       expect(section.name).toEqual(ns.name)
-      expect(section.pinned).toEqual(ns.id === -1 && ns.name === 'pinned')
       expect(section.folded).toEqual(ns.opened === 0)
       expect(section.chartIndex).toEqual(ns.charts.map((item) => String(item)))
       expect(section.config).toEqual(ns.more)
@@ -113,16 +112,34 @@ describe('formatLocalData => sections', () => {
     checkSections(sections, namespaces)
   })
 
-  it('pinned namespace', () => {
+  it('pinned sections', () => {
     const namespaces = [mockOriginalNamespace(-1, 'pinned', 1), mockOriginalNamespace(2, 'test', 1)]
     const [sections] = formatLocalData({ namespaces, charts: [] })
     checkSections(sections, namespaces)
   })
 
-  it('hidden namespace', () => {
+  it('hidden sections', () => {
     const namespaces = [mockOriginalNamespace(-2, 'hidden', 0), mockOriginalNamespace(2, 'test', 1)]
     const [sections] = formatLocalData({ namespaces, charts: [] })
     checkSections(sections, namespaces)
+  })
+
+  it('media and common section', () => {
+    const medias = ['image', 'audio', 'text', 'media']
+    const namespaces = medias.map((name) => mockOriginalNamespace(Number(customAlphabet('123456789', 4)()), name))
+    const [sections] = formatLocalData({ namespaces, charts: [] })
+    sections.forEach((section) => {
+      // 媒体类型的空间默认 1 列,高度300
+      expect(section.cols).toEqual(1)
+      expect(section.rowHeight).toEqual(300)
+    })
+    const commonNamespaces = [mockOriginalNamespace()]
+    const [commonSections] = formatLocalData({ namespaces: commonNamespaces, charts: [] })
+    commonSections.forEach((section) => {
+      // 普通类型的空间默认 3 列,高度400
+      expect(section.cols).toEqual(3)
+      expect(section.rowHeight).toEqual(400)
+    })
   })
 })
 
@@ -138,6 +155,7 @@ describe('formatLocalData => charts', () => {
       expect(chart.index).toEqual(String(oc.id))
       expect(chart.type).toEqual(oc.type === 'default' ? 'LINE' : oc.type.toUpperCase())
       expect(chart.title).toEqual(oc.name)
+      expect(chart.color).toEqual('#528d59')
       /** @type { Metric[] } */
       const metrics = chart.metrics
       /**
