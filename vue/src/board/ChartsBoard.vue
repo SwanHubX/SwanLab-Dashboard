@@ -30,11 +30,6 @@ const props = defineProps(['sections', 'charts'])
 
 const boardStore = useBoardStore()
 
-/**
- * @type { import('vue').ComputedRef<Section[]> }
- */
-const sections = computed(() => props.sections)
-
 onMounted(() => {
   boardStore.init(props.sections, props.charts)
 })
