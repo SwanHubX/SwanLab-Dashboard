@@ -20,21 +20,51 @@ import http from '@swanlab-vue/api/http'
 import { ref } from 'vue'
 import ChartsBoard from '@swanlab-vue/board/ChartsBoard.vue'
 import { formatLocalData } from '@swanlab-vue/utils/chart'
+import { useProjectStore } from '@swanlab-vue/store'
+const projectStore = useProjectStore()
 
 /**
  * @type {Ref<Section[]>} sections section配置
  */
-const sections = ref()
+const sections = shallowRef()
 /**
  * @type {Ref<Chart[]>} charts 图表配置
  */
-const charts = ref()
+const charts = computed(() => {
+  // 根据不显示的实验id过滤图表
+  /**
+   * @type {Chart[]} cs
+   */
+  const cs = []
+  _charts.value.forEach((chart) => {
+    const c = { ...chart, metrics: [...chart.metrics] }
+    // 过滤不显示的实验
+    c.metrics = c.metrics.filter((metric) => !expIds.value.includes(metric.expId))
+    if (c.metrics.length && c.metrics.some((m) => m.column.class !== 'SYSTEM')) {
+      cs.push(c)
+    }
+  })
+  // console.log(cs)
+  return cs
+})
+
+/**
+ * @type {Ref<Chart[]>} charts 全部的图表配置
+ */
+const _charts = shallowRef([])
+
+/**
+ * @type {Ref<IndexId[]>} expIds 当前不显示的实验id
+ */
+const expIds = computed(() => {
+  return projectStore.experiments.map((exp) => (exp.show ? undefined : exp.id.toString())).filter((id) => id)
+})
 // ---------------------------------- 请求数据 ----------------------------------
 const ready = ref(false)
 http.get('/project/charts').then(({ data }) => {
   const r = formatLocalData(data)
   sections.value = r[0]
-  charts.value = r[1]
+  _charts.value = r[1]
   ready.value = true
 })
 </script>

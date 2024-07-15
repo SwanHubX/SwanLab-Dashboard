@@ -111,21 +111,11 @@ export const useProjectStore = defineStore('project', () => {
   /**
    * 修改实验的显示状态，是否显示，二元状态，如果show为1，则改为0，反之亦然
    */
-  let changeShowCallback = null
   const changeExperimentShow = (id) => {
     const experiment = experiments.value.find((e) => e.experiment_id == id)
     experiment.show = experiment.show ? 0 : 1
-    changeShowCallback && changeShowCallback(id, experiment.show)
     return experiment.show
   }
-
-  const registerChangeShowCallback = (callback) => {
-    changeShowCallback = callback
-  }
-  const destoryChangeShowCallback = () => {
-    changeShowCallback = null
-  }
-
   return {
     sum,
     name,
@@ -144,8 +134,6 @@ export const useProjectStore = defineStore('project', () => {
     clearProject,
     setExperimentStatus,
     setExperimentInfo,
-    changeExperimentShow,
-    registerChangeShowCallback,
-    destoryChangeShowCallback
+    changeExperimentShow
   }
 })
