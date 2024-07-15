@@ -2,6 +2,7 @@
 import { defineConfig, loadEnv } from 'vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
+import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import json5Plugin from 'vite-plugin-json5'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
@@ -28,7 +29,8 @@ export default defineConfig(({ mode }) => {
         dts: 'auto-imports.d.ts',
         eslintrc: {
           enabled: true
-        }
+        },
+        resolvers: [AntDesignVueResolver()]
       }),
       // 自动导入组件，自定义组件库
       Components({
@@ -37,7 +39,8 @@ export default defineConfig(({ mode }) => {
         // 文件扩展名
         extensions: ['vue'],
         // 配置type文件生成位置
-        dts: 'components.d.ts'
+        dts: 'components.d.ts',
+        resolvers: [AntDesignVueResolver({ importStyle: false, resolveIcons: true })]
       })
     ],
     root: 'vue',

@@ -1,5 +1,5 @@
 <template>
-  <ChartsDashboard
+  <!-- <ChartsDashboard
     :groups="groups"
     :update-chart-status="updateChartStatus"
     :update-namespace-status="updateNamespaceStatus"
@@ -7,7 +7,8 @@
     :default-color="defaultColor"
     :get-color="getColor"
     :subscribe="on"
-  />
+  /> -->
+  <ChartsBoard />
 </template>
 
 <script setup>
@@ -20,8 +21,10 @@
 import { useProjectStore } from '@swanlab-vue/store'
 import { onUnmounted } from 'vue'
 import http from '@swanlab-vue/api/http'
-import ChartsDashboard from '@swanlab-vue/charts/ChartsDashboard.vue'
+// import ChartsDashboard from '@swanlab-vue/dashboard/ChartsDashboard.vue'
+import ChartsBoard from '@swanlab-vue/board/ChartsBoard.vue'
 import { updateChartStatus, updateNamespaceStatus, media } from '@swanlab-vue/api/chart'
+
 const props = defineProps({
   // 图表组
   groups: {
