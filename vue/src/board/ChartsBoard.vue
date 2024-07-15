@@ -6,11 +6,7 @@
       </div>
       <SLButton theme="primary" class="px-3 py-1 rounded-lg">顺滑 </SLButton>
     </div>
-    <div>
-      {{ sections }}
-      <hr />
-      {{ charts }}
-    </div>
+    <SectionPuzzle :section="section" v-for="section in sections" :key="section.index" />
   </section>
 </template>
 
@@ -22,19 +18,26 @@
  **/
 import SLButton from '@swanlab-vue/components/SLButton.vue'
 import SLSearch from '@swanlab-vue/components/SLSearch.vue'
+import SectionPuzzle from './puzzle/SectionPuzzle.vue'
+import { useBoardStore } from './store'
 
 /**
- * 需要传入的属性，一个图表看板包含多个section和多个chart
- * @type {{sections: Section[], charts: Chart[]}}
+ * @type {Object} Props
+ * @property {Section[]} sections
+ * @property {Chart[]} charts
  */
 const props = defineProps(['sections', 'charts'])
+
+const boardStore = useBoardStore()
 
 /**
  * 用 props 还是用 store
  */
 const sections = computed(() => props.sections)
-const charts = computed(() => props.charts)
 
+onMounted(() => {
+  boardStore.init(props.sections, props.charts)
+})
 // ---------------------------------- 搜索相关 ----------------------------------
 
 const search = (value) => {
