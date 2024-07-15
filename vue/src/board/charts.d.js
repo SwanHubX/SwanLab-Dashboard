@@ -20,6 +20,7 @@
  * @typedef {Object} Chart
  * @property {IndexId} index 图表 ID
  * @property {String} title 图表名
+ * @property {'#528d59'} color 图表默认颜色
  * @property {Object} [config] 图表配置
  * @property {'LINE' | 'TEXT' | 'IMAGE' | 'AUDIO'} type 图表类型，分配为不同的组件
  * @property {Metric[]} metrics 此图表包含的指标列表
