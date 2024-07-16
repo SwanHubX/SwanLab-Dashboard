@@ -70,12 +70,12 @@ const props = defineProps({
 })
 
 /**
- * section列数
+ * section最大列数
  */
 const columnsNum = computed(() => props.section.cols)
 
 /**
- * section行数
+ * section最大行数
  */
 const rowsNum = computed(() => 2)
 
@@ -146,8 +146,11 @@ const L = {
   },
   width: ref(0),
   height: computed(
-    // 总高度 =（行数-1） * 行间距 + 行数 * 行高
-    () => (rowsNum.value - 1) * L.spacing.y + rowsNum.value * L.row.height.value
+    // 总高度 =（当前行数-1） * 行间距 + 当前行数 * 行高
+    () => {
+      const nowRows = Math.min(Math.ceil(nowCharts.value.length / columnsNum.value), rowsNum.value)
+      return (nowRows - 1) * L.spacing.y + nowRows * L.row.height.value
+    }
   )
 }
 
