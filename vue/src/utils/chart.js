@@ -78,7 +78,7 @@ export const formatLocalData = (data) => {
       config: ns.more,
       index: String(ns.id),
       type: null,
-      rowHeight: 400,
+      rowHeight: 272,
       cols: /** @type {7 | 6 | 4 | 3 | 2 | 1} */ (3)
     }
     // 处理图表分类块的类别：[PUBLIC, PINNED, HIDDEN]

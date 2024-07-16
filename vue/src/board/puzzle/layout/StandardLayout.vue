@@ -2,7 +2,7 @@
   <div ref="layoutRef">
     <!-- 修改图表大小时的展示框 -->
     <div class="chart-preview"></div>
-    <div class="relative" :style="{ height: L.height.value + 'px' }" v-if="observerOn">
+    <div class="relative overflow-hidden" :style="{ height: L.height.value + 'px' }" v-if="observerOn">
       <ChartPuzzle
         v-for="(chart, index) in nowCharts"
         class="standard-chart"
