@@ -78,7 +78,7 @@ export const formatLocalData = (data) => {
       config: ns.more,
       index: String(ns.id),
       type: null,
-      rowHeight: 400,
+      rowHeight: 272,
       cols: /** @type {7 | 6 | 4 | 3 | 2 | 1} */ (3)
     }
     // 处理图表分类块的类别：[PUBLIC, PINNED, HIDDEN]
@@ -86,7 +86,7 @@ export const formatLocalData = (data) => {
     else if (ns.name === 'hidden' && ns.id === -2) temp.type = 'HIDDEN'
     else temp.type = 'PUBLIC'
     // 媒体类型的空间默认 1 列,高度300
-    if (['image', 'audio', 'text', 'media'].includes(temp.name.toLowerCase())) {
+    if (['Image', 'Audio', 'Text', 'Media'].includes(temp.name)) {
       temp.cols = 1
       temp.rowHeight = 300
     }

@@ -1,0 +1,13 @@
+{
+  "section": {
+    "name": {
+      "Text": "Text",
+      "Image": "Image",
+      "Audio": "Audio",
+      "Media": "Media",
+      "default": "Charts",
+      "pinned": "Pinned",
+      "hidden": "Hidden"
+    }
+  }
+}

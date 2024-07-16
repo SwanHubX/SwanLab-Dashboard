@@ -1,0 +1,13 @@
+{
+  "section": {
+    "name": {
+      "Text": "文字",
+      "Image": "图像",
+      "Audio": "音频",
+      "Media": "媒体",
+      "default": "图表",
+      "pinned": "置顶",
+      "hidden": "隐藏"
+    }
+  }
+}
