@@ -87,18 +87,18 @@ watch(
 }
 
 .controller {
-  @apply flex items-center px-4 py-2;
+  @apply flex items-center px-4 pt-2 pb-4;
 
   button {
     @apply flex items-center gap-1 relative;
-  }
 
-  .icon {
-    @apply w-6 h-6 absolute -left-6 transition-all;
-  }
+    .icon {
+      @apply w-6 h-6 absolute -left-6 transition-all;
+    }
 
-  .count {
-    @apply px-3 bg-highest text-sm rounded-full ml-2;
+    .count {
+      @apply px-3 bg-highest text-sm rounded-full ml-2;
+    }
   }
 }
 </style>
