@@ -157,7 +157,10 @@ const L = {
 const observerOn = ref(false)
 onMounted(() => {
   observer = new ResizeObserver(() => {
+    // 如果宽度没有变化，不触发渲染
     if (L.width.value === layoutRef.value.clientWidth) return
+    // 如果元素被hidden，不触发渲染
+    if (layoutRef.value.offsetParent === null) return
     L.width.value = layoutRef.value.clientWidth
     observerOn.value = true
   })
