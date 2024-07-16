@@ -5,6 +5,7 @@
       :key="section.index"
       :section="section"
       :charts="filterChartsBySection(section)"
+      :mobile="mobile"
     />
   </Collapse>
 </template>
@@ -17,6 +18,7 @@
  **/
 import { Collapse } from 'ant-design-vue'
 import SectionPuzzle from '../puzzle/SectionPuzzle.vue'
+import { debounce } from '../utils'
 /**
  * @type {{sections: Section[], charts: Chart[]}} Props
  */
@@ -44,6 +46,25 @@ const activeSectionIndex = ref(props.sections.filter((section) => !section.folde
 const handleSectionCollapseChange = (activeKey) => {
   console.log('section change', activeKey)
 }
+
+// ---------------------------------- 移动端局切换 ----------------------------------
+/** 切换阈值，视口小于此值时切换 */
+const threshold = 768
+const mobile = ref(window.innerWidth < threshold)
+const handleResize = () => {
+  mobile.value = window.innerWidth < threshold
+}
+/** @type {() => void} */
+// @ts-ignore
+const debounceHandleResize = debounce(handleResize, 200)
+
+onMounted(() => {
+  window.addEventListener('resize', debounceHandleResize)
+})
+onUnmounted(() => {
+  window.removeEventListener('resize', debounceHandleResize)
+})
+
 // ---------------------------------- 拖拽事件委托 ----------------------------------
 
 // TODO 拖拽事件委托

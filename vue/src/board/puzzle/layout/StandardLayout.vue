@@ -28,6 +28,35 @@
   </div>
 </template>
 
+<script>
+/**
+ * 每个图表之间的间距, x: 水平间距, y: 垂直间距
+ * @typedef {{readonly x: number, readonly y: number}} ChartSpacing
+ */
+
+/**
+ * section列配置
+ * @typedef {Object} SectionColumn
+ * @property {ComputedRef<number>} width - 列的宽度，单位像素，结合 {@link columnsNum} 设置的列数，以及当前的容器高度，计算列宽度（不包含 {@link ChartSpacing}）
+ */
+
+/**
+ * section行配置
+ * @typedef {Object} SectionRow
+ * @property {ComputedRef<number>} height - 行的高度，单位像素，即为 {@link rowsHeight} 设置的行高
+ */
+
+/**
+ * section标准布局配置
+ * @typedef {Object} SectionStandardLayoutConfig
+ * @property {SectionColumn} col - section列配置
+ * @property {SectionRow} row - section行配置
+ * @property {ChartSpacing} spacing - 图表之间的间距配置，单位像素
+ * @property {Ref<number>} width - section容器宽度，单位像素
+ * @property {ComputedRef<number>} height - section容器高度，超出部分将会被隐藏，单位像素
+ */
+</script>
+
 <script setup>
 /**
  * @description: section内部标准布局
@@ -61,18 +90,17 @@ const props = defineProps({
     default: false
   },
   /**
-   * 图表是否可拖拽
+   * 图表是否不可拖拽
    */
-  draggable: {
+  noDraggable: {
     type: Boolean,
     default: false
   }
 })
-
 /**
  * section最大列数
  */
-const columnsNum = computed(() => props.section.cols)
+const columnsNum = computed(() => (props.singleCol ? 1 : props.section.cols))
 
 /**
  * section最大行数
@@ -88,44 +116,6 @@ const rowsHeight = computed(() => props.section.rowHeight)
  * 一页section最多多少个图表
  */
 const chartsNumPerPage = computed(() => columnsNum.value * rowsNum.value)
-
-/**
- * 每个图表之间的间距, x: 水平间距, y: 垂直间距
- * @typedef {{readonly x: number, readonly y: number}} ChartSpacing
- */
-
-/**
- * section列配置
- * @typedef {Object} SectionColumn
- * @property {ComputedRef<number>} width - 列的宽度，单位像素，结合 {@link columnsNum} 设置的列数，以及当前的容器高度，计算列宽度（不包含 {@link ChartSpacing}）
- */
-
-/**
- * section行配置
- * @typedef {Object} SectionRow
- * @property {ComputedRef<number>} height - 行的高度，单位像素，即为 {@link rowsHeight} 设置的行高
- */
-
-/**
- * section标准布局配置
- * @typedef {Object} SectionStandardLayoutConfig
- * @property {SectionColumn} col - section列配置
- * @property {SectionRow} row - section行配置
- * @property {ChartSpacing} spacing - 图表之间的间距配置，单位像素
- * @property {Ref<number>} width - section容器宽度，单位像素
- * @property {ComputedRef<number>} height - section容器高度，超出部分将会被隐藏，单位像素
- */
-
-/**
- * 布局容器DOM
- * @type {Ref<HTMLElement>}
- */
-const layoutRef = ref(null)
-/**
- * 图表容器DOM的监听对象
- * @type {ResizeObserver}
- */
-let observer = null
 
 /**
  * @type { SectionStandardLayoutConfig }
@@ -155,18 +145,29 @@ const L = {
 }
 
 /**
+ * 布局容器DOM
+ * @type {Ref<HTMLElement>}
+ */
+const layoutRef = ref(null)
+
+/**
  * 第一次监听到以后，才会触发渲染
  */
 const observerOn = ref(false)
+
+/**
+ * 图表容器DOM的监听对象
+ * @type {ResizeObserver}
+ */
+const observer = new ResizeObserver(() => {
+  // 如果宽度没有变化，不触发渲染
+  if (L.width.value === layoutRef.value.clientWidth) return
+  // 如果元素被hidden，不触发渲染
+  if (layoutRef.value.offsetParent === null) return
+  L.width.value = layoutRef.value.clientWidth
+  observerOn.value = true
+})
 onMounted(() => {
-  observer = new ResizeObserver(() => {
-    // 如果宽度没有变化，不触发渲染
-    if (L.width.value === layoutRef.value.clientWidth) return
-    // 如果元素被hidden，不触发渲染
-    if (layoutRef.value.offsetParent === null) return
-    L.width.value = layoutRef.value.clientWidth
-    observerOn.value = true
-  })
   observer.observe(layoutRef.value)
 })
 

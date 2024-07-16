@@ -21,11 +21,31 @@ import { CollapsePanel } from 'ant-design-vue'
 import StandardLayout from './layout/StandardLayout.vue'
 import MobileLayout from './layout/MobileLayout.vue'
 import { t } from '@swanlab-vue/i18n'
-/**
- * @type {{section: Section, charts: Chart[]}} Props
- */
-// @ts-ignore
-const props = defineProps(['section', 'charts'])
+const props = defineProps({
+  /**
+   * section配置
+   */
+  section: {
+    /** @type { PropType<Section>} */
+    type: Object,
+    required: true
+  },
+  /**
+   * 图表配置
+   */
+  charts: {
+    /** @type  {PropType<Chart[]>} */
+    type: Array,
+    required: true
+  },
+  /**
+   * 是否强制使用移动端布局
+   */
+  mobile: {
+    type: Boolean,
+    default: false
+  }
+})
 
 /**
  * 此section的名称，对某些特殊名称需要特殊处理
@@ -37,7 +57,7 @@ const sectionName = computed(() => {
   return name
 })
 
-const nowLayout = shallowRef(StandardLayout)
+const nowLayout = computed(() => (props.mobile ? MobileLayout : StandardLayout))
 </script>
 
 <style lang="scss" scoped>
