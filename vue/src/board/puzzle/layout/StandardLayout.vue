@@ -10,7 +10,8 @@
         :chart="chart"
         :style="{
           transform: `translate(${getChartTranslateX(index)}px, ${getChartTranslateY(index)}px)`,
-          height: `${layoutConfig.rowHeight.value}px`
+          height: `${layoutConfig.row.height.value}px`,
+          width: `${layoutConfig.col.width.value}px`
         }"
       />
     </div>
@@ -29,7 +30,6 @@
  **/
 import { Pagination } from 'ant-design-vue'
 import ChartPuzzle from '../ChartPuzzle.vue'
-import transform from 'ant-design-vue/es/_util/cssinjs/transformers/legacyLogicalProperties'
 const props = defineProps({
   /**
    * section配置
@@ -69,12 +69,25 @@ const props = defineProps({
  */
 
 /**
+ * section列配置
+ * @typedef {Object} SectionColumn
+ * @property {ComputedRef<number>} width - 列的宽度，单位像素，结合 {@link Section} 设置的列数，以及当前的容器高度，计算列宽度（不包含 {@link ChartSpacing}）
+ */
+
+/**
+ * section行配置
+ * @typedef {Object} SectionRow
+ * @property {ComputedRef<number>} height - 行的高度，单位像素，即为 {@link Section} 设置的行高
+ * @property {number} count - 行的最大数量
+ */
+
+/**
  * section标准布局配置
  * @typedef {Object} SectionStandardLayoutConfig
- * @property {Ref<number>} rowHeight - 当前section的行高，单位像素
- * @property {number} rows - 当前section的行数
- * @property {Ref<number>} cols - 当前section的列数
- * @property {ChartSpacing} spacing - 图表之间的间距，单位像素
+ * @property {SectionColumn} col - section列配置
+ * @property {SectionRow} row - section行配置
+ * @property {ChartSpacing} spacing - 图表之间的间距配置，单位像素
+ * @property {Ref<number>} width - section容器宽度，单位像素
  * @property {ComputedRef<number>} height - section容器高度，超出部分将会被隐藏，单位像素
  */
 
@@ -90,32 +103,34 @@ const layoutRef = ref(null)
 let observer = null
 
 /**
- * @readonly
  * @type { SectionStandardLayoutConfig }
  */
 const layoutConfig = {
-  rowHeight: ref(props.section.rowHeight),
-  rows: 2,
-  cols: ref(props.section.cols),
+  row: {
+    height: computed(() => props.section.rowHeight),
+    count: 2
+  },
+  col: {
+    width: computed(() => {
+      // 列宽 = (容器宽度 - （列数-1） * 列间距) / 列数
+      return (layoutConfig.width.value - (layoutConfig.row.count - 1) * layoutConfig.spacing.x) / props.section.cols
+    })
+  },
   spacing: {
     x: 16,
     y: 16
   },
-  height: computed(() => {
-    return (layoutConfig.rows - 1) * layoutConfig.spacing.y + layoutConfig.rows * layoutConfig.rowHeight.value
-  })
+  width: ref(0),
+  height: computed(
+    // 总高度 =（行数-1） * 行间距 + 行数 * 行高
+    () => (layoutConfig.row.count - 1) * layoutConfig.spacing.y + layoutConfig.row.count * layoutConfig.row.height.value
+  )
 }
 
-watch(
-  () => [props.section.rowHeight, props.section.cols],
-  ([rowHeight, cols]) => {
-    layoutConfig.rowHeight.value = rowHeight
-    layoutConfig.cols.value = cols
-  }
-)
-
 onMounted(() => {
-  observer = new ResizeObserver(() => {})
+  observer = new ResizeObserver(() => {
+    layoutConfig.width.value = layoutRef.value.clientWidth
+  })
   observer.observe(layoutRef.value)
 })
 
