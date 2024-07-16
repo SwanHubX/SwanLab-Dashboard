@@ -2,22 +2,28 @@
   <div ref="layoutRef">
     <!-- 修改图表大小时的展示框 -->
     <div class="chart-preview"></div>
-    <div class="relative overflow-hidden" :style="{ height: layoutConfig.height.value + 'px' }">
+    <div class="relative" :style="{ height: L.height.value + 'px' }" v-if="observerOn">
       <ChartPuzzle
-        v-for="(chart, index) in props.charts"
+        v-for="(chart, index) in nowCharts"
         class="standard-chart"
         :key="chart.index"
         :chart="chart"
         :style="{
           transform: `translate(${getChartTranslateX(index)}px, ${getChartTranslateY(index)}px)`,
-          height: `${layoutConfig.row.height.value}px`,
-          width: `${layoutConfig.col.width.value}px`
+          height: `${L.row.height.value}px`,
+          width: `${L.col.width.value}px`
         }"
       />
     </div>
     <!-- 分页器 -->
     <div class="w-full pt-4 flex justify-end">
-      <Pagination class="!text-xs" v-model:current="current" simple :total="50" />
+      <Pagination
+        simple
+        class="!text-xs"
+        v-model:current="current"
+        :total="props.charts.length"
+        :page-size="chartsNumPerPage"
+      />
     </div>
   </div>
 </template>
@@ -64,6 +70,26 @@ const props = defineProps({
 })
 
 /**
+ * section列数
+ */
+const columnsNum = computed(() => props.section.cols)
+
+/**
+ * section行数
+ */
+const rowsNum = computed(() => 2)
+
+/**
+ * section行高
+ */
+const rowsHeight = computed(() => props.section.rowHeight)
+
+/**
+ * 一页section最多多少个图表
+ */
+const chartsNumPerPage = computed(() => columnsNum.value * rowsNum.value)
+
+/**
  * 每个图表之间的间距, x: 水平间距, y: 垂直间距
  * @typedef {{readonly x: number, readonly y: number}} ChartSpacing
  */
@@ -71,14 +97,13 @@ const props = defineProps({
 /**
  * section列配置
  * @typedef {Object} SectionColumn
- * @property {ComputedRef<number>} width - 列的宽度，单位像素，结合 {@link Section} 设置的列数，以及当前的容器高度，计算列宽度（不包含 {@link ChartSpacing}）
+ * @property {ComputedRef<number>} width - 列的宽度，单位像素，结合 {@link columnsNum} 设置的列数，以及当前的容器高度，计算列宽度（不包含 {@link ChartSpacing}）
  */
 
 /**
  * section行配置
  * @typedef {Object} SectionRow
- * @property {ComputedRef<number>} height - 行的高度，单位像素，即为 {@link Section} 设置的行高
- * @property {number} count - 行的最大数量
+ * @property {ComputedRef<number>} height - 行的高度，单位像素，即为 {@link rowsHeight} 设置的行高
  */
 
 /**
@@ -105,15 +130,14 @@ let observer = null
 /**
  * @type { SectionStandardLayoutConfig }
  */
-const layoutConfig = {
+const L = {
   row: {
-    height: computed(() => props.section.rowHeight),
-    count: 2
+    height: computed(() => rowsHeight.value)
   },
   col: {
     width: computed(() => {
       // 列宽 = (容器宽度 - （列数-1） * 列间距) / 列数
-      return (layoutConfig.width.value - (layoutConfig.row.count - 1) * layoutConfig.spacing.x) / props.section.cols
+      return (L.width.value - (columnsNum.value - 1) * L.spacing.x) / columnsNum.value
     })
   },
   spacing: {
@@ -123,13 +147,19 @@ const layoutConfig = {
   width: ref(0),
   height: computed(
     // 总高度 =（行数-1） * 行间距 + 行数 * 行高
-    () => (layoutConfig.row.count - 1) * layoutConfig.spacing.y + layoutConfig.row.count * layoutConfig.row.height.value
+    () => (rowsNum.value - 1) * L.spacing.y + rowsNum.value * L.row.height.value
   )
 }
 
+/**
+ * 第一次监听到以后，才会触发渲染
+ */
+const observerOn = ref(false)
 onMounted(() => {
   observer = new ResizeObserver(() => {
-    layoutConfig.width.value = layoutRef.value.clientWidth
+    if (L.width.value === layoutRef.value.clientWidth) return
+    L.width.value = layoutRef.value.clientWidth
+    observerOn.value = true
   })
   observer.observe(layoutRef.value)
 })
@@ -139,23 +169,41 @@ onUnmounted(() => {
 })
 
 /**
- * 当前展示的图表页数
- */
-const current = ref(1)
-
-/**
- * 根据 {@link SectionStandardLayoutConfig} 中的行高和列数以及当前图表所在页数下的图表索引计算图表的x轴偏移量
+ * 根据 {@link columnsNum} 、 {@link L.spacing} 、 {@link L.col.width} 以及当前图表所在页数下的图表索引计算图表的x轴偏移量
  * @param {number} index - 图表排序索引
  * @returns {number}
  */
-const getChartTranslateX = (index) => {}
+const getChartTranslateX = (index) => {
+  // 当前图表所在的列数(从0开始)
+  const col = index % columnsNum.value
+  return col * L.col.width.value + col * L.spacing.x
+}
 
 /**
  * 根据 {@link SectionStandardLayoutConfig} 中的行高和列数以及当前图表所在页数下的图表索引计算图表的y轴偏移量
  *  @param {number} index - 排序图表索引
  * @returns {number}
  */
-const getChartTranslateY = (index) => {}
+const getChartTranslateY = (index) => {
+  // 当前图表所在的行数(从0开始)
+  const row = Math.floor(index / columnsNum.value)
+  return row * L.row.height.value + row * L.spacing.y
+}
+
+// ---------------------------------- 分页配置 ----------------------------------
+/**
+ * 当前展示的图表页数
+ */
+const current = ref(1)
+
+/**
+ * 当前页展示的图表
+ */
+const nowCharts = computed(() => {
+  const start = (current.value - 1) * chartsNumPerPage.value
+  const end = current.value * chartsNumPerPage.value
+  return props.charts.slice(start, end)
+})
 </script>
 
 <style lang="scss" scoped>
