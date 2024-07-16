@@ -1,13 +1,11 @@
 <template>
-  <Collapse v-model:active-key="activeSectionIndex" ghost @change="handleSectionCollapseChange">
-    <SectionPuzzle
-      v-for="section in props.sections"
-      :key="section.index"
-      :section="section"
-      :charts="filterChartsBySection(section)"
-      :mobile="mobile"
-    />
-  </Collapse>
+  <SectionPuzzle
+    v-for="section in props.sections"
+    :key="section.index"
+    :section="section"
+    :charts="filterChartsBySection(section)"
+    :mobile="mobile"
+  />
 </template>
 
 <script setup>
@@ -16,7 +14,6 @@
  * @file: SectionsWrapper.vue
  * @since: 2024-07-16 00:58:17
  **/
-import { Collapse } from 'ant-design-vue'
 import SectionPuzzle from '../puzzle/SectionPuzzle.vue'
 import { debounce } from '../utils'
 /**
