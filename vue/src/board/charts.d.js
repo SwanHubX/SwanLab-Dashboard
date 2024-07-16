@@ -47,16 +47,20 @@
  */
 
 /**
- * 指标数据超集
- * @typedef {Object} MetricData
+ * 指标数据唯一标识
+ * @typedef {Object} MetricDataId
  * @property {IndexId} experimentId 实验 ID，是唯一识别的 {@link IndexId}
  * @property {IndexId} key 检索的指标名，是唯一识别的 {@link IndexId}
- * @property {any[]} metrics 指标数据列表
+ */
+
+/**
+ * 指标数据超集
+ * @typedef {MetricDataId & { metrics: any[], type: 'scalar'| 'media'}} MetricData
  */
 
 /**
  * 指标数据存储对象
- * @typedef {MetricData & {metrics: ScalarDetail[]}} ScalarData
+ * @typedef {MetricData & {metrics: ScalarDetail[], type: 'scalar'}} ScalarData
  */
 
 /**
@@ -69,7 +73,7 @@
 
 /**
  * 指标数据存储对象
- * @typedef {MetricData & {metrics: MediaDetail[], steps: Number[]}} MediaData
+ * @typedef {MetricData & {metrics: MediaDetail[], steps: Number[], type: 'media'}} MediaData
  */
 
 /**
