@@ -1,5 +1,5 @@
 <template>
-  <SectionsWrapper :sections="showSections" :charts="nowCharts" />
+  <SectionsWrapper :sections="showSections" :charts="nowCharts" @fold-change="handleSectionCollapseChange" />
 </template>
 
 <script>
@@ -88,6 +88,13 @@ const showSections = computed(() => {
 
 // ---------------------------------- 平滑逻辑 ----------------------------------
 // TODO
+
+// ---------------------------------- 折叠逻辑 ----------------------------------
+
+const handleSectionCollapseChange = (index, isFold) => {
+  console.log('section change', index, isFold)
+  emits('fold', index, isFold)
+}
 </script>
 
 <style lang="scss"></style>

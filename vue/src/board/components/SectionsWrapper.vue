@@ -5,6 +5,7 @@
     :section="section"
     :charts="filterChartsBySection(section)"
     :mobile="mobile"
+    @fold-change="handleSectionCollapseChange"
   />
 </template>
 
@@ -34,14 +35,11 @@ const filterChartsBySection = (section) => {
 
 // ---------------------------------- 折叠、展开逻辑 ----------------------------------
 
-// 初始化时获取所有已经打开的section index
-const activeSectionIndex = ref(props.sections.filter((section) => !section.folded).map((section) => section.index))
 /**
  * 当section展开/折叠时触发此事件
- * @param { IndexId[] } activeKey 所有展开的section index
  */
-const handleSectionCollapseChange = (activeKey) => {
-  console.log('section change', activeKey)
+const handleSectionCollapseChange = (index, isFold) => {
+  emits('fold-change', index, isFold)
 }
 
 // ---------------------------------- 移动端局切换 ----------------------------------

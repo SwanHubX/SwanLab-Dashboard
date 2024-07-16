@@ -3,8 +3,8 @@
     <!-- 控制栏 -->
     <div class="controller">
       <!-- 关闭、展开按钮 -->
-      <button @click="folded = !folded">
-        <SLIcon icon="down" class="icon" :class="{ '-rotate-90': folded }" />
+      <button @click="isFold = !isFold">
+        <SLIcon icon="down" class="icon" :class="{ '-rotate-90': isFold }" />
         {{ sectionName }}
         <span class="count">{{ charts.length || 0 }}</span>
       </button>
@@ -12,7 +12,7 @@
       <div class="grow"></div>
       <!-- 添加图表的按钮 -->
     </div>
-    <component :is="nowLayout" :charts="charts" :section="section" v-show="!folded" />
+    <component :is="nowLayout" :charts="charts" :section="section" v-show="!isFold" />
   </section>
 </template>
 
@@ -53,6 +53,8 @@ const props = defineProps({
   }
 })
 
+const emits = defineEmits(['fold-change'])
+
 const nowLayout = computed(() => (props.mobile ? MobileLayout : StandardLayout))
 
 // ---------------------------------- 折叠布局相关 ----------------------------------
@@ -67,7 +69,12 @@ const sectionName = computed(() => {
   return name
 })
 
-const folded = ref(props.section.folded)
+const isFold = ref(props.section.folded)
+
+watch(
+  () => isFold.value,
+  (v) => emits('fold-change', props.section.index, v)
+)
 </script>
 
 <style lang="scss" scoped>
