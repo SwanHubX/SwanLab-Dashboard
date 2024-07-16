@@ -37,6 +37,9 @@ const filterChartsBySection = (section) => {
 
 /**
  * 当section展开/折叠时触发此事件
+ * @param {string} index
+ * @param {boolean} isFold
+ * @returns {void}
  */
 const handleSectionCollapseChange = (index, isFold) => {
   emits('fold-change', index, isFold)
