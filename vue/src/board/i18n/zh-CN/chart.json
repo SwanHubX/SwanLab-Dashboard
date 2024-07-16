@@ -1,4 +1,7 @@
 {
+  "chart": {
+    "error": "此图表显示出现问题"
+  },
   "section": {
     "name": {
       "Text": "文字",

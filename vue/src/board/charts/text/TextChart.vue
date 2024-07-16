@@ -6,12 +6,17 @@
  * @file: TextChart.vue
  * @since: 2024-07-14 20:53:41
  **/
+/** props */
+const props = defineProps({
+  /** 图表配置 */
+  chart: {
+    /** @type {PropType<Chart>} */
+    type: Object,
+    required: true
+  }
+})
 
-/**
- * 组件配置
- * @type {{chart: TextChart}}
- */
-const props = defineProps(['chart'])
+const emits = defineEmits(['ready'])
 </script>
 
 <style lang="scss" scoped></style>

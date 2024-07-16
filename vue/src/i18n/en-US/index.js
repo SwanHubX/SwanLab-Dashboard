@@ -1,4 +1,4 @@
-import chart from '@swanlab-vue/board/i18n/chart.en.json'
+import chart from '@swanlab-vue/board/i18n/en-US/chart.json'
 import sider from './sider.json'
 import home from './home.json'
 import experiment from './experiment.json'
