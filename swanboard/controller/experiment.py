@@ -146,13 +146,13 @@ def get_experiment_info(experiment_id: int):
     # 加载实验配置
     config_path = get_config_path(experiment["run_id"])
     if os.path.exists(config_path):
-        with open(config_path, "r+", encoding="utf8") as f:
+        with open(config_path, "r+") as f:
             experiment["config"] = yaml.load(f, Loader=yaml.FullLoader)
 
     # 加载实验元信息
     meta_path = get_meta_path(experiment["run_id"])
     if os.path.exists(meta_path) and not os.stat(meta_path).st_size == 0:
-        with open(meta_path, "r+", encoding="utf8") as f:
+        with open(meta_path, "r+") as f:
             experiment["system"] = ujson.load(f)
     else:
         experiment["system"] = {}
@@ -197,7 +197,7 @@ def get_tag_data(experiment_id: int, tag: str) -> dict:
     # 获取_summary文件
     summary_path = os.path.join(tag_path, "_summary.json")
     if os.path.exists(summary_path):
-        with open(summary_path, "r", encoding="utf8") as f:
+        with open(summary_path, "r") as f:
             summary = ujson.load(f)
             max_value = summary.get("max", None)
             min_value = summary.get("min", None)
@@ -283,7 +283,7 @@ def get_experiment_summary(experiment_id: int) -> dict:
         # 获取 tag 目录下的所有存储的日志文件
         logs = get_tag_files(tag_path, LOGS_CONFIGS)
         # 打开 tag 目录下最后一个存储文件，获取最后一条数据
-        with open(os.path.join(tag_path, logs[-1]), encoding="utf8") as f:
+        with open(os.path.join(tag_path, logs[-1])) as f:
             lines = f.readlines()
             # 最后一行数据，如果为空，取倒数第二行
             data = lines[-1] if len(lines[-1]) else lines[-2]
@@ -329,7 +329,7 @@ def get_recent_logs(experiment_id):
     # 含有error.log，在返回值中带上其中的错误信息
     error = None
     if "error.log" in consoles:
-        with open(os.path.join(console_path, "error.log"), mode="r", encoding="utf8") as f:
+        with open(os.path.join(console_path, "error.log"), mode="r") as f:
             error = f.read().split("\n")
         # 在consoles里删除error.log
         consoles.remove("error.log")
@@ -521,7 +521,7 @@ def get_experiment_requirements(experiment_id: int):
     path = __get_requirements_path_by_id(experiment_id)
     if not os.path.exists(path):
         return DATA_ERROR_500("failed to find requirements")
-    with open(path, encoding="utf8") as f:
+    with open(path) as f:
         requirements = f.read()
 
     return SUCCESS_200({"requirements": requirements.split("\n")})
