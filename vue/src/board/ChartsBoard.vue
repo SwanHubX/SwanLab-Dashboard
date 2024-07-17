@@ -8,7 +8,7 @@
  * @callback foldSection
  * @param { IndexId } index - 当前section的index
  * @param { boolean } isFold - 当前section在点击后是否收起
- * @returns { Promise<void> }
+ * @returns { Promise<void>  }
  */
 
 /**
