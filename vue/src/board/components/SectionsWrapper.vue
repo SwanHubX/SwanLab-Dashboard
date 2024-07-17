@@ -1,13 +1,12 @@
 <template>
-  <Collapse v-model:active-key="activeSectionIndex" ghost @change="handleSectionCollapseChange">
-    <SectionPuzzle
-      v-for="section in props.sections"
-      :key="section.index"
-      :section="section"
-      :charts="filterChartsBySection(section)"
-      :mobile="mobile"
-    />
-  </Collapse>
+  <SectionPuzzle
+    v-for="section in props.sections"
+    :key="section.index"
+    :section="section"
+    :charts="filterChartsBySection(section)"
+    :mobile="mobile"
+    @fold-change="handleSectionCollapseChange"
+  />
 </template>
 
 <script setup>
@@ -16,7 +15,6 @@
  * @file: SectionsWrapper.vue
  * @since: 2024-07-16 00:58:17
  **/
-import { Collapse } from 'ant-design-vue'
 import SectionPuzzle from '../puzzle/SectionPuzzle.vue'
 import { debounce } from '../utils'
 /**
@@ -37,14 +35,14 @@ const filterChartsBySection = (section) => {
 
 // ---------------------------------- 折叠、展开逻辑 ----------------------------------
 
-// 初始化时获取所有已经打开的section index
-const activeSectionIndex = ref(props.sections.filter((section) => !section.folded).map((section) => section.index))
 /**
  * 当section展开/折叠时触发此事件
- * @param { IndexId[] } activeKey 所有展开的section index
+ * @param {string} index
+ * @param {boolean} isFold
+ * @returns {void}
  */
-const handleSectionCollapseChange = (activeKey) => {
-  console.log('section change', activeKey)
+const handleSectionCollapseChange = (index, isFold) => {
+  emits('fold-change', index, isFold)
 }
 
 // ---------------------------------- 移动端局切换 ----------------------------------

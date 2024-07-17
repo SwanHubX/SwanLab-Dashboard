@@ -1,14 +1,19 @@
 <template>
-  <CollapsePanel class="panel" v-if="charts.length">
-    <template #header> {{ sectionName }} </template>
-    <template #extra>
-      <div class="px-3 py-0.5 border rounded-full text-xs bg-highest grow">
-        {{ section.chartIndex.length || 0 }}
-      </div>
-    </template>
-    <!-- 标准布局/可移动布局 -->
-    <component :is="nowLayout" :charts="charts" :section="section" />
-  </CollapsePanel>
+  <section class="section">
+    <!-- 控制栏 -->
+    <div class="controller">
+      <!-- 关闭、展开按钮 -->
+      <button @click="isFold = !isFold">
+        <SLIcon icon="down" class="icon" :class="{ '-rotate-90': isFold }" />
+        {{ sectionName }}
+        <span class="count">{{ charts.length || 0 }}</span>
+      </button>
+      <!-- 中间其他操作区 -->
+      <div class="grow"></div>
+      <!-- 添加图表的按钮 -->
+    </div>
+    <component :is="nowLayout" :charts="charts" :section="section" v-show="!isFold" />
+  </section>
 </template>
 
 <script setup>
@@ -17,10 +22,11 @@
  * @file: SectionFlow.vue
  * @since: 2024-07-14 20:54:09
  **/
-import { CollapsePanel } from 'ant-design-vue'
 import StandardLayout from './layout/StandardLayout.vue'
 import MobileLayout from './layout/MobileLayout.vue'
+import SLIcon from '@swanlab-vue/components/SLIcon.vue'
 import { t } from '@swanlab-vue/i18n'
+
 const props = defineProps({
   /**
    * section配置
@@ -47,6 +53,12 @@ const props = defineProps({
   }
 })
 
+const emits = defineEmits(['fold-change'])
+
+const nowLayout = computed(() => (props.mobile ? MobileLayout : StandardLayout))
+
+// ---------------------------------- 折叠布局相关 ----------------------------------
+
 /**
  * 此section的名称，对某些特殊名称需要特殊处理
  */
@@ -57,16 +69,36 @@ const sectionName = computed(() => {
   return name
 })
 
-const nowLayout = computed(() => (props.mobile ? MobileLayout : StandardLayout))
+const isFold = ref(props.section.folded)
+
+watch(
+  () => isFold.value,
+  (v) => emits('fold-change', props.section.index, v)
+)
 </script>
 
 <style lang="scss" scoped>
-.panel {
-  @apply w-full border-b py-2 relative;
+.section {
+  @apply w-full border-b py-2 relative px-4;
 
-  &:not(:last-child)::before {
-    @apply w-full border-b border-default absolute bottom-0;
-    content: '';
+  &:last-child {
+    @apply border-none;
+  }
+}
+
+.controller {
+  @apply flex items-center px-4 pt-2 pb-4;
+
+  button {
+    @apply flex items-center gap-1 relative;
+
+    .icon {
+      @apply w-6 h-6 absolute -left-6 transition-all;
+    }
+
+    .count {
+      @apply px-3 bg-highest text-sm rounded-full ml-2;
+    }
   }
 }
 </style>
