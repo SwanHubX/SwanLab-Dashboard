@@ -1,12 +1,14 @@
 <template>
-  <SectionPuzzle
-    v-for="section in props.sections"
-    :key="section.index"
-    :section="section"
-    :charts="filterChartsBySection(section)"
-    :mobile="mobile"
-    @fold-change="handleSectionCollapseChange"
-  />
+  <div>
+    <SectionPuzzle
+      v-for="section in props.sections"
+      :key="section.index"
+      :section="section"
+      :charts="filterChartsBySection(section)"
+      :mobile="mobile"
+      @fold-change="handleSectionCollapseChange"
+    />
+  </div>
 </template>
 
 <script setup>
@@ -37,7 +39,7 @@ const filterChartsBySection = (section) => {
 
 /**
  * 当section展开/折叠时触发此事件
- * @param {string} index
+ * @param {SectionId} index
  * @param {boolean} isFold
  * @returns {void}
  */
