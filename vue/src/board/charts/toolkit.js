@@ -39,7 +39,7 @@ export const createRender = (metricIds, callback) => {
   /** @type {'idle' | 'busy' | 'cancel'} 渲染状态 */
   let state = 'idle'
   // 防抖需要使用Promise实现
-  const debounced = async (delay = 5000) => {
+  const debounced = async (delay = 500) => {
     if (state === 'busy' || state == 'cancel') return
     await new Promise((resolve) => {
       state = 'busy'
@@ -52,6 +52,24 @@ export const createRender = (metricIds, callback) => {
         state = 'idle'
       })
   }
+  /** 从store中获取指标数据 */
+  const getMetricsFromStore = () => {
+    const newMetrics = {}
+    for (const metricId of metricIds) {
+      // 按需获取指标数据
+      if (boardStore.metrics[metricId.experimentId] && boardStore.metrics[metricId.experimentId][metricId.key]) {
+        newMetrics[metricId.experimentId] = newMetrics[metricId.experimentId] || {}
+        newMetrics[metricId.experimentId][metricId.key] = boardStore.metrics[metricId.experimentId][metricId.key]
+      }
+    }
+    return newMetrics
+  }
+
+  boardStore.$onAction((...args) => {
+    // TODO 只有当命中的指标发生变化时，才会触发回调
+
+    metrics.value = getMetricsFromStore()
+  })
   // onErrorCaptured 钩子只能在以下情况下使用：
   // 组件渲染
   // 事件处理器
@@ -63,18 +81,6 @@ export const createRender = (metricIds, callback) => {
   // 所以需要有一个watch监听器转译onAction事件更改
   /** @type {import('vue').ShallowRef<import('../store').MetricStore> } */
   const metrics = shallowRef({})
-  boardStore.$onAction((...args) => {
-    // TODO 只有当命中的指标发生变化时，才会触发回调
-    const newMetrics = {}
-    for (const metricId of metricIds) {
-      // 按需获取指标数据
-      if (boardStore.metrics[metricId.experimentId] && boardStore.metrics[metricId.experimentId][metricId.key]) {
-        newMetrics[metricId.experimentId] = newMetrics[metricId.experimentId] || {}
-        newMetrics[metricId.experimentId][metricId.key] = boardStore.metrics[metricId.experimentId][metricId.key]
-      }
-    }
-    metrics.value = newMetrics
-  })
   // 监听metrics变化，变化时触发debounced回调
   const stop = watch(metrics, async () => {
     console.log('metrics changed')
@@ -85,4 +91,9 @@ export const createRender = (metricIds, callback) => {
       throw err
     })
   })
+  // 初次create时判断是否需要立即触发回调
+  setTimeout(() => {
+    const preMetrics = getMetricsFromStore()
+    if (Object.entries(preMetrics).length) metrics.value = preMetrics
+  }, 0)
 }
