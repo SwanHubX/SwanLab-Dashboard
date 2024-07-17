@@ -93,10 +93,15 @@ const showSections = computed(() => {
 // ---------------------------------- metric更新逻辑 ----------------------------------
 
 const boardStore = useBoardStore()
-setInterval(() => {
+const interval = setInterval(() => {
   console.log('update metrics')
   boardStore.updateMetrics()
 }, 1000)
+
+setTimeout(() => {
+  clearInterval(interval)
+  boardStore.polling = 'canceled'
+}, 5000)
 </script>
 
 <style lang="scss"></style>
