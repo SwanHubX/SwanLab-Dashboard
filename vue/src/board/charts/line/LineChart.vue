@@ -1,6 +1,8 @@
 <template>line</template>
 
 <script setup>
+import { createRender, parseChartMetrics } from '../toolkit'
+
 /**
  * @description: 折线图表组件
  * @file: LineChart.vue
@@ -18,14 +20,10 @@ const props = defineProps({
 
 const emits = defineEmits(['ready'])
 
-onMounted(async () => {
-  // 耗时操作
-  await new Promise((resolve) => {
-    setTimeout(() => {
-      resolve()
-    }, 1000)
-  })
-  throw new Error('Ops!')
+const metrics = parseChartMetrics(props.chart)
+
+createRender(metrics.ids, () => {
+  throw new Error('未实现')
 })
 </script>
 

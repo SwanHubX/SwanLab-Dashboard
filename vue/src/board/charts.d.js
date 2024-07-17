@@ -3,22 +3,45 @@
  */
 
 /**
+ * @typedef {IndexId} ExpId 实验ID，是对实验唯一识别的 {@link IndexId}
+ */
+
+/**
+ * @typedef {IndexId} SectionId 分组ID，是唯一识别的 {@link IndexId}
+ */
+
+/**
+ * @typedef {IndexId} ChartId 图表ID，是唯一识别的 {@link IndexId}
+ */
+
+/**
+ * @typedef {IndexId} ColumnKey 指标（列）的key，在同一实验下唯一识别
+ */
+
+/**
+ * 指标（列）数据唯一标识
+ * @typedef {Object} MetricId
+ * @property {ExpId} experimentId 实验 ID，是唯一识别的 {@link IndexId}
+ * @property {ColumnKey} key 检索的指标名，是唯一识别的 {@link IndexId}
+ */
+
+/**
  * 图表分组
  * @typedef {Object} Section
  * @property {'PUBLIC' | 'PINNED' | 'HIDDEN'} type 分组类型
- * @property {IndexId} index 分组 ID，唯一识别的 {@link IndexId}
+ * @property {SectionId} index 分组 ID，唯一识别的 {@link IndexId}
  * @property {String} name 分组名
  * @property {Boolean} folded 是否折叠
  * @property {Object} [config] 分组配置
  * @property {7 | 6 | 4 | 3 | 2 | 1} cols 标准布局模式下，分组内部图表列数（一行最多显示几个图表）
  * @property { Number } rowHeight 分组内部图表行高
- * @property {IndexId[]} chartIndex 分组内的图表 ID 列表，用于排序，每个元素为唯一识别的图表 {@link IndexId}
+ * @property {ChartId[]} chartIndex 分组内的图表 ID 列表，用于排序，每个元素为唯一识别的图表 {@link IndexId}
  */
 
 /**
  * 图表
  * @typedef {Object} Chart
- * @property {IndexId} index 图表 ID
+ * @property {ChartId} index 图表 ID
  * @property {String} title 图表名
  * @property {'#528d59'} color 图表默认颜色
  * @property {Object} [config] 图表配置
@@ -31,7 +54,7 @@
  * @typedef {Object} Metric
  * @property {'X' | 'Y'} axis 指标所在轴
  * @property {String} name 图表中展示的指标名，用于前端显示的指标名称 - 默认情况下，单实验下为指标key，多实验下为实验名
- * @property {IndexId} expId 指标对应的实验 ID，是唯一识别的 {@link IndexId}
+ * @property {ExpId} expId 指标对应的实验 ID，是唯一识别的 {@link IndexId}
  * @property {[String, String]} colors 指标颜色，用于前端展示，长度为2，第一个为白天模式，第二个为夜间模式
  * @property {Column} column 列数据，指标实际存储指向
  */
@@ -41,21 +64,14 @@
  * @typedef {Object} Column
  * @property {'SYSTEM' | 'CUSTOM'} class 类型 - [SYSTEM, CUSTOM]
  * @property {String} [error] 错误信息, 字符串
- * @property {IndexId} key 列的id，每个列通过此属性进行识别，此属性为 列 的唯一识别 {@link IndexId}
+ * @property {ColumnKey} key 列的id，每个列通过此属性进行识别，此属性为 列 的唯一识别 {@link IndexId}
  * @property {String} name tag 名称，一般和 key 相同
  * @property {'LINE' | 'TEXT' | 'IMAGE' | 'AUDIO'} type tag 类型 - [LINE, TEXT, IMAGE, AUDIO]
  */
 
 /**
- * 指标数据唯一标识
- * @typedef {Object} MetricDataId
- * @property {IndexId} experimentId 实验 ID，是唯一识别的 {@link IndexId}
- * @property {IndexId} key 检索的指标名，是唯一识别的 {@link IndexId}
- */
-
-/**
  * 指标数据超集
- * @typedef {MetricDataId & { metrics: any[], type: 'scalar'| 'media'}} MetricData
+ * @typedef {MetricId & { metrics: any[], type: 'scalar'| 'media'}} MetricData
  */
 
 /**

@@ -22,14 +22,14 @@
 /**
  * 获取标量数据的回调
  * @callback getScalarMetrics
- * @param { MetricDataId[] } metrics - 需要获取的标量数据的id
+ * @param { MetricId[] } metrics - 需要获取的标量数据的id
  * @returns { Promise<ScalarData[]> }
  */
 
 /**
  * 获取媒体数据的回调
  * @callback getMediaMetrics
- * @param { MetricDataId[] } metrics - 需要获取的媒体数据的id
+ * @param { MetricId[] } metrics - 需要获取的媒体数据的id
  * @param { number } [step] - 获取数据的确定步长，为undefined时代表初次获取
  * @returns { Promise<MediaData[]> }
  */
@@ -37,7 +37,7 @@
 /**
  * 获取某个媒体资源的回调
  * @callback getMediaResource
- * @param { MetricDataId } metric - 需要获取的媒体数据的id
+ * @param { MetricId } metric - 需要获取的媒体数据的id
  * @param { string } path - 需要获取的媒体资源的路径，为 {@link MediaDetail.data} 中的一个元素
  */
 </script>
@@ -48,6 +48,7 @@
  * @file: ChartsBoard.vue
  * @since: 2024-07-14 20:43:37
  **/
+import { useBoardStore } from './store'
 import SectionsWrapper from './components/SectionsWrapper.vue'
 const props = defineProps({
   /**
@@ -88,6 +89,14 @@ const showSections = computed(() => {
 
 // ---------------------------------- 平滑逻辑 ----------------------------------
 // TODO
+
+// ---------------------------------- metric更新逻辑 ----------------------------------
+
+const boardStore = useBoardStore()
+setInterval(() => {
+  console.log('update metrics')
+  boardStore.updateMetrics()
+}, 1000)
 </script>
 
 <style lang="scss"></style>
