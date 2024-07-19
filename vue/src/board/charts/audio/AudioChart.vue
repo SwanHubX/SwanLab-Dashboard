@@ -6,12 +6,21 @@
  * @file: AudioChart.vue
  * @since: 2024-07-14 20:53:08
  **/
-
-/**
- * 组件配置
- * @type {{chart: AudioChart}}
- */
-const props = defineProps(['chart'])
+/** props */
+const props = defineProps({
+  /** 图表配置 */
+  chart: {
+    /** @type {PropType<Chart>} */
+    type: Object,
+    required: true
+  },
+  /** 图表数据 */
+  metricsData: {
+    /** @type {PropType< MediaData[]>} */
+    type: [Array, null],
+    required: true
+  }
+})
 </script>
 
 <style lang="scss" scoped></style>

@@ -136,8 +136,10 @@ const L = {
   },
   width: ref(0),
   height: computed(
-    // 总高度 =（当前行数-1） * 行间距 + 当前行数 * 行高
+    // 如果存在翻页，总高度 =（最大行数-1） * 行间距 + 最大行数 * 行高
+    // 如果不存在翻页，总高度 =（当前行数-1） * 行间距 + 当前行数 * 行高
     () => {
+      if (hasPagination.value) return (rowsNum.value - 1) * L.spacing.y + rowsNum.value * L.row.height.value
       const nowRows = Math.min(Math.ceil(nowCharts.value.length / columnsNum.value), rowsNum.value)
       return (nowRows - 1) * L.spacing.y + nowRows * L.row.height.value
     }
@@ -202,6 +204,11 @@ const getChartTranslateY = (index) => {
  * 当前展示的图表页数
  */
 const current = ref(1)
+
+/**
+ * 是否存在翻页
+ */
+const hasPagination = computed(() => props.charts.length > chartsNumPerPage.value)
 
 /**
  * 当前页展示的图表

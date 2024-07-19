@@ -1,4 +1,7 @@
 {
+  "chart": {
+    "error": "This chart is not displayed correctly"
+  },
   "section": {
     "name": {
       "Text": "Text",

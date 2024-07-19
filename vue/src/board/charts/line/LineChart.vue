@@ -6,12 +6,21 @@
  * @file: LineChart.vue
  * @since: 2024-07-14 20:53:33
  **/
-
-/**
- * 组件配置
- * @type {{chart: LineChart}}
- */
-const props = defineProps(['chart'])
+/** props */
+const props = defineProps({
+  /** 图表配置 */
+  chart: {
+    /** @type {PropType<Chart>} */
+    type: Object,
+    required: true
+  },
+  /** 图表数据 */
+  metricsData: {
+    /** @type {PropType< ScalarData[]>} */
+    type: [Array, null],
+    required: true
+  }
+})
 </script>
 
 <style lang="scss" scoped></style>
