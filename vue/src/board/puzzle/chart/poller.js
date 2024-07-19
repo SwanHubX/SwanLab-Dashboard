@@ -17,6 +17,7 @@ export default class Poller {
    * @param {Function} task 轮询执行函数，异步
    */
   async start(interval, task) {
+    // console.log('轮询器启动:', interval.value)
     await task()
     if (!interval.value) return
     this.state = 'waiting'
@@ -42,6 +43,7 @@ export default class Poller {
    * 轮询停止函数
    */
   stop = debounce(() => {
+    // console.log('轮询器停止')
     this.state = 'idle'
     clearInterval(this.p)
   })

@@ -95,7 +95,7 @@ const props = defineProps({
    * 如果为0则不轮询（取消轮询）
    * 目前轮询间隔的更改无法影响到原有轮询设置，需要先取消原有轮询再重新设置
    */
-  internal: {
+  interval: {
     /** @type {PropType<number>} */
     type: Number,
     default: 5000,
@@ -107,24 +107,17 @@ const props = defineProps({
   draggable: {
     type: Boolean,
     default: false
+  },
+  /**
+   * 是否需要刷新
+   */
+  refresh: {
+    type: Boolean,
+    default: false
   }
 })
 
 const emits = defineEmits(['fold', 'move'])
-
-// ------------------------- 全局依赖/状态 ----------------------------------
-
-provide('ScalarGetter', props.getScalarMetrics)
-provide('MediaGetter', props.getMediaMetrics)
-provide('MediaResourceGetter', props.getMediaResource)
-provide(
-  'Interval',
-  computed(() => (props.internal > 0 ? props.internal : 0))
-)
-provide(
-  'Draggable',
-  computed(() => props.draggable)
-)
 
 // -------------------------------- 搜索 ----------------------------------
 /**
@@ -137,7 +130,23 @@ const nowCharts = computed(() => {
 
 // ---------------------------- 图表置顶/隐藏 ------------------------------
 
-// -------------------------------- 平滑 ----------------------------------
+// ---------------------------- 全局平滑配置 -------------------------------
+
+const smooth = ref({})
+
+// ------------------------- 全局依赖/状态 ----------------------------------
+
+provide('ScalarGetter', props.getScalarMetrics)
+provide('MediaGetter', props.getMediaMetrics)
+provide('MediaResourceGetter', props.getMediaResource)
+provide(
+  'Interval',
+  computed(() => (props.interval >= 0 ? props.interval : 0))
+)
+provide(
+  'Draggable',
+  computed(() => props.draggable)
+)
 </script>
 
 <style lang="scss"></style>

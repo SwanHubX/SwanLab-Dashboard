@@ -7,7 +7,7 @@
         :get-media-metrics="getMediaMetrics"
         :get-scalar-metrics="getScalarMetrics"
         :get-media-resource="getMediaResource"
-        polling
+        :interval="interval"
         v-if="charts.length"
       />
       <!-- 图表不存在 -->
@@ -67,6 +67,9 @@ const _charts = shallowRef([])
 const expIds = computed(() => {
   return projectStore.experiments.map((exp) => (exp.show ? undefined : exp.id.toString())).filter((id) => id)
 })
+
+/** 用于规定轮询器状态，0为不轮询（关闭轮询） */
+const interval = ref(0)
 // ---------------------------------- 请求图表数据 ----------------------------------
 const ready = ref(false)
 http.get('/project/charts').then(({ data }) => {
