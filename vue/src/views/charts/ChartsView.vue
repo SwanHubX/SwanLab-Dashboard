@@ -1,7 +1,15 @@
 <template>
   <div class="flex flex-col min-h-full bg-higher">
     <template v-if="ready">
-      <ChartsBoard :sections="sections" :charts="charts" v-if="charts.length" />
+      <ChartsBoard
+        v-model:sections="sections"
+        v-model:charts="charts"
+        :get-media-metrics="getMediaMetrics"
+        :get-scalar-metrics="getScalarMetrics"
+        :get-media-resource="getMediaResource"
+        polling
+        v-if="charts.length"
+      />
       <!-- 图表不存在 -->
       <p class="font-semibold pt-5 text-center" v-else>Empty Charts</p>
     </template>
@@ -59,7 +67,7 @@ const _charts = shallowRef([])
 const expIds = computed(() => {
   return projectStore.experiments.map((exp) => (exp.show ? undefined : exp.id.toString())).filter((id) => id)
 })
-// ---------------------------------- 请求数据 ----------------------------------
+// ---------------------------------- 请求图表数据 ----------------------------------
 const ready = ref(false)
 http.get('/project/charts').then(({ data }) => {
   const r = formatLocalData(data)
@@ -67,6 +75,27 @@ http.get('/project/charts').then(({ data }) => {
   _charts.value = r[1]
   ready.value = true
 })
+
+// ---------------------------------- 请求媒体数据 ----------------------------------
+
+/** @type {import('@swanlab-vue/board/ChartsBoard.vue').getMediaMetricsRequest} */
+const getMediaMetrics = async (metrics, step) => {
+  console.log('getMediaMetrics', metrics, step)
+  return []
+}
+
+/** @type {import('@swanlab-vue/board/ChartsBoard.vue').getMediaResourceRequest} */
+const getMediaResource = async (resource) => {
+  console.log('getMediaResource', resource)
+  return []
+}
+// ---------------------------------- 请求标量数据 ----------------------------------
+
+/** @type {import('@swanlab-vue/board/ChartsBoard.vue').getScalarMetricsRequest} */
+const getScalarMetrics = async (metrics) => {
+  console.log('getScalarMetrics', metrics)
+  return []
+}
 </script>
 
 <style lang="scss" scoped></style>

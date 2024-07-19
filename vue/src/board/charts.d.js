@@ -71,12 +71,14 @@
 
 /**
  * 指标数据超集
- * @typedef {MetricId & { metrics: any[], type: 'scalar'| 'media'}} MetricData
+ * 约定metrics可以为undefined，此时对于chart层面而言，数据不存在，此请求无效
+ * @typedef {MetricId & { metrics?: any[], type: 'scalar'| 'media'}} MetricData
  */
 
 /**
  * 指标数据存储对象
- * @typedef {MetricData & {metrics: ScalarDetail[], type: 'scalar'}} ScalarData
+ * 约定metrics可以为undefined，此时对于chart层面而言，数据不存在，此请求无效
+ * @typedef {MetricData & {metrics?: ScalarDetail[], type: 'scalar'}} ScalarData
  */
 
 /**
@@ -89,7 +91,8 @@
 
 /**
  * 指标数据存储对象
- * @typedef {MetricData & {metrics: MediaDetail[], steps: Number[], type: 'media'}} MediaData
+ * 约定metrics可以为undefined，此时对于chart层面而言，数据不存在，此请求无效
+ * @typedef {MetricData & {metrics?: MediaDetail[], steps: Number[], type: 'media'}} MediaData
  */
 
 /**

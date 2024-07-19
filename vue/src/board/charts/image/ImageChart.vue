@@ -13,10 +13,14 @@ const props = defineProps({
     /** @type {PropType<Chart>} */
     type: Object,
     required: true
+  },
+  /** 图表数据 */
+  metricsData: {
+    /** @type {PropType< MediaData[]>} */
+    type: [Array, null],
+    required: true
   }
 })
-
-const emits = defineEmits(['ready'])
 </script>
 
 <style lang="scss" scoped></style>

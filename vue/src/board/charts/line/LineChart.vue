@@ -1,8 +1,6 @@
 <template>line</template>
 
 <script setup>
-import { createRender, parseChartMetrics } from '../toolkit'
-
 /**
  * @description: 折线图表组件
  * @file: LineChart.vue
@@ -15,15 +13,13 @@ const props = defineProps({
     /** @type {PropType<Chart>} */
     type: Object,
     required: true
+  },
+  /** 图表数据 */
+  metricsData: {
+    /** @type {PropType< ScalarData[]>} */
+    type: [Array, null],
+    required: true
   }
-})
-
-const emits = defineEmits(['ready'])
-
-const metrics = parseChartMetrics(props.chart)
-
-createRender(metrics.ids, () => {
-  throw new Error('未实现')
 })
 </script>
 
