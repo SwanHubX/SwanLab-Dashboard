@@ -9,7 +9,20 @@ import { useScalarProps } from '../toolkit'
  * @since: 2024-07-20 15:52:47
  **/
 /** props */
-const props = useScalarProps()
+const props = defineProps({
+  /** 图表配置 */
+  chart: {
+    /** @type {PropType<Chart>} */
+    type: Object,
+    required: true
+  },
+  /** 图表数据 */
+  metricsData: {
+    /** @type {PropType< ScalarData[]>} */
+    type: [Array, null],
+    required: true
+  }
+})
 </script>
 
 <style lang="scss" scoped></style>

@@ -1,6 +1,12 @@
 {
   "chart": {
-    "error": "This chart is not displayed correctly"
+    "error": {
+      "unknown": "This chart is not displayed correctly"
+    },
+    "limit": {
+      "title": "Showing first {count} runs",
+      "tip": "Click on the pencil icon (top right corner of this chart) to change the max number of runs displayed"
+    }
   },
   "section": {
     "name": {

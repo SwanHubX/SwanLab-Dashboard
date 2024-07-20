@@ -5,7 +5,7 @@
     </div>
     <div class="flex flex-col h-full items-center justify-center gap-2 text-dimmer" v-else-if="state === 'error'">
       <CloseCircleOutlined :style="{ fontSize: '20px' }" />
-      <p class="text-xs text-center">{{ $t('chart.chart.error') }}</p>
+      <p class="text-xs text-center">{{ $t('chart.chart.error.unknown') }}</p>
     </div>
     <component :is="chartComponent" :chart="chart" :metricsData="metricsData" v-else />
   </div>
