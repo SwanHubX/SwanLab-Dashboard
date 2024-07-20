@@ -1,5 +1,7 @@
 <template>
-  <SectionsWrapper :sections="sections" :charts="nowCharts" />
+  <div :key="boardKey">
+    <SectionsWrapper :sections="stagingSections" :charts="nowCharts" />
+  </div>
 </template>
 
 <script>
@@ -19,6 +21,13 @@
  * @param { IndexId } index - 当前图表的index
  * @param { 'move' | 'pin' | 'hide' } type - 移动类型，move代表移动，pin代表置顶，hide代表隐藏
  * @returns { Promise<void>  }
+ */
+
+/**
+ * 跳转到某个实验的回调
+ * @callback jumpToExperimentCallback
+ * @param { IndexId } index - 当前图表的index
+ * @param { IndexId } expId - 需要跳转到的实验的index
  */
 
 /**
@@ -51,19 +60,31 @@
  * @file: ChartsBoard.vue
  * @since: 2024-07-14 20:43:37
  **/
-import { useBoardStore } from './store'
 import SectionsWrapper from './components/SectionsWrapper.vue'
 
-/**
- * @type {Ref<Section[]>} Section配置组
- */
-const sections = defineModel('sections')
-/**
- * @type {Ref<Chart[]>} Chart配置组
- */
-const charts = defineModel('charts')
+const refresh = defineModel('refresh', {
+  type: Boolean,
+  default: false
+})
 
 const props = defineProps({
+  /**
+   * section配置
+   */
+  sections: {
+    /** @type { PropType<Section[]> } */
+    type: Array,
+    required: true
+  },
+  /**
+   * chart配置
+   */
+  charts: {
+    /** @type { PropType<Chart[]> } */
+    type: Array,
+    required: true
+  },
+
   /**
    * 获取标量数据的请求依赖
    */
@@ -108,17 +129,14 @@ const props = defineProps({
   draggable: {
     type: Boolean,
     default: false
-  },
-  /**
-   * 是否需要刷新
-   */
-  refresh: {
-    type: Boolean,
-    default: false
   }
 })
+const stagingSections = ref(props.sections)
+const stagingCharts = ref(props.charts)
+const boardKey = ref(0)
+const emits = defineEmits(['fold', 'move', 'jump'])
 
-const emits = defineEmits(['fold', 'move'])
+// ---------------------------------- 刷新 ----------------------------------
 
 // -------------------------------- 搜索 ----------------------------------
 /**
@@ -126,7 +144,7 @@ const emits = defineEmits(['fold', 'move'])
  */
 const nowCharts = computed(() => {
   // TODO 搜索过滤
-  return charts.value
+  return stagingCharts.value
 })
 
 // ---------------------------- 图表置顶/隐藏 ------------------------------

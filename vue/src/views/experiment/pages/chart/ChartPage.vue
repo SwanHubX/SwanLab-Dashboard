@@ -2,8 +2,8 @@
   <!-- 图表容器 -->
   <div class="chart-page">
     <ChartsBoard
-      v-model:sections="sections"
-      v-model:charts="charts"
+      :sections="sections"
+      :charts="charts"
       :get-media-metrics="getMediaMetrics"
       :get-scalar-metrics="getScalarMetrics"
       :get-media-resource="getMediaResource"

@@ -2,12 +2,13 @@
   <div class="flex flex-col min-h-full bg-higher">
     <template v-if="ready">
       <ChartsBoard
-        v-model:sections="sections"
-        v-model:charts="charts"
+        :sections="sections"
+        :charts="charts"
         :get-media-metrics="getMediaMetrics"
         :get-scalar-metrics="getScalarMetrics"
         :get-media-resource="getMediaResource"
         :interval="interval"
+        v-model:refresh="refresh"
         v-if="charts.length"
       />
       <!-- 图表不存在 -->
@@ -67,6 +68,9 @@ const _charts = shallowRef([])
 const expIds = computed(() => {
   return projectStore.experiments.map((exp) => (exp.show ? undefined : exp.id.toString())).filter((id) => id)
 })
+
+/** @type {Ref<boolean>} */
+const refresh = ref(false)
 
 /** 用于规定轮询器状态，0为不轮询（关闭轮询） */
 const interval = ref(0)
