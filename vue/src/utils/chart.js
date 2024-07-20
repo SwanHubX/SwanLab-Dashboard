@@ -97,17 +97,44 @@ export const formatLocalData = (data, exps) => {
       rowHeight: 272,
       cols: /** @type {7 | 6 | 4 | 3 | 2 | 1} */ (3)
     }
+
     // 处理图表分类块的类别：[PUBLIC, PINNED, HIDDEN]
-    if (ns.name === 'pinned' && ns.id === -1) temp.type = 'PINNED'
-    else if (ns.name === 'hidden' && ns.id === -2) temp.type = 'HIDDEN'
-    else temp.type = 'PUBLIC'
+    const typeMap = {
+      '-1': 'PINNED',
+      '-2': 'HIDDEN'
+    }
+    temp.type = typeMap[ns.id] || 'PUBLIC'
+
     // 媒体类型的空间默认 1 列,高度300
-    if (['Image', 'Audio', 'Text', 'Media'].includes(temp.name)) {
+    const mediaTypes = ['Image', 'Audio', 'Text', 'Media']
+    if (mediaTypes.includes(temp.name)) {
       temp.cols = 1
       temp.rowHeight = 300
     }
+
     return temp
   })
+
+  // 如果没有 PINNED 手动补上
+  const addSectionIfMissing = (type, name, index) => {
+    if (!tempSections.some((section) => section.type === type)) {
+      const data = {
+        name,
+        chartIndex: [],
+        folded: true,
+        index: String(index),
+        config: null,
+        type,
+        rowHeight: 272,
+        cols: /** @type {7 | 6 | 4 | 3 | 2 | 1} */ (3)
+      }
+      if (type === 'HIDDEN') tempSections.push(data)
+      else tempSections.unshift(data)
+    }
+  }
+
+  addSectionIfMissing('PINNED', 'pinned', -1)
+  addSectionIfMissing('HIDDEN', 'hidden', -2)
   // ---------------------------------- chart 相关 ----------------------------------
   /** @type {Chart[]} */
   const tempCharts = charts.map((/** @type {OriginalChart} */ chart) => {
