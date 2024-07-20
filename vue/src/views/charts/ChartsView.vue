@@ -96,8 +96,8 @@ const getMediaResource = async (resource) => {
 
 /** @type {import('@swanlab-vue/board/ChartsBoard.vue').getScalarMetricsRequest} */
 const getScalarMetrics = async (metrics) => {
-  console.log('getScalarMetrics', metrics)
-  return []
+  const res = await Promise.all(metrics.map((m) => http.get(`/experiment/${m.experimentId}/tag/${m.key}`)))
+  return res.map((r) => r.data)
 }
 </script>
 

@@ -74,6 +74,7 @@ onMounted(() => {
         if (m.metrics?.length) msd.push(m)
       }
       if (msd.length) metricsData.value = msd
+      console.log('获取数据成功:', msd)
     } catch (e) {
       console.error('获取数据失败:', e)
       state.value = 'error'
