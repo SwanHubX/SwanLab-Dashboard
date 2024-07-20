@@ -62,6 +62,7 @@ const sections = defineModel('sections')
  * @type {Ref<Chart[]>} Chart配置组
  */
 const charts = defineModel('charts')
+
 const props = defineProps({
   /**
    * 获取标量数据的请求依赖

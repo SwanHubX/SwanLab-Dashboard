@@ -1,3 +1,4 @@
+import http from '@swanlab-vue/api/http'
 /**
  * @typedef { Object } OriginalChartData 本地版图表初始化接口返回的原始数据类型
  * @property { OriginalNamespace[] } namespaces 命名空间
@@ -21,8 +22,8 @@
 
 /**
  * @typedef {Object} OriginalSource
- * @typedef {String} key 指标名称
- * @typedef {String} experiment_id 实验ID
+ * @property {String} key 指标名称
+ * @property {String} experiment_id 实验ID
  */
 
 /**
@@ -39,8 +40,7 @@
  * @property { Object | null } error 错误信息
  * @property { Number } status 图表状态
  * @property { Number } system 0 为系统自动生成的多试验图表，1 为某实验所属图表
- * @property { Array<String> } source 图表数据来源列表，当前为实验名
- * @property { Object<String, Number> } source_map 图表数据来源映射，当前为实验ID
+ * @property { Array<OriginalSource> } source 图表数据来源列表
  * @property { Object | null } experiment_id 所属实验信息(多实验图表时为 null)
  * @property { Object | null } project_id 所属项目信息(单实验图表时为 null)
  * @property { String } created_time 创建时间
@@ -78,7 +78,7 @@ const generateYAxis = (key, name, type) => {
 /**
  * 针对本地版进行数据格式化
  * @param { OriginalChartData } data
- * @param {{light:string, dark:string, id: Number}} [exps] 实验信息，用于设置指标颜色
+ * @param {Array<{light:string, dark:string, id: Number}>} [exps] 实验信息，用于设置指标颜色
  * @returns { [ Section[], Chart[]] } 格式化后的数据
  */
 export const formatLocalData = (data, exps) => {
@@ -109,7 +109,7 @@ export const formatLocalData = (data, exps) => {
   })
   // ---------------------------------- chart 相关 ----------------------------------
   /** @type {Chart[]} */
-  const tempCharts = charts.map((chart) => {
+  const tempCharts = charts.map((/** @type {OriginalChart} */ chart) => {
     const type = chart.type.toUpperCase()
     const temp = {
       index: String(chart.id),
@@ -138,11 +138,17 @@ export const formatLocalData = (data, exps) => {
       })
     }
     chart.source.forEach((m) => {
-      console.log('m:', m, chart.source_map)
+      // 寻找colors
+      const colors = []
+      if (exps) {
+        const exp = exps.find((v) => v.id === Number(m.experiment_id))
+        colors.push(exp.light)
+        colors.push(exp.dark)
+      }
       temp.metrics.push({
         axis: temp.type === 'LINE' ? 'Y' : 'X',
-        colors: [],
-        expId: String(chart.source_map[m]),
+        colors,
+        expId: m.experiment_id,
         name: m,
         column: JSON.parse(JSON.stringify(yAxis)) // 深拷贝，防止在下一步错误处理中添加错误时让所有 metric 都报错
       })
@@ -174,4 +180,25 @@ export const formatLocalScalarData = (metricsData) => {
       metrics: metric.list
     }
   })
+}
+
+// ---------------------------------- 请求媒体数据 ----------------------------------
+
+/** @type {import('@swanlab-vue/board/ChartsBoard.vue').getMediaMetricsRequest} */
+export const getMediaMetrics = async (metrics, step) => {
+  console.log('getMediaMetrics', metrics, step)
+  return []
+}
+
+/** @type {import('@swanlab-vue/board/ChartsBoard.vue').getMediaResourceRequest} */
+export const getMediaResource = async (resource) => {
+  console.log('getMediaResource', resource)
+  return []
+}
+// ---------------------------------- 请求标量数据 ----------------------------------
+
+/** @type {import('@swanlab-vue/board/ChartsBoard.vue').getScalarMetricsRequest} */
+export const getScalarMetrics = async (metrics) => {
+  const res = await Promise.all(metrics.map((m) => http.get(`/experiment/${m.experimentId}/tag/${m.key}`)))
+  return formatLocalScalarData(res.map((r) => r.data))
 }
