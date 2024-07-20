@@ -84,39 +84,55 @@ const generateYAxis = (key, name, type) => {
  */
 export const formatLocalData = (data, exps) => {
   const { namespaces, charts } = data
-  // ---------------------------------- section 相关 ----------------------------------
-  /** @type {Section[]} */
-  const tempSections = namespaces.map((/** @type {OriginalNamespace} */ ns) => {
-    const temp = {
+
+  const tempSections = formatSections(namespaces)
+  addMissingSections(tempSections)
+
+  const tempCharts = formatCharts(charts, exps)
+
+  return [tempSections, tempCharts]
+}
+
+/**
+ * 格式化 Namespace 数据结构到 Section
+ * @param {OriginalNamespace[]} namespaces
+ * @returns {Section[]} sections
+ */
+const formatSections = (namespaces) => {
+  return namespaces.map((ns) => {
+    const typeMap = {
+      '-1': 'PINNED',
+      '-2': 'HIDDEN'
+    }
+
+    const mediaTypes = ['Image', 'Audio', 'Text', 'Media']
+    const type = typeMap[ns.id] || 'PUBLIC'
+
+    const section = {
       name: ns.name,
       chartIndex: ns.charts.map((v) => String(v)),
       folded: ns.opened === 0,
       config: ns.more,
       index: String(ns.id),
-      type: null,
-      rowHeight: 272,
-      cols: /** @type {7 | 6 | 4 | 3 | 2 | 1} */ (3)
+      type: type,
+      rowHeight: mediaTypes.includes(ns.name) ? 300 : 272,
+      /** @type {7 | 6 | 4 | 3 | 2 | 1} */
+      cols: mediaTypes.includes(ns.name) ? 1 : 3
     }
-    // 处理图表分类块的类别：[PUBLIC, PINNED, HIDDEN]
-    const typeMap = {
-      '-1': 'PINNED',
-      '-2': 'HIDDEN'
-    }
-    temp.type = typeMap[ns.id] || 'PUBLIC'
-    // 媒体类型的空间默认 1 列,高度300
-    const mediaTypes = ['Image', 'Audio', 'Text', 'Media']
-    if (mediaTypes.includes(temp.name)) {
-      temp.cols = 1
-      temp.rowHeight = 300
-    }
-    return temp
-  })
 
-  // 如果没有 PINNED 或 HIDDEN 手动补上
+    return section
+  })
+}
+
+/**
+ * 如果确实 HIDDEN 或 PINNED，则添加
+ * @param {Section[]} sections
+ */
+const addMissingSections = (sections) => {
   const addSectionIfMissing = (type, name, index) => {
-    if (!tempSections.some((section) => section.type === type)) {
+    if (!sections.some((section) => section.type === type)) {
       /** @type {Section} */
-      const data = {
+      const section = {
         name,
         chartIndex: [],
         folded: true,
@@ -124,82 +140,105 @@ export const formatLocalData = (data, exps) => {
         config: null,
         type,
         rowHeight: 272,
-        cols: /** @type {7 | 6 | 4 | 3 | 2 | 1} */ (3)
+        cols: 3
       }
-      if (type === 'HIDDEN') tempSections.push(data)
-      else tempSections.unshift(data)
+
+      if (type === 'HIDDEN') sections.push(section)
+      else sections.unshift(section)
     }
   }
-  if (tempSections.length !== 0) {
-    // 没有 PINNED 类型的 section
-    if (!tempSections.some((s) => s.type === 'PINNED')) addSectionIfMissing('PINNED', 'pinned', -1)
-    if (!tempSections.some((s) => s.type === 'HIDDEN')) addSectionIfMissing('HIDDEN', 'hidden', -2)
+  // 无命名空间则忽略
+  if (sections.length !== 0) {
+    addSectionIfMissing('PINNED', 'pinned', -1)
+    addSectionIfMissing('HIDDEN', 'hidden', -2)
   }
-  // ---------------------------------- chart 相关 ----------------------------------
-  /** @type {Chart[]} */
-  const tempCharts = charts.map((/** @type {OriginalChart} */ chart) => {
-    const type = chart.type.toUpperCase()
-    const temp = {
+}
+
+/**
+ * 格式化 OriginalChart 为 Chart
+ * @param {OriginalChart[]} charts
+ * @param {Array<{light:string, dark:string, id: Number}>} [exps] exps
+ * @returns {Chart[]} charts
+ */
+const formatCharts = (charts, exps) => {
+  return charts.map((chart) => {
+    /** @type {'LINE' | 'TEXT' | 'IMAGE' | 'AUDIO'} */
+    // @ts-ignore
+    const type = chart.type.toUpperCase() === 'DEFAULT' ? 'LINE' : chart.type.toUpperCase()
+    /** @type {Chart} */
+    const tempChart = {
       index: String(chart.id),
       title: chart.name,
       config: chart.config,
-      color: /** @type {'#528d59'} */ ('#528d59'),
-      type: /** @type {'LINE' | 'TEXT' | 'IMAGE' | 'AUDIO'} */ (type === 'DEFAULT' ? 'LINE' : type),
+      color: '#528d59',
+      type: type,
       metrics: []
     }
-    // ---------------------------------- metric 相关 ----------------------------------
-    const yAxis = generateYAxis(temp.title, temp.title, temp.type === 'LINE' ? 'FLOAT' : temp.type)
+
+    const yAxis = generateYAxis(tempChart.title, tempChart.title, type === 'LINE' ? 'FLOAT' : type)
+    /** @type {Column} */
+    // @ts-ignore
     const xAxis = generateXAxis()
-    // 这线图需要添加配置信息，且metric中添加系统生成的X轴
-    if (temp.type === 'LINE') {
-      temp.config = {
+
+    if (type === 'LINE') {
+      tempChart.config = {
         xAxis,
         xTitle: 'Step',
         yAxis: [yAxis],
         yTitle: chart.name
       }
-      temp.metrics.push({
+      tempChart.metrics.push({
         axis: 'X',
         column: xAxis,
+        // @ts-ignore
         colors: [],
         name: 'summary'
       })
     }
 
-    // 大于10个指标时，只取前10个
     let source = chart.source
     if (source.length > 10) {
-      temp.captured = 10
+      tempChart.captured = 10
       source = source.slice(0, 10)
     }
 
     source.forEach((m) => {
-      // 寻找colors
-      const colors = []
-      if (exps) {
-        const exp = exps.find((v) => v.id === Number(m.experiment_id))
-        colors.push(exp.light)
-        colors.push(exp.dark)
-      }
-      temp.metrics.push({
-        axis: temp.type === 'LINE' ? 'Y' : 'X',
+      const colors = exps ? getExperimentColors(exps, m.experiment_id) : []
+      tempChart.metrics.push({
+        axis: type === 'LINE' ? 'Y' : 'X',
+        // @ts-ignore
         colors,
         expId: m.experiment_id,
         name: m.key,
-        column: JSON.parse(JSON.stringify(yAxis)) // 深拷贝，防止在下一步错误处理中添加错误时让所有 metric 都报错
+        column: JSON.parse(JSON.stringify(yAxis))
       })
     })
-    // ---------------------------------- 错误相关 ----------------------------------
-    const error = chart.error
-    if (!error || Object.keys(error).length === 0) return temp
-    // 遍历error,找到对应的metric，设置error
-    Object.keys(error).forEach((key) => {
-      const target = temp.metrics.find((v) => v.name === key)
-      target.column.error = error[key]
-    })
-    return temp
+
+    handleChartErrors(chart, tempChart)
+
+    return tempChart
   })
-  return [tempSections, tempCharts]
+}
+
+/**
+ * 获取实验颜色
+ * @param {number} experimentId
+ * @param {Array<{light:string, dark:string, id: Number}>} [exps] exps
+ * @returns
+ */
+const getExperimentColors = (experimentId, exps) => {
+  const exp = exps.find((v) => v.id === Number(experimentId))
+  return exp ? [exp.light, exp.dark] : []
+}
+const handleChartErrors = (chart, tempChart) => {
+  const error = chart.error
+  if (!error || Object.keys(error).length === 0) return
+  Object.keys(error).forEach((key) => {
+    const target = tempChart.metrics.find((v) => v.name === key)
+    if (target) {
+      target.column.error = error[key]
+    }
+  })
 }
 
 /**
