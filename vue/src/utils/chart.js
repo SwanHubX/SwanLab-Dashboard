@@ -158,7 +158,7 @@ export const formatLocalData = (data, exps) => {
         axis: temp.type === 'LINE' ? 'Y' : 'X',
         colors,
         expId: m.experiment_id,
-        name: m,
+        name: m.key,
         column: JSON.parse(JSON.stringify(yAxis)) // 深拷贝，防止在下一步错误处理中添加错误时让所有 metric 都报错
       })
     })
