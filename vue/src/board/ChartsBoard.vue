@@ -129,6 +129,13 @@ const props = defineProps({
   draggable: {
     type: Boolean,
     default: false
+  },
+  /**
+   * 深色模式
+   */
+  dark: {
+    type: Boolean,
+    default: false
   }
 })
 const stagingSections = ref(props.sections)
@@ -165,6 +172,10 @@ provide(
 provide(
   'Draggable',
   computed(() => props.draggable)
+)
+provide(
+  'Dark',
+  computed(() => props.dark)
 )
 </script>
 

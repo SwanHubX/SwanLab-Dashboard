@@ -46,6 +46,7 @@
  * @property {'#528d59'} color 图表默认颜色
  * @property {Object} [config] 图表配置
  * @property {'LINE' | 'TEXT' | 'IMAGE' | 'AUDIO'} type 图表类型，分配为不同的组件
+ * @property {Number} [captured] 当metric过多时，会截取最前面的metric，此时此字段表示截取的数量，否则不存在
  * @property {Metric[]} metrics 此图表包含的指标列表
  */
 

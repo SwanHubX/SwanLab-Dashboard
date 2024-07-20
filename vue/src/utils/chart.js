@@ -1,4 +1,5 @@
 import http from '@swanlab-vue/api/http'
+import { tm } from '@swanlab-vue/i18n'
 /**
  * @typedef { Object } OriginalChartData 本地版图表初始化接口返回的原始数据类型
  * @property { OriginalNamespace[] } namespaces 命名空间
@@ -137,7 +138,15 @@ export const formatLocalData = (data, exps) => {
         name: 'summary'
       })
     }
-    chart.source.forEach((m) => {
+
+    // 大于10个指标时，只取前10个
+    let source = chart.source
+    if (source.length > 10) {
+      temp.captured = 10
+      source = source.slice(0, 10)
+    }
+
+    source.forEach((m) => {
       // 寻找colors
       const colors = []
       if (exps) {
