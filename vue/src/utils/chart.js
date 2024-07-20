@@ -97,27 +97,25 @@ export const formatLocalData = (data, exps) => {
       rowHeight: 272,
       cols: /** @type {7 | 6 | 4 | 3 | 2 | 1} */ (3)
     }
-
     // 处理图表分类块的类别：[PUBLIC, PINNED, HIDDEN]
     const typeMap = {
       '-1': 'PINNED',
       '-2': 'HIDDEN'
     }
     temp.type = typeMap[ns.id] || 'PUBLIC'
-
     // 媒体类型的空间默认 1 列,高度300
     const mediaTypes = ['Image', 'Audio', 'Text', 'Media']
     if (mediaTypes.includes(temp.name)) {
       temp.cols = 1
       temp.rowHeight = 300
     }
-
     return temp
   })
 
-  // 如果没有 PINNED 手动补上
+  // 如果没有 PINNED 或 HIDDEN 手动补上
   const addSectionIfMissing = (type, name, index) => {
     if (!tempSections.some((section) => section.type === type)) {
+      /** @type {Section} */
       const data = {
         name,
         chartIndex: [],
@@ -132,9 +130,11 @@ export const formatLocalData = (data, exps) => {
       else tempSections.unshift(data)
     }
   }
-
-  addSectionIfMissing('PINNED', 'pinned', -1)
-  addSectionIfMissing('HIDDEN', 'hidden', -2)
+  if (tempSections.length !== 0) {
+    // 没有 PINNED 类型的 section
+    if (!tempSections.some((s) => s.type === 'PINNED')) addSectionIfMissing('PINNED', 'pinned', -1)
+    if (!tempSections.some((s) => s.type === 'HIDDEN')) addSectionIfMissing('HIDDEN', 'hidden', -2)
+  }
   // ---------------------------------- chart 相关 ----------------------------------
   /** @type {Chart[]} */
   const tempCharts = charts.map((/** @type {OriginalChart} */ chart) => {

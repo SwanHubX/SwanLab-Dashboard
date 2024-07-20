@@ -108,30 +108,38 @@ describe('formatLocalData => sections', () => {
     })
   }
 
-  it('empty sections', () => {
+  it('没有 section', () => {
     const [sections] = formatLocalData({ namespaces: [], charts: [] })
     expect(sections).to.deep.equal([])
   })
 
-  it('sections without hide or pin', () => {
+  it('自动生成 PINNED 和 HIDDEN', () => {
     const namespaces = [mockOriginalNamespace(), mockOriginalNamespace(1, 'test', 0), mockOriginalNamespace()]
     const [sections] = formatLocalData({ namespaces, charts: [] })
-    checkSections(sections, namespaces)
+    checkSections(sections.slice(1, -1), namespaces)
+    expect(sections[0].type).toEqual('PINNED')
+    expect(sections[0].chartIndex.length).toEqual(0)
+    expect(sections[4].type).toEqual('HIDDEN')
+    expect(sections[4].chartIndex.length).toEqual(0)
   })
 
-  it('pinned sections', () => {
+  it('有 PINNED，自动生成 HIDDEN', () => {
     const namespaces = [mockOriginalNamespace(-1, 'pinned', 1), mockOriginalNamespace(2, 'test', 1)]
     const [sections] = formatLocalData({ namespaces, charts: [] })
-    checkSections(sections, namespaces)
+    checkSections(sections.slice(0, -1), namespaces)
+    expect(sections[2].type).toEqual('HIDDEN')
+    expect(sections[2].chartIndex.length).toEqual(0)
   })
 
-  it('hidden sections', () => {
+  it('有 HIDDEN，自动生成 PINNED', () => {
     const namespaces = [mockOriginalNamespace(-2, 'hidden', 0), mockOriginalNamespace(2, 'test', 1)]
     const [sections] = formatLocalData({ namespaces, charts: [] })
-    checkSections(sections, namespaces)
+    checkSections(sections.slice(1, -2), namespaces)
+    expect(sections[0].type).toEqual('PINNED')
+    expect(sections[0].chartIndex.length).toEqual(0)
   })
 
-  it('media and common section', () => {
+  it('媒体 section 和普通 section', () => {
     const medias = ['image', 'audio', 'text', 'media']
     const namespaces = medias.map((name) => mockOriginalNamespace(Number(customAlphabet('123456789', 4)()), name))
     const [sections] = formatLocalData({ namespaces, charts: [] })
