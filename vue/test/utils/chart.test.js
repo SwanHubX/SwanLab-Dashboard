@@ -25,11 +25,22 @@ const generateRandomArray = (type = 'number', length = undefined) => {
 }
 
 /**
+ * @param {number} [length=5] 数据长度
+ * @returns {import('@swanlab-vue/utils/chart').OriginalSource[]} 随机生成的数据
+ */
+const generateRandomSource = (length = 5) => {
+  return generateRandomArray('number', length).map(() => ({
+    experiment_id: nanoid(),
+    key: nanoid()
+  }))
+}
+
+/**
  * 生成一个本地后端返回的原始 namespace 数据
  * @param { number } id
  * @param { string } name
  * @param { number } opened
- * @returns { import('@swanlab-vue/utils/chart').Namespace } namespace
+ * @returns { import('@swanlab-vue/utils/chart').OriginalNamespace } namespace
  */
 const mockOriginalNamespace = (id = 1, name = 'test', opened = 1) => {
   const time = new Date().toISOString()
@@ -53,15 +64,12 @@ const mockOriginalNamespace = (id = 1, name = 'test', opened = 1) => {
  * @param { ChartType } type
  * @param { boolean } multi
  * @param { string } reference
+ * @param { number } sourceLength
  * @returns { import('@swanlab-vue/utils/chart').OriginalChart }
  */
-const mockOriginalChart = (type = 'default', multi = false, reference = 'step') => {
+const mockOriginalChart = (type = 'default', multi = false, reference = 'step', sourceLength = 1) => {
   const time = new Date().toISOString()
-  const source = generateRandomArray('string', multi ? null : 1).map((item) => String(item))
-  const source_map = {}
-  source.forEach((item) => {
-    source_map[item] = customAlphabet('123456789', 4)()
-  })
+  const source = generateRandomSource(sourceLength)
   return {
     id: Number(customAlphabet('123456789', 4)()),
     type,
@@ -76,7 +84,6 @@ const mockOriginalChart = (type = 'default', multi = false, reference = 'step') 
     multi,
     reference,
     source,
-    source_map,
     experiment_id: multi ? null : {},
     project_id: multi ? {} : null,
     created_time: time,
@@ -88,7 +95,7 @@ describe('formatLocalData => sections', () => {
   /**
    * 检测转化后的 section 数据
    * @param { Section[] } sections
-   * @param { import('@swanlab-vue/utils/chart').Namespace[] } namespaces
+   * @param { import('@swanlab-vue/utils/chart').OriginalNamespace[] } namespaces
    */
   const checkSections = (sections, namespaces) => {
     sections.forEach((section, index) => {
@@ -129,16 +136,16 @@ describe('formatLocalData => sections', () => {
     const namespaces = medias.map((name) => mockOriginalNamespace(Number(customAlphabet('123456789', 4)()), name))
     const [sections] = formatLocalData({ namespaces, charts: [] })
     sections.forEach((section) => {
-      // 媒体类型的空间默认 1 列,高度300
-      expect(section.cols).toEqual(1)
-      expect(section.rowHeight).toEqual(300)
+      // 媒体类型的空间默认 3 列,高度300
+      expect(section.cols).toEqual(3)
+      expect(section.rowHeight).toEqual(272)
     })
     const commonNamespaces = [mockOriginalNamespace()]
     const [commonSections] = formatLocalData({ namespaces: commonNamespaces, charts: [] })
     commonSections.forEach((section) => {
       // 普通类型的空间默认 3 列,高度400
       expect(section.cols).toEqual(3)
-      expect(section.rowHeight).toEqual(400)
+      expect(section.rowHeight).toEqual(272)
     })
   })
 })
@@ -236,7 +243,7 @@ describe('formatLocalData => charts', () => {
     oc.source.forEach((s) => {
       oc.error = {
         ...(oc.error || {}), // error 可能为obj或null
-        [s]: {
+        [s.key]: {
           data_class: nanoid(5),
           excepted: nanoid(5)
         }

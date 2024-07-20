@@ -1,4 +1,7 @@
-<template>line</template>
+<template>
+  <ChartToolbar />
+  <div></div>
+</template>
 
 <script setup>
 /**
@@ -6,6 +9,8 @@
  * @file: LineChart.vue
  * @since: 2024-07-14 20:53:33
  **/
+import ChartToolbar from '../.components/ChartToolbar.vue'
+import { watch } from 'vue'
 /** props */
 const props = defineProps({
   /** 图表配置 */
@@ -21,6 +26,15 @@ const props = defineProps({
     required: true
   }
 })
+
+watch(
+  () => props.metricsData,
+  (newVal) => {},
+  { immediate: true }
+)
+
+// ---------------------------------- 渲染函数 ----------------------------------
+const render = (/** @type {ScalarData[]} */ metricsData) => {}
 </script>
 
 <style lang="scss" scoped></style>

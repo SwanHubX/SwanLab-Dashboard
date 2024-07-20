@@ -2,12 +2,13 @@
   <div class="flex flex-col min-h-full bg-higher">
     <template v-if="ready">
       <ChartsBoard
-        v-model:sections="sections"
-        v-model:charts="charts"
+        :sections="sections"
+        :charts="charts"
         :get-media-metrics="getMediaMetrics"
         :get-scalar-metrics="getScalarMetrics"
         :get-media-resource="getMediaResource"
         :interval="interval"
+        v-model:refresh="refresh"
         v-if="charts.length"
       />
       <!-- 图表不存在 -->
@@ -27,7 +28,7 @@
 import http from '@swanlab-vue/api/http'
 import { ref } from 'vue'
 import ChartsBoard from '@swanlab-vue/board/ChartsBoard.vue'
-import { formatLocalData } from '@swanlab-vue/utils/chart'
+import { formatLocalData, getMediaMetrics, getMediaResource, getScalarMetrics } from '@swanlab-vue/utils/chart'
 import { useProjectStore } from '@swanlab-vue/store'
 const projectStore = useProjectStore()
 
@@ -68,6 +69,9 @@ const expIds = computed(() => {
   return projectStore.experiments.map((exp) => (exp.show ? undefined : exp.id.toString())).filter((id) => id)
 })
 
+/** @type {Ref<boolean>} */
+const refresh = ref(false)
+
 /** 用于规定轮询器状态，0为不轮询（关闭轮询） */
 const interval = ref(0)
 // ---------------------------------- 请求图表数据 ----------------------------------
@@ -78,28 +82,6 @@ http.get('/project/charts').then(({ data }) => {
   _charts.value = r[1]
   ready.value = true
 })
-
-// ---------------------------------- 请求媒体数据 ----------------------------------
-
-/** @type {import('@swanlab-vue/board/ChartsBoard.vue').getMediaMetricsRequest} */
-const getMediaMetrics = async (metrics, step) => {
-  console.log('getMediaMetrics', metrics, step)
-  return []
-}
-
-/** @type {import('@swanlab-vue/board/ChartsBoard.vue').getMediaResourceRequest} */
-const getMediaResource = async (resource) => {
-  console.log('getMediaResource', resource)
-  return []
-}
-// ---------------------------------- 请求标量数据 ----------------------------------
-
-/** @type {import('@swanlab-vue/board/ChartsBoard.vue').getScalarMetricsRequest} */
-const getScalarMetrics = async (metrics) => {
-  console.log('getScalarMetrics', metrics)
-  return []
-}
 </script>
 
 <style lang="scss" scoped></style>
-ku

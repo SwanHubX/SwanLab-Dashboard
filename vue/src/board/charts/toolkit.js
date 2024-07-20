@@ -1,5 +1,6 @@
 import { inject } from 'vue'
 
+/** 媒体信息获取器 */
 export class MediaGetter {
   constructor() {
     /** @type {import("../ChartsBoard.vue").getMediaMetricsRequest} */
@@ -19,3 +20,6 @@ export class MediaGetter {
    * */
   resource = this.getMediaResource
 }
+
+/** 创建渲染函数 */
+export const createRender = () => {}

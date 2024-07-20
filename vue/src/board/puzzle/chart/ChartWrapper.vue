@@ -1,13 +1,13 @@
 <template>
-  <div class="h-full w-full absolute top-0 left-0 rounded">
-    <div class="flex items-center justify-center h-full" v-if="state === 'loading'">
+  <div class="h-full w-full relative top-0 left-0 rounded py-4 px-3">
+    <div class="flex items-center justify-center h-full z-10" v-if="state === 'loading'">
       <Spin />
     </div>
-    <div class="flex flex-col h-full items-center justify-center gap-2 text-dimmer" v-else-if="state === 'error'">
+    <div class="flex flex-col h-full items-center justify-center gap-2 text-dimmer z-10" v-else-if="state === 'error'">
       <CloseCircleOutlined :style="{ fontSize: '20px' }" />
-      <p class="text-xs text-center">{{ $t('chart.chart.error') }}</p>
+      <p class="text-xs text-center">{{ $t('chart.chart.error.unknown') }}</p>
     </div>
-    <component :is="charts[chart.type.toLowerCase()]" :chart="chart" :metricsData="metricsData" v-else />
+    <component :is="chartComponent" :chart="chart" :metricsData="metricsData" v-else />
   </div>
 </template>
 
@@ -36,6 +36,14 @@ const props = defineProps({
   }
 })
 
+const isChartError = computed(() => false)
+
+/** @type {ComputedRef<Component>} */
+const chartComponent = computed(() => {
+  if (isChartError.value) return charts.error
+  return charts[props.chart.type.toLowerCase()]
+})
+
 /** @type {import('@swanlab-vue/board/ChartsBoard.vue').getMediaMetricsRequest | import('@swanlab-vue/board/ChartsBoard.vue').getScalarMetricsRequest} */
 const getter = props.chart.type === 'LINE' ? inject('ScalarGetter') : inject('MediaGetter')
 /** @type {ComputedRef<Number>} 是否继续轮询 */
@@ -47,11 +55,35 @@ const interval = inject('Interval')
  */
 const metricsData = shallowRef(null)
 // ---------------------------------- 处理子组件状态 ----------------------------------
-/**
- * 此图表状态
- * @type {Ref<'loading' | 'error' | 'success'>}
- */
-const state = ref('loading')
+
+/** @type {Ref<'loading' | 'error' | 'success'>} */
+const state = customRef((track, trigger) => {
+  // 默认为loading状态
+  /** @type {'loading' | 'error' | 'success'} */
+  let _state = 'loading'
+  let timeout = null
+  const delay = 500
+  return {
+    get() {
+      track()
+      return _state
+    },
+    /** @param {'loading' | 'error' | 'success'} value */
+    set(value) {
+      clearTimeout(timeout)
+      if (_state === value) return
+      // 如果是success状态，延迟一段时间再切换状态，防止闪烁
+      if (value != 'success') {
+        _state = value
+        return trigger()
+      }
+      timeout = setTimeout(() => {
+        _state = value
+        trigger()
+      }, delay)
+    }
+  }
+})
 onErrorCaptured((err) => {
   console.error('出现错误:', err)
   state.value = 'error'
@@ -65,15 +97,22 @@ const metrics = parseChartMetrics(props.chart)
 const poller = new Poller()
 
 onMounted(() => {
+  // 如果图表本身存在error字段，直接显示error图表而不开启轮询和获取数据
+
   poller.start(interval, async () => {
     try {
       /** @type {MetricData[]} */
       const msd = []
       for (const m of await getter(metrics.ids)) {
+        // console.log('获取数据:', m)
         // 过滤掉没有数据的metric
         if (m.metrics?.length) msd.push(m)
       }
-      if (msd.length) metricsData.value = msd
+      if (msd.length) {
+        metricsData.value = msd
+        // console.log('获取数据成功:', msd)
+        state.value = 'success'
+      }
     } catch (e) {
       console.error('获取数据失败:', e)
       state.value = 'error'

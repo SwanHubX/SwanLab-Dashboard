@@ -75,6 +75,10 @@ watch(
   () => isFold.value,
   (v) => emits('fold-change', props.section.index, v)
 )
+
+// ---------------------------------- 当前section为PINNED、PUBLIC、HIDDEN中的哪一个 ----------------------------------
+
+provide('SectionType', props.section.type)
 </script>
 
 <style lang="scss" scoped>

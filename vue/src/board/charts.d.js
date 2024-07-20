@@ -26,9 +26,13 @@
  */
 
 /**
+ * @typedef {'PUBLIC' | 'PINNED' | 'HIDDEN'} SectionType 分组类型
+ */
+
+/**
  * 图表分组
  * @typedef {Object} Section
- * @property {'PUBLIC' | 'PINNED' | 'HIDDEN'} type 分组类型
+ * @property {SectionType} type 分组类型
  * @property {SectionId} index 分组 ID，唯一识别的 {@link IndexId}
  * @property {String} name 分组名
  * @property {Boolean} folded 是否折叠
@@ -46,6 +50,7 @@
  * @property {'#528d59'} color 图表默认颜色
  * @property {Object} [config] 图表配置
  * @property {'LINE' | 'TEXT' | 'IMAGE' | 'AUDIO'} type 图表类型，分配为不同的组件
+ * @property {Number} [captured] 当metric过多时，会截取最前面的metric，此时此字段表示截取的数量，否则不存在
  * @property {Metric[]} metrics 此图表包含的指标列表
  */
 

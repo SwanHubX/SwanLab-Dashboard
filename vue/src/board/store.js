@@ -1,33 +1,20 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-
 /**
- * 指标信息在状态管理中的存储结构
- * {实验Id: {列的key: 指标数据}}
- * @typedef {Object.<ColumnKey, Object.<ExpId, MetricData>>} MetricStore
+ * 当前鼠标悬浮的图表信息
+ * @typedef {Object} ChartHovering
+ * @property {SectionId} sIndex 所属section索引
+ * @property {ChartId} cIndex 所属chart索引
+ * @property {ExpId} eIndex 悬浮鼠标离哪个实验的指标最近
+ * @property {{x: number, y: number}} position 鼠标位置
  */
 
 export const useBoardStore = defineStore('board', () => {
   // ---------------------------------- state ----------------------------------
 
-  /**
-   * 轮询器状态，标识轮询器当前状态
-   * idle: 空闲状态
-   * busy: 轮询回调正在执行
-   * waiting: 等待下一次轮询
-   * canceled: 轮询已取消
-   * @type {Ref<'idle' | 'busy' | 'waiting' | 'canceled'>}
-   */
-  const polling = ref('idle')
-  /** @type {MetricStore} 指标存储数据 */
-  const metrics = {}
+  const hovering = ref({})
 
   // ---------------------------------- action ----------------------------------
-  const updateMetrics = () => {}
 
-  return {
-    metrics,
-    polling,
-    updateMetrics
-  }
+  return {}
 })

@@ -217,8 +217,9 @@ def get_tag_data(experiment_id: int, tag: str) -> dict:
             "max": max_value,
             "min": min_value,
             "list": lttb(tag_data),
+            "key": tag,
             # 标注此数据隶属于哪个实验
-            "experiment_id": experiment_id,
+            "experiment_id": str(experiment_id),
         }
     )
 
