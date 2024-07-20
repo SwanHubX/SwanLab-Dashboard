@@ -1,11 +1,11 @@
 /**
  * @typedef { Object } OriginalChartData 本地版图表初始化接口返回的原始数据类型
- * @property { Namespace[] } namespaces 命名空间
+ * @property { OriginalNamespace[] } namespaces 命名空间
  * @property { OriginalChart[] } charts 图表
  */
 
 /**
- * @typedef { Object } Namespace
+ * @typedef { Object } OriginalNamespace
  * @property { Number } id 命名空间ID，-1表示置顶，-2表示隐藏
  * @property { String } name 命名空间名称
  * @property { String } description 命名空间描述
@@ -17,6 +17,12 @@
  * @property { Number } opened 0表示收起，1表示展开
  * @property { String } created_time 创建时间
  * @property { String } updated_time 更新时间
+ */
+
+/**
+ * @typedef {Object} OriginalSource
+ * @typedef {String} key 指标名称
+ * @typedef {String} experiment_id 实验ID
  */
 
 /**
@@ -72,13 +78,14 @@ const generateYAxis = (key, name, type) => {
 /**
  * 针对本地版进行数据格式化
  * @param { OriginalChartData } data
+ * @param {{light:string, dark:string, id: Number}} [exps] 实验信息，用于设置指标颜色
  * @returns { [ Section[], Chart[]] } 格式化后的数据
  */
-export const formatLocalData = (data) => {
+export const formatLocalData = (data, exps) => {
   const { namespaces, charts } = data
   // ---------------------------------- section 相关 ----------------------------------
   /** @type {Section[]} */
-  const tempSections = namespaces.map((/** @type {Namespace} */ ns) => {
+  const tempSections = namespaces.map((/** @type {OriginalNamespace} */ ns) => {
     const temp = {
       name: ns.name,
       chartIndex: ns.charts.map((v) => String(v)),
@@ -131,6 +138,7 @@ export const formatLocalData = (data) => {
       })
     }
     chart.source.forEach((m) => {
+      console.log('m:', m, chart.source_map)
       temp.metrics.push({
         axis: temp.type === 'LINE' ? 'Y' : 'X',
         colors: [],

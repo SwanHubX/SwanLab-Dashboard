@@ -29,7 +29,7 @@ const generateRandomArray = (type = 'number', length = undefined) => {
  * @param { number } id
  * @param { string } name
  * @param { number } opened
- * @returns { import('@swanlab-vue/utils/chart').Namespace } namespace
+ * @returns { import('@swanlab-vue/utils/chart').OriginalNamespace } namespace
  */
 const mockOriginalNamespace = (id = 1, name = 'test', opened = 1) => {
   const time = new Date().toISOString()
@@ -88,7 +88,7 @@ describe('formatLocalData => sections', () => {
   /**
    * 检测转化后的 section 数据
    * @param { Section[] } sections
-   * @param { import('@swanlab-vue/utils/chart').Namespace[] } namespaces
+   * @param { import('@swanlab-vue/utils/chart').OriginalNamespace[] } namespaces
    */
   const checkSections = (sections, namespaces) => {
     sections.forEach((section, index) => {
