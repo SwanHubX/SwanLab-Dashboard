@@ -26,9 +26,13 @@
  */
 
 /**
+ * @typedef {'PUBLIC' | 'PINNED' | 'HIDDEN'} SectionType 分组类型
+ */
+
+/**
  * 图表分组
  * @typedef {Object} Section
- * @property {'PUBLIC' | 'PINNED' | 'HIDDEN'} type 分组类型
+ * @property {SectionType} type 分组类型
  * @property {SectionId} index 分组 ID，唯一识别的 {@link IndexId}
  * @property {String} name 分组名
  * @property {Boolean} folded 是否折叠

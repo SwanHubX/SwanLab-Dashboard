@@ -1,4 +1,5 @@
 <template>
+  <ChartToolbar />
   <div></div>
 </template>
 
@@ -8,7 +9,8 @@
  * @file: LineChart.vue
  * @since: 2024-07-14 20:53:33
  **/
-import { defineProps, watch } from 'vue'
+import ChartToolbar from '../.components/ChartToolbar.vue'
+import { watch } from 'vue'
 /** props */
 const props = defineProps({
   /** 图表配置 */

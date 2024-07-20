@@ -1,9 +1,9 @@
 <template>
-  <div class="h-full w-full absolute top-0 left-0 rounded">
-    <div class="flex items-center justify-center h-full" v-if="state === 'loading'">
+  <div class="h-full w-full relative top-0 left-0 rounded py-4 px-3">
+    <div class="flex items-center justify-center h-full z-10" v-if="state === 'loading'">
       <Spin />
     </div>
-    <div class="flex flex-col h-full items-center justify-center gap-2 text-dimmer" v-else-if="state === 'error'">
+    <div class="flex flex-col h-full items-center justify-center gap-2 text-dimmer z-10" v-else-if="state === 'error'">
       <CloseCircleOutlined :style="{ fontSize: '20px' }" />
       <p class="text-xs text-center">{{ $t('chart.chart.error.unknown') }}</p>
     </div>
