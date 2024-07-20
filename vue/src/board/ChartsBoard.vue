@@ -155,7 +155,12 @@ const nowCharts = computed(() => {
 })
 
 // ---------------------------- 图表置顶/隐藏 ------------------------------
-
+/**
+ * @callback ChangeChartPinOrHide 图表置顶/隐藏
+ * @param {ChartId} index - 图表的唯一标识
+ * @param {'PINNED' | 'HIDDEN' | 'PUBLIC'} type - 置顶或隐藏或回归正常
+ */
+const changeChartPinOrHide = (index, type) => {}
 // ---------------------------- 全局平滑配置 -------------------------------
 
 const smooth = ref({})
@@ -177,6 +182,7 @@ provide(
   'Dark',
   computed(() => props.dark)
 )
+provide('ChangeChartPinOrHide', changeChartPinOrHide)
 </script>
 
 <style lang="scss"></style>
