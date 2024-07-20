@@ -7,7 +7,7 @@
       <CloseCircleOutlined :style="{ fontSize: '20px' }" />
       <p class="text-xs text-center">{{ $t('chart.chart.error') }}</p>
     </div>
-    <component :is="charts[chart.type.toLowerCase()]" :chart="chart" :metricsData="metricsData" v-else />
+    <component :is="chartComponent" :chart="chart" :metricsData="metricsData" v-else />
   </div>
 </template>
 
@@ -34,6 +34,14 @@ const props = defineProps({
     type: Boolean,
     default: false
   }
+})
+
+const isChartError = computed(() => false)
+
+/** @type {ComputedRef<Component>} */
+const chartComponent = computed(() => {
+  if (isChartError.value) return charts.error
+  return charts[props.chart.type.toLowerCase()]
 })
 
 /** @type {import('@swanlab-vue/board/ChartsBoard.vue').getMediaMetricsRequest | import('@swanlab-vue/board/ChartsBoard.vue').getScalarMetricsRequest} */
@@ -89,6 +97,8 @@ const metrics = parseChartMetrics(props.chart)
 const poller = new Poller()
 
 onMounted(() => {
+  // 如果图表本身存在error字段，直接显示error图表而不开启轮询和获取数据
+
   poller.start(interval, async () => {
     try {
       /** @type {MetricData[]} */

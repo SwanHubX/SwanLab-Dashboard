@@ -7,5 +7,6 @@ export default {
   line: LineChart,
   audio: AudioChart,
   image: ImageChart,
-  text: TextChart
+  text: TextChart,
+  error: TextChart
 }
