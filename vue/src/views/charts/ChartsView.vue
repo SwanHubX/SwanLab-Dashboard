@@ -27,7 +27,7 @@
 import http from '@swanlab-vue/api/http'
 import { ref } from 'vue'
 import ChartsBoard from '@swanlab-vue/board/ChartsBoard.vue'
-import { formatLocalData } from '@swanlab-vue/utils/chart'
+import { formatLocalData, formatLocalScalarData } from '@swanlab-vue/utils/chart'
 import { useProjectStore } from '@swanlab-vue/store'
 const projectStore = useProjectStore()
 
@@ -97,9 +97,8 @@ const getMediaResource = async (resource) => {
 /** @type {import('@swanlab-vue/board/ChartsBoard.vue').getScalarMetricsRequest} */
 const getScalarMetrics = async (metrics) => {
   const res = await Promise.all(metrics.map((m) => http.get(`/experiment/${m.experimentId}/tag/${m.key}`)))
-  return res.map((r) => r.data)
+  return formatLocalScalarData(res.map((r) => r.data))
 }
 </script>
 
 <style lang="scss" scoped></style>
-ku

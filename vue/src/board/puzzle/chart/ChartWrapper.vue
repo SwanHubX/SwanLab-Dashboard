@@ -47,11 +47,35 @@ const interval = inject('Interval')
  */
 const metricsData = shallowRef(null)
 // ---------------------------------- 处理子组件状态 ----------------------------------
-/**
- * 此图表状态
- * @type {Ref<'loading' | 'error' | 'success'>}
- */
-const state = ref('loading')
+
+/** @type {Ref<'loading' | 'error' | 'success'>} */
+const state = customRef((track, trigger) => {
+  // 默认为loading状态
+  /** @type {'loading' | 'error' | 'success'} */
+  let _state = 'loading'
+  let timeout = null
+  const delay = 500
+  return {
+    get() {
+      track()
+      return _state
+    },
+    /** @param {'loading' | 'error' | 'success'} value */
+    set(value) {
+      clearTimeout(timeout)
+      if (_state === value) return
+      // 如果是success状态，延迟一段时间再切换状态，防止闪烁
+      if (value != 'success') {
+        _state = value
+        return trigger()
+      }
+      timeout = setTimeout(() => {
+        _state = value
+        trigger()
+      }, delay)
+    }
+  }
+})
 onErrorCaptured((err) => {
   console.error('出现错误:', err)
   state.value = 'error'
@@ -70,11 +94,15 @@ onMounted(() => {
       /** @type {MetricData[]} */
       const msd = []
       for (const m of await getter(metrics.ids)) {
+        // console.log('获取数据:', m)
         // 过滤掉没有数据的metric
         if (m.metrics?.length) msd.push(m)
       }
-      if (msd.length) metricsData.value = msd
-      console.log('获取数据成功:', msd)
+      if (msd.length) {
+        metricsData.value = msd
+        // console.log('获取数据成功:', msd)
+        state.value = 'success'
+      }
     } catch (e) {
       console.error('获取数据失败:', e)
       state.value = 'error'

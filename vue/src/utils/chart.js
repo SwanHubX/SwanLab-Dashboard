@@ -41,6 +41,14 @@
  * @property { String } updated_time 更新时间
  */
 
+/**
+ * 从后端获取到的原始指标数据格式
+ * @typedef {Object} OriginalMetricData
+ * @property {String} experiment_id 实验ID
+ * @property {String} key 指标名称
+ * @property {ScalarDetail[]} list 指标数据
+ */
+
 const generateXAxis = () => {
   return {
     class: 'SYSTEM',
@@ -142,4 +150,20 @@ export const formatLocalData = (data) => {
     return temp
   })
   return [tempSections, tempCharts]
+}
+
+/**
+ * 针对本地版进行数据格式化
+ * @param {OriginalMetricData[]} metricsData 指标数据集合
+ * @returns {ScalarData[]} 格式化后的数据
+ */
+export const formatLocalScalarData = (metricsData) => {
+  return metricsData.map((metric) => {
+    return {
+      experimentId: metric.experiment_id,
+      key: metric.key,
+      type: 'scalar',
+      metrics: metric.list
+    }
+  })
 }
