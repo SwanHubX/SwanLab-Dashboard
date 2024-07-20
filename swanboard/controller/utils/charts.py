@@ -28,7 +28,9 @@ def get_exp_charts(id: int):
         error = {}
         # source->experiment_id
         for source in Chart.search2list(chart.sources):
-            sources.append({"key": source["tag_id"]["name"], "experiment_id": source["tag_id"]["experiment_id"]["id"]})
+            sources.append(
+                {"key": source["tag_id"]["name"], "experiment_id": str(source["tag_id"]["experiment_id"]["id"])}
+            )
             if source["error"]:
                 error[source["tag_id"]["name"]] = Chart.json2dict(source["error"])
         chart_list[index]["error"] = error
@@ -70,7 +72,7 @@ def get_proj_charts(id: int):
         sources, error = [], {}
         # 单箭头是通过外键反向索引的 chart -> source -> tag -> experiment => experiment_name
         for source in _chart.sources:
-            sources.append({"key": source.tag_id.name, "experiment_id": source.tag_id.experiment_id.id})
+            sources.append({"key": source.tag_id.name, "experiment_id": str(source.tag_id.experiment_id.id)})
         # 当前chart的error字段，将所有的error字段转换为dict，key为实验名
         for source in _chart.sources:
             if source.error:
