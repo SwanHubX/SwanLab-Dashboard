@@ -118,8 +118,10 @@ describe('formatLocalData => sections', () => {
     const [sections] = formatLocalData({ namespaces, charts: [] })
     checkSections(sections.slice(1, -1), namespaces)
     expect(sections[0].type).toEqual('PINNED')
+    expect(sections[0].folded).toEqual(false)
     expect(sections[0].chartIndex.length).toEqual(0)
     expect(sections[4].type).toEqual('HIDDEN')
+    expect(sections[0].folded).toEqual(true)
     expect(sections[4].chartIndex.length).toEqual(0)
   })
 
@@ -129,6 +131,7 @@ describe('formatLocalData => sections', () => {
     checkSections(sections.slice(0, -1), namespaces)
     expect(sections[2].type).toEqual('HIDDEN')
     expect(sections[2].chartIndex.length).toEqual(0)
+    expect(sections[2].folded).toEqual(true)
   })
 
   it('有 HIDDEN，自动生成 PINNED', () => {
@@ -137,6 +140,7 @@ describe('formatLocalData => sections', () => {
     checkSections(sections.slice(1, -2), namespaces)
     expect(sections[0].type).toEqual('PINNED')
     expect(sections[0].chartIndex.length).toEqual(0)
+    expect(sections[0].folded).toEqual(false)
   })
 
   it('媒体 section 和普通 section', () => {
