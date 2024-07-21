@@ -21,6 +21,11 @@ const props = defineProps({
     /** @type {PropType< ScalarData[]>} */
     type: [Array, null],
     required: true
+  },
+  /** 是否为放大环境 */
+  zoom: {
+    type: Boolean,
+    default: true
   }
 })
 </script>

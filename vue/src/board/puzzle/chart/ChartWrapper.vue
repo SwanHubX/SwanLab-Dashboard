@@ -7,7 +7,13 @@
       <CloseCircleOutlined :style="{ fontSize: '20px' }" />
       <p class="text-xs text-center">{{ $t('chart.chart.error.unknown') }}</p>
     </div>
-    <component :is="chartComponent" :chart="chart" :metricsData="metricsData" v-else />
+    <div class="w-full h-full text-base" v-else>
+      <!-- 标题 -->
+      <div class="chart-title" :class="{ 'zoom-chart-title': zoom }">{{ chart.title }}</div>
+      <div class="chart-content" :class="{ 'zoom-chart-content': zoom }">
+        <component :is="chartComponent" :chart="chart" :metricsData="metricsData" :zoom="zoom" />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -33,6 +39,11 @@ const props = defineProps({
   draggable: {
     type: Boolean,
     default: false
+  },
+  /** 是否为放大环境 */
+  zoom: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -44,8 +55,8 @@ const chartComponent = computed(() => {
   return charts[props.chart.type.toLowerCase()]
 })
 
-/** @type {import('@swanlab-vue/board/ChartsBoard.vue').getMediaMetricsRequest | import('@swanlab-vue/board/ChartsBoard.vue').getScalarMetricsRequest} */
-const getter = props.chart.type === 'LINE' ? inject('ScalarGetter') : inject('MediaGetter')
+/** @type {import('@swanlab-vue/board/ChartsBoard.vue').MediaMetricsConstructor | import('@swanlab-vue/board/ChartsBoard.vue').ScalarMetricsConstructor} */
+const getter = props.chart.type === 'LINE' ? inject('ScalarConstructor') : inject('MediaConstructor')
 /** @type {ComputedRef<Number>} 是否继续轮询 */
 const interval = inject('Interval')
 
@@ -123,4 +134,25 @@ onMounted(() => {
 onUnmounted(() => poller.stop())
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+$chart-title-height: 13%;
+$chart-title-zoom-height: 8%;
+.chart-title {
+  @apply flex items-center justify-center font-semibold pb-1 pt-2;
+  height: $chart-title-height;
+}
+
+.zoom-chart-title {
+  @apply text-2xl;
+  padding-bottom: 0.5rem !important;
+  height: $chart-title-zoom-height !important;
+}
+
+.chart-content {
+  height: calc(100% - #{$chart-title-height});
+}
+
+.zoom-chart-content {
+  height: calc(100% - #{$chart-title-zoom-height});
+}
+</style>

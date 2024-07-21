@@ -5,28 +5,27 @@
 </template>
 
 <script>
-// request后缀代表需等待的事件
-// callback后缀代表回调事件，此时不需要等待
 /**
  * 更改section展开、收起状态的回调事件
- * @callback foldSectionCallBack
+ * @callback FoldSectionCallBack
  * @param { IndexId } index - 当前section的index
  * @param { boolean } isFold - 当前section在点击后是否收起
  * @returns { Promise<void>  }
  */
 
 /**
- * 跳转到某个实验的回调
- * @callback jumpToExperimentCallback
+ * 跳转到某个实验的，需要返回url
+ * @callback ExperimentURIConstructor
  * @param { IndexId } index - 当前图表的index
  * @param { IndexId } expId - 需要跳转到的实验的index
+ * @returns { string }
  */
 
 /**
- * 移动图表位置的回调
+ * 移动图表位置的构造函数，需要返回新的sections和charts
  * 作为'PINNED' | 'HIDDEN' | 'PUBLIC'时，组件内等待事件完成，刷新图表
  * 作为'MOVE'时，组件内直接移动图表位置，该请求仅作为同步后端数据
- * @callback moveChartEventCallback
+ * @callback MoveChartConstructor
  * @param {ChartId} cIndex - 图表的唯一标识
  * @param {'PINNED' | 'HIDDEN' | 'PUBLIC' | 'MOVE'} type - 置顶或隐藏或回归正常或移动到其他section的制定位置
  * @param {SectionId} [sIndex] - 当type为MOVE时，需要指定目标section的index
@@ -35,23 +34,23 @@
  */
 
 /**
- * 获取标量数据的请求
- * @callback getScalarMetricsRequest
+ * 获取标量数据的构造
+ * @callback ScalarMetricsConstructor
  * @param { MetricId[] } metrics - 需要获取的标量数据的id
  * @returns { Promise<ScalarData[]> }
  */
 
 /**
- * 获取媒体数据的请求
- * @callback getMediaMetricsRequest
+ * 获取媒体数据的构造
+ * @callback MediaMetricsConstructor
  * @param { MetricId[] } metrics - 需要获取的媒体数据的id
  * @param { number } [step] - 获取数据的确定步长，为undefined时代表初次获取
  * @returns { Promise<MediaData[]> }
  */
 
 /**
- * 获取某个媒体资源的回调
- * @callback getMediaResourceRequest
+ * 获取某个媒体资源的构造
+ * @callback MediaResourceConstructor
  * @param { MetricId } metric - 需要获取的媒体数据的id
  * @param { string } path - 需要获取的媒体资源的路径，为 {@link MediaDetail.data} 中的一个元素
  * @returns {Promise<?>}
@@ -100,8 +99,8 @@ const props = defineProps({
   /**
    * 图表置顶/隐藏/移动等事件
    */
-  moveChartEventCallback: {
-    /** @type { PropType<moveChartEventCallback>} */
+  MoveChartConstructor: {
+    /** @type { PropType<MoveChartConstructor>} */
     // @ts-ignore
     type: Function,
     required: true
@@ -109,8 +108,8 @@ const props = defineProps({
   /**
    * 获取标量数据的请求依赖
    */
-  getScalarMetrics: {
-    /** @type { PropType<getScalarMetricsRequest>} */
+  ScalarConstructor: {
+    /** @type { PropType<ScalarMetricsConstructor>} */
     // @ts-ignore
     type: Function,
     required: true
@@ -118,8 +117,8 @@ const props = defineProps({
   /**
    * 获取媒体数据的请求依赖
    */
-  getMediaMetrics: {
-    /** @type { PropType<getMediaMetricsRequest>} */
+  MediaConstructor: {
+    /** @type { PropType<MediaMetricsConstructor>} */
     // @ts-ignore
     type: Function,
     required: true
@@ -127,11 +126,20 @@ const props = defineProps({
   /**
    * 获取媒体资源的请求依赖
    */
-  getMediaResource: {
-    /** @type { PropType<getMediaResourceRequest>} */
+  ResourceConstructor: {
+    /** @type { PropType<MediaResourceConstructor>} */
     // @ts-ignore
     type: Function,
     required: true
+  },
+  /**
+   * 获取实验跳转链接的请求依赖
+   */
+  ExpURIConstructor: {
+    /** @type { PropType<ExperimentURIConstructor>} */
+    // @ts-ignore
+    type: Function,
+    default: () => {}
   },
   /**
    * 轮询间隔，单位毫秒
@@ -158,9 +166,9 @@ const props = defineProps({
     default: false
   },
   /**
-   * 环境标识，cloud环境下会有一些逻辑与本地不一样
+   * 图表标识，多实验/单实验
    */
-  cloud: {
+  multi: {
     type: Boolean,
     default: false
   }
@@ -189,7 +197,7 @@ const nowCharts = computed(() => {
 const changeChartPinOrHide = async (cIndex, type) => {
   if (type === 'MOVE') throw new Error('MOVE事件还未完善')
 
-  const { sections, charts } = await props.moveChartEventCallback(cIndex, type)
+  const { sections, charts } = await props.MoveChartConstructor(cIndex, type)
   stagingSections.value = sections
   stagingCharts.value = charts
   refresh.value = !refresh.value
@@ -200,9 +208,9 @@ const smooth = ref({})
 
 // ------------------------- 全局依赖/状态 ----------------------------------
 
-provide('ScalarGetter', props.getScalarMetrics)
-provide('MediaGetter', props.getMediaMetrics)
-provide('MediaResourceGetter', props.getMediaResource)
+provide('ScalarConstructor', props.ScalarConstructor)
+provide('MediaConstructor', props.MediaConstructor)
+provide('ResourceConstructor', props.ResourceConstructor)
 provide(
   'Interval',
   computed(() => (props.interval >= 0 ? props.interval : 0))
@@ -210,6 +218,7 @@ provide(
 provide('Dark', props.dark)
 provide('Role', props.role)
 provide('ChangeChartPinOrHide', changeChartPinOrHide)
+provide('Multi', props.multi)
 </script>
 
 <style lang="scss"></style>

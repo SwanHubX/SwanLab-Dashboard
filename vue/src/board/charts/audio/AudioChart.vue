@@ -6,7 +6,7 @@
  * @file: AudioChart.vue
  * @since: 2024-07-14 20:53:08
  **/
-/** props */
+import ChartToolbar from '../.components/ChartToolbar.vue'
 const props = defineProps({
   /** 图表配置 */
   chart: {
@@ -16,9 +16,14 @@ const props = defineProps({
   },
   /** 图表数据 */
   metricsData: {
-    /** @type {PropType< MediaData[]>} */
+    /** @type {PropType< ScalarData[]>} */
     type: [Array, null],
     required: true
+  },
+  /** 是否为放大环境 */
+  zoom: {
+    type: Boolean,
+    default: true
   }
 })
 </script>

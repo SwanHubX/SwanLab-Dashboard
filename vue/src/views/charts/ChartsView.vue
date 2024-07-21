@@ -4,10 +4,10 @@
       <ChartsBoard
         :sections="sections"
         :charts="charts"
-        :get-media-metrics="C.getMediaMetrics"
-        :get-scalar-metrics="C.getScalarMetrics"
-        :get-media-resource="C.getMediaResource"
-        :move-chart-event-callback="moveChartEventCallback"
+        :MediaConstructor="C.getMediaMetrics"
+        :ScalarConstructor="C.getScalarMetrics"
+        :ResourceConstructor="C.getMediaResource"
+        :MoveChartConstructor="moveChartConstructor"
         :interval="interval"
         v-model:refresh="refresh"
         v-if="charts.length"
@@ -85,8 +85,8 @@ http.get('/project/charts').then(({ data }) => {
 })
 
 // ---------------------------------- 图表移动 ----------------------------------
-/** @type {import('@swanlab-vue/board/ChartsBoard.vue').moveChartEventCallback} */
-const moveChartEventCallback = async (cIndex, type) => {
+/** @type {import('@swanlab-vue/board/ChartsBoard.vue').MoveChartConstructor} */
+const moveChartConstructor = async (cIndex, type) => {
   const data = await C.moveChartEventRequest(cIndex, type)
   const _ = C.formatLocalData(data, projectStore.experiments)
   return {
