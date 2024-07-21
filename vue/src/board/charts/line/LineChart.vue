@@ -1,5 +1,5 @@
 <template>
-  <ChartToolbar :chart="chart" v-if="zoom" />
+  <ChartToolbar :chart="chart" v-if="!zoom" />
   <div></div>
 </template>
 
