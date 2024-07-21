@@ -52,7 +52,7 @@
  * @typedef {Object} Chart
  * @property {ChartId} index 图表 ID
  * @property {String} title 图表名
- * @property {'#528d59'} color 图表默认颜色
+ * @property {['#528d59', '#528d59']} colors 图表默认颜色
  * @property {Object} [config] 图表配置
  * @property {'LINE' | 'TEXT' | 'IMAGE' | 'AUDIO'} type 图表类型，分配为不同的组件
  * @property {Number} [captured] 当metric过多时，会截取最前面的metric，此时此字段表示截取的数量，否则不存在
@@ -80,13 +80,14 @@
  */
 
 /**
- * 指标（列）数据超集
+ * 列数据超集
+ * 注意，这里是列数据！
  * 约定metrics可以为undefined，此时对于chart层面而言，数据不存在，此请求无效
- * @typedef {ColumnId & { metrics?: any[], type: 'scalar'| 'media'}} MetricData
+ * @typedef {ColumnId & { type: 'scalar'| 'media'}} MetricData
  */
 
 /**
- * 指标数据存储对象
+ * 标量数据存储对象
  * 约定metrics可以为undefined，此时对于chart层面而言，数据不存在，此请求无效
  * @typedef {MetricData & {metrics?: ScalarDetail[], type: 'scalar'}} ScalarData
  */
@@ -100,7 +101,7 @@
  */
 
 /**
- * 指标数据存储对象
+ * 媒体数据存储对象
  * 约定metrics可以为undefined，此时对于chart层面而言，数据不存在，此请求无效
  * @typedef {MetricData & {metrics?: MediaDetail[], steps: Number[], type: 'media'}} MediaData
  */
@@ -126,21 +127,11 @@
  * @typedef { Chart & {type: 'LINE'} } LineChart
  */
 
-/**
- * 折线图数据
- * @typedef {ScalarData} LineMetricData
- */
-
 // ---------------------------------- 图像数据结构 ----------------------------------
 
 /**
  * 图像图表配置
  * @typedef {Chart & {type: 'IMAGE'} } ImageChart
- */
-
-/**
- * 图像数据
- * @typedef {MediaData} ImageMetricData
  */
 
 // ---------------------------------- 音频数据结构 ----------------------------------
@@ -150,19 +141,9 @@
  * @typedef {Chart & {type: 'AUDIO'} } AudioChart
  */
 
-/**
- * 音频数据
- * @typedef {MediaData} AudioMetricData
- */
-
 // ---------------------------------- 文字图数据结构 ----------------------------------
 
 /**
  * 文字图表配置
  * @typedef {Chart & {type: 'TEXT'} } TextChart
- */
-
-/**
- * 文字数据
- * @typedef {MediaData} TextMetricData
  */

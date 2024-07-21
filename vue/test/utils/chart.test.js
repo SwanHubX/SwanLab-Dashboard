@@ -174,7 +174,7 @@ describe('formatLocalData => charts', () => {
       expect(chart.index).toEqual(String(oc.id))
       expect(chart.type).toEqual(oc.type === 'default' ? 'LINE' : oc.type.toUpperCase())
       expect(chart.title).toEqual(oc.name)
-      expect(chart.color).toEqual('#528d59')
+      expect(chart.colors).toEqual(['#528d59', '#528d59'])
       /** @type { Metric[] } */
       const metrics = chart.metrics
       /**

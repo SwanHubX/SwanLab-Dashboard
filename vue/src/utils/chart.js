@@ -169,7 +169,7 @@ const formatCharts = (charts, exps) => {
       index: String(chart.id),
       title: chart.name,
       config: chart.config,
-      color: '#528d59',
+      colors: ['#528d59', '#528d59'],
       type: type,
       metrics: []
     }

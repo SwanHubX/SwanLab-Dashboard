@@ -1,6 +1,6 @@
 <template>
   <ChartToolbar :chart="chart" v-if="!zoom" />
-  <div class="overflow-hidden" ref="g2Ref"></div>
+  <g2-line :chart="chart" :colorFinder="colorFinder" :zoom="zoom" ref="g2LineRef" />
 </template>
 
 <script setup>
@@ -10,7 +10,8 @@
  * @since: 2024-07-14 20:53:33
  **/
 import ChartToolbar from '../.components/ChartToolbar.vue'
-import { watchMetric } from '../toolkit'
+import { useColorFinder, watchMetric } from '../toolkit'
+import G2Line from './components/G2Line.vue'
 const props = defineProps({
   /** 图表配置 */
   chart: {
@@ -36,13 +37,14 @@ const props = defineProps({
   }
 })
 
-/**
- * 操作渲染区域的 DOM 引用
- * @type {Ref<HTMLDivElement>}
- */
-const g2Ref = ref(null)
+/** 颜色查找器 */
+const colorFinder = useColorFinder(props.chart, props.multi)
+
+const g2LineRef = ref(null)
 // ---------------------------------- 渲染函数 ----------------------------------
-const render = (/** @type {ScalarData[]} */ metricsData) => {}
+const render = (/** @type {ScalarData[]} */ scalars) => {
+  g2LineRef.value.render(scalars)
+}
 
 // ---------------------------------- 自动更新逻辑 ----------------------------------
 watchMetric(() => props.metricsData, render)
