@@ -161,7 +161,7 @@ def get_project_summary(project_id: int = DEFAULT_PROJECT_ID) -> dict:
             # 获取所有 tag 文件
             logs = get_tag_files(tag_path, exclude=LOGS_CONFIGS)
             # 打开最后一个文件，获取最后一行数据
-            with open(os.path.join(tag_path, logs[-1]), mode="r") as f:
+            with open(os.path.join(tag_path, logs[-1]), mode="r", encoding="utf8") as f:
                 try:
                     lines = f.readlines()
                     tag_data = ujson.loads(lines[-1])
