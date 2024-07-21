@@ -1,5 +1,5 @@
 <template>
-  <ChartToolbar />
+  <ChartToolbar :chart="chart" />
   <div></div>
 </template>
 

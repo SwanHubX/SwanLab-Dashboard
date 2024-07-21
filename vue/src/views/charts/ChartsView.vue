@@ -4,9 +4,10 @@
       <ChartsBoard
         :sections="sections"
         :charts="charts"
-        :get-media-metrics="getMediaMetrics"
-        :get-scalar-metrics="getScalarMetrics"
-        :get-media-resource="getMediaResource"
+        :get-media-metrics="C.getMediaMetrics"
+        :get-scalar-metrics="C.getScalarMetrics"
+        :get-media-resource="C.getMediaResource"
+        :move-chart-event-callback="C.moveChartEventCallback"
         :interval="interval"
         v-model:refresh="refresh"
         v-if="charts.length"
@@ -28,7 +29,7 @@
 import http from '@swanlab-vue/api/http'
 import { ref } from 'vue'
 import ChartsBoard from '@swanlab-vue/board/ChartsBoard.vue'
-import { formatLocalData, getMediaMetrics, getMediaResource, getScalarMetrics } from '@swanlab-vue/utils/chart'
+import * as C from '@swanlab-vue/utils/chart'
 import { useProjectStore } from '@swanlab-vue/store'
 const projectStore = useProjectStore()
 
@@ -77,7 +78,7 @@ const interval = ref(0)
 // ---------------------------------- 请求图表数据 ----------------------------------
 const ready = ref(false)
 http.get('/project/charts').then(({ data }) => {
-  const r = formatLocalData(data)
+  const r = C.formatLocalData(data)
   sections.value = r[0]
   _charts.value = r[1]
   ready.value = true

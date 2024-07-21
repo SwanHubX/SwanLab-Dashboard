@@ -1,5 +1,4 @@
 import http from '@swanlab-vue/api/http'
-import { tm } from '@swanlab-vue/i18n'
 /**
  * @typedef { Object } OriginalChartData 本地版图表初始化接口返回的原始数据类型
  * @property { OriginalNamespace[] } namespaces 命名空间
@@ -276,4 +275,17 @@ export const getMediaResource = async (resource) => {
 export const getScalarMetrics = async (metrics) => {
   const res = await Promise.all(metrics.map((m) => http.get(`/experiment/${m.experimentId}/tag/${m.key}`)))
   return formatLocalScalarData(res.map((r) => r.data))
+}
+
+// ---------------------------------- 组件移动事件 ----------------------------------
+
+/** @type {import('@swanlab-vue/board/ChartsBoard.vue').moveChartEventCallback} */
+export const moveChartEventCallback = async (cIndex, type) => {
+  if (type === 'MOVE') throw new Error('MOVE is not supported yet')
+  // HIDDEN对应-1，PINNED对应1，PUBLIC对应0
+  const groups = await http.patch(`/chart/${cIndex}/status`, {
+    status: type === 'HIDDEN' ? -1 : type === 'PINNED' ? 1 : 0
+  })
+  console.log(groups)
+  return null
 }

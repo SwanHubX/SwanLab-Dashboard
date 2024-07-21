@@ -1,5 +1,5 @@
 <template>
-  <section class="section">
+  <section class="section" v-if="props.charts.length">
     <!-- 控制栏 -->
     <div class="controller">
       <!-- 关闭、展开按钮 -->
