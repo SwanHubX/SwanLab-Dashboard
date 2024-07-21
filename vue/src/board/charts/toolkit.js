@@ -4,9 +4,9 @@ import { inject } from 'vue'
 export class MediaGetter {
   constructor() {
     /** @type {import("../ChartsBoard.vue").MediaMetricsConstructor} */
-    this.getMediaMetrics = inject('GetMediaMetrics')
+    this.getMediaMetrics = inject('MediaConstructor')
     /** @type {import("../ChartsBoard.vue").MediaResourceConstructor} */
-    this.getMediaResource = inject('GetMediaResource')
+    this.getMediaResource = inject('ResourceConstructor')
   }
   /**
    * 获取媒体资源请求函数
