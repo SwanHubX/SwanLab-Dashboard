@@ -1,5 +1,5 @@
 <template>
-  <div class="chart-toolbar">
+  <div class="chart-toolbar" ref="toolbarRef">
     <div class="panel">
       <button
         class="toolbar-button"
@@ -17,15 +17,25 @@
         />
       </button>
       <!-- 更多 -->
-      <div v-tippy="{ content: $t('chart.toolbar.tips.more') }">
-        <Dropdown class="toolbar-button hidden-no-hover" :trigger="['click']" v-model:open="open">
+      <div class="relative">
+        <Dropdown class="toolbar-button hidden-no-hover" v-model:open="open">
           <more-outlined style="transform: rotate(90deg)" />
           <template #overlay>
             <Menu style="width: 120px" @click="handleMenuClick">
               <MenuItem auto-close @click="handleHidden" :disabled="hiddenLoading || disabled">
-                <div class="flex items-center gap-2">
-                  <LoadingOutlined v-if="hiddenLoading" />
-                  {{ $t('chart.toolbar.tips.hide') }}
+                <div class="flex items-center gap-3">
+                  <!-- 当前在非隐藏列 -->
+                  <template v-if="sType !== 'HIDDEN'">
+                    <LoadingOutlined v-if="hiddenLoading" />
+                    <EyeInvisibleOutlined v-else />
+                    {{ $t('chart.toolbar.tips.hide') }}
+                  </template>
+                  <!-- 当前在隐藏列 -->
+                  <template v-else>
+                    <LoadingOutlined v-if="hiddenLoading" />
+                    <EyeOutlined v-else />
+                    {{ $t('chart.toolbar.tips.unHide') }}
+                  </template>
                 </div>
               </MenuItem>
               <slot name="more" :disabled="disabled" :open="open"></slot>
@@ -43,7 +53,15 @@
  * @file: ChartToolbar.vue
  * @since: 2024-07-20 15:14:01
  **/
-import { PushpinOutlined, PushpinFilled, ExpandOutlined, MoreOutlined, LoadingOutlined } from '@ant-design/icons-vue'
+import {
+  PushpinOutlined,
+  PushpinFilled,
+  ExpandOutlined,
+  MoreOutlined,
+  LoadingOutlined,
+  EyeInvisibleOutlined,
+  EyeOutlined
+} from '@ant-design/icons-vue'
 import { Dropdown, Menu, MenuItem } from 'ant-design-vue'
 import { t } from '@swanlab-vue/i18n'
 
@@ -60,7 +78,10 @@ const props = defineProps({
     required: true
   }
 })
-
+/**
+ * @type {Ref<HTMLDivElement>}
+ */
+const toolbarRef = ref(null)
 const emits = defineEmits(['zoom'])
 /** @type {SectionType} */
 const sType = inject('SectionType')
@@ -90,7 +111,7 @@ const pinLoading = ref(false)
 const toolBarIcons = [
   {
     icon: PinComponent,
-    tip: t('chart.toolbar.tips.pin'),
+    tip: sType === 'PINNED' ? t('chart.toolbar.tips.unPin') : t('chart.toolbar.tips.pin'),
     handler: () => {
       pinLoading.value = true
       changeChartPinOrHide(props.chart.index, sType === 'PINNED' ? 'PUBLIC' : 'PINNED')
@@ -129,7 +150,7 @@ const handleMenuClick = (e) => {
 const hiddenLoading = ref(false)
 const handleHidden = () => {
   hiddenLoading.value = true
-  changeChartPinOrHide(props.chart.index, 'HIDDEN')
+  changeChartPinOrHide(props.chart.index, sType === 'HIDDEN' ? 'PUBLIC' : 'HIDDEN')
 }
 </script>
 

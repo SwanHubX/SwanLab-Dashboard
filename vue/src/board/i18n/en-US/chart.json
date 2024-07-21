@@ -12,8 +12,9 @@
     "tips": {
       "pin": "Pin",
       "zoom": "Zoom in",
-      "more": "More actions",
-      "hide": "Hide"
+      "hide": "Hide",
+      "unHide": "Un hide",
+      "unPin": "Un pin"
     }
   },
   "section": {

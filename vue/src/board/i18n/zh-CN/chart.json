@@ -12,8 +12,9 @@
     "tips": {
       "pin": "置顶",
       "zoom": "放大展示",
-      "more": "更多操作",
-      "hide": "隐藏"
+      "hide": "隐藏",
+      "unHide": "取消隐藏",
+      "unPin": "取消置顶"
     }
   },
   "section": {
