@@ -7,7 +7,7 @@
       :get-media-metrics="C.getMediaMetrics"
       :get-scalar-metrics="C.getScalarMetrics"
       :get-media-resource="C.getMediaResource"
-      :move-chart-event-callback="C.moveChartEventCallback"
+      :move-chart-event-callback="moveChartEventCallback"
       :interval="interval"
       v-if="charts?.length"
     />
@@ -42,6 +42,17 @@ const charts = ref()
   charts.value = res[1]
   status.value = 'success'
 })()
+
+// ---------------------------------- 图表移动 ----------------------------------
+/** @type {import('@swanlab-vue/board/ChartsBoard.vue').moveChartEventCallback} */
+const moveChartEventCallback = async (cIndex, type) => {
+  const data = await C.moveChartEventRequest(cIndex, type)
+  const _ = C.formatLocalData(data)
+  return {
+    sections: _[0],
+    charts: _[1]
+  }
+}
 </script>
 
 <style lang="scss" scoped>

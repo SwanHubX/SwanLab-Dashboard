@@ -7,12 +7,12 @@
         :class="{ 'hidden-no-hover': icon.hidden }"
         v-tippy="{ content: icon.tip }"
         :disabled="icon.disabled || icon.loading?.value"
+        @click="icon.handler"
       >
         <component
           class="text-sm flex items-center"
           :key="index"
           :is="icon.loading?.value ? LoadingOutlined : icon.icon"
-          @click="icon.handler"
           :style="icon.style"
         />
       </button>
@@ -75,7 +75,7 @@ const PinComponent = sType === 'PINNED' ? PushpinFilled : PushpinOutlined
  * @property {string} tip - 图标提示
  * @property {Function} handler - 图标点击事件
  * @property {Boolean} [hidden] - 当鼠标没有hover在工具栏上时隐藏，为true则始终显示
- * @property {Object} [style] - 图标新增样式
+ * @property {Object} [style] - 图标特殊样式
  * @property {Boolean} [disabled] - 是否禁用
  * @property {Ref<Boolean>} [loading] - 是否替换为加载中
  */
@@ -97,7 +97,8 @@ const toolBarIcons = [
     },
     hidden: sType !== 'PINNED',
     disabled,
-    loading: pinLoading
+    loading: pinLoading,
+    style: { color: sType === 'PINNED' ? 'var(--positive-default)' : '' }
   },
   {
     icon: ExpandOutlined,
@@ -145,7 +146,7 @@ const handleHidden = () => {
   }
   .toolbar-button {
     @apply flex items-center justify-center rounded w-5 h-5;
-    @apply hover:text-positive-higher hover:bg-positive-dimmest;
+    @apply hover:text-positive-default hover:bg-positive-dimmest;
 
     &:disabled {
       @apply cursor-not-allowed text-dimmest;

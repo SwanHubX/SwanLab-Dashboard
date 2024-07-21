@@ -202,7 +202,7 @@ const formatCharts = (charts, exps) => {
     }
 
     source.forEach((m) => {
-      const colors = exps ? getExperimentColors(exps, m.experiment_id) : []
+      const colors = exps ? getExperimentColors(Number(m.experiment_id), exps) : []
       tempChart.metrics.push({
         axis: type === 'LINE' ? 'Y' : 'X',
         // @ts-ignore
@@ -279,13 +279,17 @@ export const getScalarMetrics = async (metrics) => {
 
 // ---------------------------------- 组件移动事件 ----------------------------------
 
-/** @type {import('@swanlab-vue/board/ChartsBoard.vue').moveChartEventCallback} */
-export const moveChartEventCallback = async (cIndex, type) => {
+/**
+ * 组件移动
+ * @param {ChartId} cIndex 图表ID
+ * @param {'MOVE' | 'PINNED' | 'HIDDEN' | 'PUBLIC'} type 移动类型
+ * @returns {Promise<{charts: OriginalChart[], namespaces: OriginalNamespace[]}>}
+ */
+export const moveChartEventRequest = async (cIndex, type) => {
   if (type === 'MOVE') throw new Error('MOVE is not supported yet')
   // HIDDEN对应-1，PINNED对应1，PUBLIC对应0
-  const groups = await http.patch(`/chart/${cIndex}/status`, {
+  const { data } = await http.patch(`/chart/${cIndex}/status`, {
     status: type === 'HIDDEN' ? -1 : type === 'PINNED' ? 1 : 0
   })
-  console.log(groups)
-  return null
+  return data
 }
