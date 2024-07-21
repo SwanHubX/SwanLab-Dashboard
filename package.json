@@ -13,6 +13,7 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@ant-design/icons-vue": "^7.0.1",
     "@antv/g2plot": "^2.4.31",
     "@headlessui/vue": "^1.7.22",
     "ant-design-vue": "4.x",
