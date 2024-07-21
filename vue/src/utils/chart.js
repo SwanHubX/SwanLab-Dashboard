@@ -134,7 +134,7 @@ const addMissingSections = (sections) => {
       const section = {
         name,
         chartIndex: [],
-        folded: true,
+        folded: type === 'HIDDEN',
         index: String(index),
         config: null,
         type,
