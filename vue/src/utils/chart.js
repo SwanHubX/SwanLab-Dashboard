@@ -49,7 +49,7 @@ import http from '@swanlab-vue/api/http'
 
 /**
  * 从后端获取到的原始指标数据格式
- * @typedef {Object} OriginalColumnData
+ * @typedef {Object} OriginalMetricData
  * @property {String} experiment_id 实验ID
  * @property {String} key 指标名称
  * @property {ScalarDetail[]} list 指标数据
@@ -242,7 +242,7 @@ const handleChartErrors = (chart, tempChart) => {
 
 /**
  * 针对本地版进行数据格式化
- * @param {OriginalColumnData[]} metricsData 指标数据集合
+ * @param {OriginalMetricData[]} metricsData 指标数据集合
  * @returns {ScalarData[]} 格式化后的数据
  */
 export const formatLocalScalarData = (metricsData) => {

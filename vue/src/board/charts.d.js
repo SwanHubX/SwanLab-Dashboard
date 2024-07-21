@@ -82,13 +82,13 @@
 /**
  * 指标（列）数据超集
  * 约定metrics可以为undefined，此时对于chart层面而言，数据不存在，此请求无效
- * @typedef {ColumnId & { metrics?: any[], type: 'scalar'| 'media'}} ColumnData
+ * @typedef {ColumnId & { metrics?: any[], type: 'scalar'| 'media'}} MetricData
  */
 
 /**
  * 指标数据存储对象
  * 约定metrics可以为undefined，此时对于chart层面而言，数据不存在，此请求无效
- * @typedef {ColumnData & {metrics?: ScalarDetail[], type: 'scalar'}} ScalarData
+ * @typedef {MetricData & {metrics?: ScalarDetail[], type: 'scalar'}} ScalarData
  */
 
 /**
@@ -102,7 +102,7 @@
 /**
  * 指标数据存储对象
  * 约定metrics可以为undefined，此时对于chart层面而言，数据不存在，此请求无效
- * @typedef {ColumnData & {metrics?: MediaDetail[], steps: Number[], type: 'media'}} MediaData
+ * @typedef {MetricData & {metrics?: MediaDetail[], steps: Number[], type: 'media'}} MediaData
  */
 
 /**
@@ -128,7 +128,7 @@
 
 /**
  * 折线图数据
- * @typedef {ScalarData} LineColumnData
+ * @typedef {ScalarData} LineMetricData
  */
 
 // ---------------------------------- 图像数据结构 ----------------------------------
@@ -140,7 +140,7 @@
 
 /**
  * 图像数据
- * @typedef {MediaData} ImageColumnData
+ * @typedef {MediaData} ImageMetricData
  */
 
 // ---------------------------------- 音频数据结构 ----------------------------------
@@ -152,7 +152,7 @@
 
 /**
  * 音频数据
- * @typedef {MediaData} AudioColumnData
+ * @typedef {MediaData} AudioMetricData
  */
 
 // ---------------------------------- 文字图数据结构 ----------------------------------
@@ -164,5 +164,5 @@
 
 /**
  * 文字数据
- * @typedef {MediaData} TextColumnData
+ * @typedef {MediaData} TextMetricData
  */
