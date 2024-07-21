@@ -16,18 +16,22 @@
  */
 
 /**
- * 移动图表位置的回调
- * @callback moveChartEventCallback
- * @param { IndexId } index - 当前图表的index
- * @param { 'move' | 'pin' | 'hide' } type - 移动类型，move代表移动，pin代表置顶，hide代表隐藏
- * @returns { Promise<void>  }
- */
-
-/**
  * 跳转到某个实验的回调
  * @callback jumpToExperimentCallback
  * @param { IndexId } index - 当前图表的index
  * @param { IndexId } expId - 需要跳转到的实验的index
+ */
+
+/**
+ * 移动图表位置的回调
+ * 作为'PINNED' | 'HIDDEN' | 'PUBLIC'时，组件内等待事件完成，刷新图表
+ * 作为'MOVE'时，组件内直接移动图表位置，该请求仅作为同步后端数据
+ * @callback moveChartEventCallback
+ * @param {ChartId} cIndex - 图表的唯一标识
+ * @param {'PINNED' | 'HIDDEN' | 'PUBLIC' | 'MOVE'} type - 置顶或隐藏或回归正常或移动到其他section的制定位置
+ * @param {SectionId} [sIndex] - 当type为MOVE时，需要指定目标section的index
+ * @param {Number} [index] - 当type为MOVE时，需要指定移动到目标section的排序
+ * @returns { Promise<{sections: Section[], charts: Chart[]}>  }
  */
 
 /**
@@ -51,6 +55,15 @@
  * @param { MetricId } metric - 需要获取的媒体数据的id
  * @param { string } path - 需要获取的媒体资源的路径，为 {@link MediaDetail.data} 中的一个元素
  * @returns {Promise<?>}
+ */
+
+// ---------------------------------- 组件内事件 ----------------------------------
+/**
+ * @callback moveChartEvent 图表置顶/隐藏/移动等事件
+ * @param {ChartId} cIndex - 图表的唯一标识
+ * @param {'PINNED' | 'HIDDEN' | 'PUBLIC' | 'MOVE'} type - 置顶或隐藏或回归正常或移动到其他section的制定位置
+ * @param {SectionId} [sIndex] - 当type为MOVE时，需要指定目标section的index
+ * @param {Number} [index] - 当type为MOVE时，需要指定移动到目标section的排序
  */
 </script>
 
@@ -84,7 +97,15 @@ const props = defineProps({
     type: Array,
     required: true
   },
-
+  /**
+   * 图表置顶/隐藏/移动等事件
+   */
+  moveChartEventCallback: {
+    /** @type { PropType<moveChartEventCallback>} */
+    // @ts-ignore
+    type: Function,
+    required: true
+  },
   /**
    * 获取标量数据的请求依赖
    */
@@ -123,12 +144,11 @@ const props = defineProps({
     default: 5000,
     validator: (/** @type {number} */ v) => v >= 0
   },
-  /**
-   * 全局是否可拖拽
-   */
-  draggable: {
-    type: Boolean,
-    default: false
+  role: {
+    /** @type {PropType<Role>} */
+    // @ts-ignore
+    type: String,
+    default: 'OWNER'
   },
   /**
    * 深色模式
@@ -136,12 +156,19 @@ const props = defineProps({
   dark: {
     type: Boolean,
     default: false
+  },
+  /**
+   * 环境标识，cloud环境下会有一些逻辑与本地不一样
+   */
+  cloud: {
+    type: Boolean,
+    default: false
   }
 })
 const stagingSections = ref(props.sections)
 const stagingCharts = ref(props.charts)
 const boardKey = ref(0)
-const emits = defineEmits(['fold', 'move', 'jump'])
+const emits = defineEmits(['fold', 'jump'])
 
 // ---------------------------------- 刷新 ----------------------------------
 
@@ -156,6 +183,17 @@ const nowCharts = computed(() => {
 
 // ---------------------------- 图表置顶/隐藏 ------------------------------
 
+/**
+ * @type {moveChartEvent}
+ */
+const changeChartPinOrHide = async (cIndex, type) => {
+  if (type === 'MOVE') throw new Error('MOVE事件还未完善')
+
+  const { sections, charts } = await props.moveChartEventCallback(cIndex, type)
+  stagingSections.value = sections
+  stagingCharts.value = charts
+  refresh.value = !refresh.value
+}
 // ---------------------------- 全局平滑配置 -------------------------------
 
 const smooth = ref({})
@@ -169,14 +207,9 @@ provide(
   'Interval',
   computed(() => (props.interval >= 0 ? props.interval : 0))
 )
-provide(
-  'Draggable',
-  computed(() => props.draggable)
-)
-provide(
-  'Dark',
-  computed(() => props.dark)
-)
+provide('Dark', props.dark)
+provide('Role', props.role)
+provide('ChangeChartPinOrHide', changeChartPinOrHide)
 </script>
 
 <style lang="scss"></style>

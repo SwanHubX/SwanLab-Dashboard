@@ -8,6 +8,15 @@
       "tip": "Click on the pencil icon (top right corner of this chart) to change the max number of runs displayed"
     }
   },
+  "toolbar": {
+    "tips": {
+      "pin": "Pin",
+      "zoom": "Zoom in",
+      "hide": "Hide",
+      "unHide": "Un hide",
+      "unPin": "Un pin"
+    }
+  },
   "section": {
     "name": {
       "Text": "Text",

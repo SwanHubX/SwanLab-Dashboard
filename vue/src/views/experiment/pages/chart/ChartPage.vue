@@ -4,9 +4,10 @@
     <ChartsBoard
       :sections="sections"
       :charts="charts"
-      :get-media-metrics="getMediaMetrics"
-      :get-scalar-metrics="getScalarMetrics"
-      :get-media-resource="getMediaResource"
+      :get-media-metrics="C.getMediaMetrics"
+      :get-scalar-metrics="C.getScalarMetrics"
+      :get-media-resource="C.getMediaResource"
+      :move-chart-event-callback="moveChartEventCallback"
       :interval="interval"
       v-if="charts?.length"
     />
@@ -23,7 +24,7 @@ import { useExperimentStore } from '@swanlab-vue/store'
 import http from '@swanlab-vue/api/http'
 import { ref } from 'vue'
 import ChartsBoard from '@swanlab-vue/board/ChartsBoard.vue'
-import { formatLocalData, getMediaMetrics, getMediaResource, getScalarMetrics } from '@swanlab-vue/utils/chart'
+import * as C from '@swanlab-vue/utils/chart'
 const experimentStore = useExperimentStore()
 
 /** 用于规定轮询器状态，0为不轮询（关闭轮询） */
@@ -36,11 +37,22 @@ const sections = ref()
 const charts = ref()
 ;(async function () {
   const { data } = await http.get(`/experiment/${experimentStore.id}/chart`)
-  const res = formatLocalData(data)
+  const res = C.formatLocalData(data)
   sections.value = res[0]
   charts.value = res[1]
   status.value = 'success'
 })()
+
+// ---------------------------------- 图表移动 ----------------------------------
+/** @type {import('@swanlab-vue/board/ChartsBoard.vue').moveChartEventCallback} */
+const moveChartEventCallback = async (cIndex, type) => {
+  const data = await C.moveChartEventRequest(cIndex, type)
+  const _ = C.formatLocalData(data)
+  return {
+    sections: _[0],
+    charts: _[1]
+  }
+}
 </script>
 
 <style lang="scss" scoped>

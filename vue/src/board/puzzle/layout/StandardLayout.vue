@@ -23,6 +23,7 @@
         v-model:current="current"
         :total="props.charts.length"
         :page-size="chartsNumPerPage"
+        v-if="hasPagination"
       />
     </div>
   </div>

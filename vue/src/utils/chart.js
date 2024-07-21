@@ -1,5 +1,4 @@
 import http from '@swanlab-vue/api/http'
-import { tm } from '@swanlab-vue/i18n'
 /**
  * @typedef { Object } OriginalChartData 本地版图表初始化接口返回的原始数据类型
  * @property { OriginalNamespace[] } namespaces 命名空间
@@ -203,7 +202,7 @@ const formatCharts = (charts, exps) => {
     }
 
     source.forEach((m) => {
-      const colors = exps ? getExperimentColors(exps, m.experiment_id) : []
+      const colors = exps ? getExperimentColors(Number(m.experiment_id), exps) : []
       tempChart.metrics.push({
         axis: type === 'LINE' ? 'Y' : 'X',
         // @ts-ignore
@@ -276,4 +275,21 @@ export const getMediaResource = async (resource) => {
 export const getScalarMetrics = async (metrics) => {
   const res = await Promise.all(metrics.map((m) => http.get(`/experiment/${m.experimentId}/tag/${m.key}`)))
   return formatLocalScalarData(res.map((r) => r.data))
+}
+
+// ---------------------------------- 组件移动事件 ----------------------------------
+
+/**
+ * 组件移动
+ * @param {ChartId} cIndex 图表ID
+ * @param {'MOVE' | 'PINNED' | 'HIDDEN' | 'PUBLIC'} type 移动类型
+ * @returns {Promise<{charts: OriginalChart[], namespaces: OriginalNamespace[]}>}
+ */
+export const moveChartEventRequest = async (cIndex, type) => {
+  if (type === 'MOVE') throw new Error('MOVE is not supported yet')
+  // HIDDEN对应-1，PINNED对应1，PUBLIC对应0
+  const { data } = await http.patch(`/chart/${cIndex}/status`, {
+    status: type === 'HIDDEN' ? -1 : type === 'PINNED' ? 1 : 0
+  })
+  return data
 }

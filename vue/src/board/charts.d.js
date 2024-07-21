@@ -19,6 +19,11 @@
  */
 
 /**
+ * 组件内置权限管理，根据访问者的权限，对组件进行显示隐藏
+ * @typedef {'OWNER'| 'MEMBER'| 'VIEWER'|'VISITOR'} Role
+ */
+
+/**
  * 指标（列）数据唯一标识
  * @typedef {Object} MetricId
  * @property {ExpId} experimentId 实验 ID，是唯一识别的 {@link IndexId}
