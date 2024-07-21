@@ -11,7 +11,7 @@
       <!-- 标题 -->
       <div class="chart-title" :class="{ 'zoom-chart-title': zoom }">{{ chart.title }}</div>
       <div class="chart-content" :class="{ 'zoom-chart-content': zoom }">
-        <component :is="chartComponent" :chart="chart" :metricsData="metricsData" :zoom="zoom" />
+        <component :is="chartComponent" :chart="chart" :metricsData="metricsData" :zoom="zoom" :multi="multi" />
       </div>
     </div>
   </div>
@@ -59,6 +59,7 @@ const chartComponent = computed(() => {
 const getter = props.chart.type === 'LINE' ? inject('ScalarConstructor') : inject('MediaConstructor')
 /** @type {ComputedRef<Number>} 是否继续轮询 */
 const interval = inject('Interval')
+const multi = inject('Multi')
 
 /**
  * 此图表的数据

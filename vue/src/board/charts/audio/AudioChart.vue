@@ -24,6 +24,11 @@ const props = defineProps({
   zoom: {
     type: Boolean,
     default: true
+  },
+  /** 是否为多实验图表环境 */
+  multi: {
+    type: Boolean,
+    default: false
   }
 })
 </script>

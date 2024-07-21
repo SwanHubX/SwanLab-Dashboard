@@ -29,17 +29,21 @@ const props = defineProps({
   zoom: {
     type: Boolean,
     default: true
+  },
+  /** 是否为多实验图表环境 */
+  multi: {
+    type: Boolean,
+    default: false
   }
 })
+
 /**
  * 操作渲染区域的 DOM 引用
  * @type {Ref<HTMLDivElement>}
  */
 const g2Ref = ref(null)
 // ---------------------------------- 渲染函数 ----------------------------------
-const render = (/** @type {ScalarData[]} */ metricsData) => {
-  // 逻辑处理
-}
+const render = (/** @type {ScalarData[]} */ metricsData) => {}
 
 // ---------------------------------- 自动更新逻辑 ----------------------------------
 watchMetric(() => props.metricsData, render)
