@@ -22,8 +22,8 @@ const props = defineProps({
     type: [Array, null],
     required: true
   },
-  /** 是否显示toolbar */
-  toolbar: {
+  /** 是否为放大环境 */
+  zoom: {
     type: Boolean,
     default: true
   }

@@ -1,5 +1,5 @@
 <template>
-  <ChartToolbar :chart="chart" v-if="toolbar" />
+  <ChartToolbar :chart="chart" v-if="zoom" />
   <div></div>
 </template>
 
@@ -11,7 +11,6 @@
  **/
 import ChartToolbar from '../.components/ChartToolbar.vue'
 import { watch } from 'vue'
-/** props */
 const props = defineProps({
   /** 图表配置 */
   chart: {
@@ -25,8 +24,8 @@ const props = defineProps({
     type: [Array, null],
     required: true
   },
-  /** 是否显示toolbar */
-  toolbar: {
+  /** 是否为放大环境 */
+  zoom: {
     type: Boolean,
     default: true
   }

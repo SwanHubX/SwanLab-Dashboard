@@ -11,7 +11,7 @@
       <!-- 标题 -->
       <div class="chart-title" :class="{ 'zoom-chart-title': zoom }">{{ chart.title }}</div>
       <div class="chart-content" :class="{ 'zoom-chart-content': zoom }">
-        <component :is="chartComponent" :chart="chart" :metricsData="metricsData" :toolbar="!zoom" />
+        <component :is="chartComponent" :chart="chart" :metricsData="metricsData" :zoom="zoom" />
       </div>
     </div>
   </div>

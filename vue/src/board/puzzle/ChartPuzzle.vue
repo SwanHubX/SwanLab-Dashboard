@@ -25,7 +25,7 @@
 
 <script setup>
 /**
- * @description: 图表拼图容器，关注拖拽逻辑，而不关心具体图表是什么以及里面的状态
+ * @description: 图表拼图容器，关注拖拽逻辑和放大等逻辑，而不关心具体图表是什么以及里面的状态
  * @file: ChartPuzzle.vue
  * @since: 2024-07-14 20:57:49
  **/
