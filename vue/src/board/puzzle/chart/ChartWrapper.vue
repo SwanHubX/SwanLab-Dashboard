@@ -63,7 +63,7 @@ const multi = inject('Multi')
 
 /**
  * 此图表的数据
- * @type {import("vue").ShallowRef<null | MetricData[]>}
+ * @type {import("vue").ShallowRef<null | ColumnData[]>}
  */
 const metricsData = shallowRef(null)
 // ---------------------------------- 处理子组件状态 ----------------------------------
@@ -113,7 +113,7 @@ onMounted(() => {
 
   poller.start(interval, async () => {
     try {
-      /** @type {MetricData[]} */
+      /** @type {ColumnData[]} */
       const msd = []
       for (const m of await getter(metrics.ids)) {
         // console.log('获取数据:', m)

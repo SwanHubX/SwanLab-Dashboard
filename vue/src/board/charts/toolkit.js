@@ -24,14 +24,14 @@ export class MediaGetter {
 /**
  * 输入到更新函数的指标渲染回调
  * @callback renderChart
- * @param {MetricData[]} newVal 新的指标数据
- * @param {MetricData[]} oldVal 旧的指标数据
+ * @param {ColumnData[]} newVal 新的指标数据
+ * @param {ColumnData[]} oldVal 旧的指标数据
  */
 
 /**
  * 用于监听指标变化的函数
  * @callback MetricWatchFunc
- * @returns {MetricData[]}
+ * @returns {ColumnData[]}
  */
 
 /**

@@ -36,14 +36,14 @@
 /**
  * 获取标量数据的构造
  * @callback ScalarMetricsConstructor
- * @param { MetricId[] } metrics - 需要获取的标量数据的id
+ * @param { ColumnId[] } metrics - 需要获取的标量数据的id
  * @returns { Promise<ScalarData[]> }
  */
 
 /**
  * 获取媒体数据的构造
  * @callback MediaMetricsConstructor
- * @param { MetricId[] } metrics - 需要获取的媒体数据的id
+ * @param { ColumnId[] } metrics - 需要获取的媒体数据的id
  * @param { number } [step] - 获取数据的确定步长，为undefined时代表初次获取
  * @returns { Promise<MediaData[]> }
  */
@@ -51,7 +51,7 @@
 /**
  * 获取某个媒体资源的构造
  * @callback MediaResourceConstructor
- * @param { MetricId } metric - 需要获取的媒体数据的id
+ * @param { ColumnId } metric - 需要获取的媒体数据的id
  * @param { string } path - 需要获取的媒体资源的路径，为 {@link MediaDetail.data} 中的一个元素
  * @returns {Promise<?>}
  */

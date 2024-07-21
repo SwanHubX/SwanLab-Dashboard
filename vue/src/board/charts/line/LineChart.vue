@@ -10,7 +10,6 @@
  * @since: 2024-07-14 20:53:33
  **/
 import ChartToolbar from '../.components/ChartToolbar.vue'
-import { watch } from 'vue'
 import { watchMetric } from '../toolkit'
 const props = defineProps({
   /** 图表配置 */

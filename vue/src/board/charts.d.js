@@ -25,7 +25,7 @@
 
 /**
  * 指标（列）数据唯一标识
- * @typedef {Object} MetricId
+ * @typedef {Object} ColumnId
  * @property {ExpId} experimentId 实验 ID，是唯一识别的 {@link IndexId}
  * @property {ColumnKey} key 检索的指标名，是唯一识别的 {@link IndexId}
  */
@@ -80,15 +80,15 @@
  */
 
 /**
- * 指标数据超集
+ * 指标（列）数据超集
  * 约定metrics可以为undefined，此时对于chart层面而言，数据不存在，此请求无效
- * @typedef {MetricId & { metrics?: any[], type: 'scalar'| 'media'}} MetricData
+ * @typedef {ColumnId & { metrics?: any[], type: 'scalar'| 'media'}} ColumnData
  */
 
 /**
  * 指标数据存储对象
  * 约定metrics可以为undefined，此时对于chart层面而言，数据不存在，此请求无效
- * @typedef {MetricData & {metrics?: ScalarDetail[], type: 'scalar'}} ScalarData
+ * @typedef {ColumnData & {metrics?: ScalarDetail[], type: 'scalar'}} ScalarData
  */
 
 /**
@@ -102,7 +102,7 @@
 /**
  * 指标数据存储对象
  * 约定metrics可以为undefined，此时对于chart层面而言，数据不存在，此请求无效
- * @typedef {MetricData & {metrics?: MediaDetail[], steps: Number[], type: 'media'}} MediaData
+ * @typedef {ColumnData & {metrics?: MediaDetail[], steps: Number[], type: 'media'}} MediaData
  */
 
 /**
@@ -128,7 +128,7 @@
 
 /**
  * 折线图数据
- * @typedef {ScalarData} LineMetricData
+ * @typedef {ScalarData} LineColumnData
  */
 
 // ---------------------------------- 图像数据结构 ----------------------------------
@@ -140,7 +140,7 @@
 
 /**
  * 图像数据
- * @typedef {MediaData} ImageMetricData
+ * @typedef {MediaData} ImageColumnData
  */
 
 // ---------------------------------- 音频数据结构 ----------------------------------
@@ -152,7 +152,7 @@
 
 /**
  * 音频数据
- * @typedef {MediaData} AudioMetricData
+ * @typedef {MediaData} AudioColumnData
  */
 
 // ---------------------------------- 文字图数据结构 ----------------------------------
@@ -164,5 +164,5 @@
 
 /**
  * 文字数据
- * @typedef {MediaData} TextMetricData
+ * @typedef {MediaData} TextColumnData
  */
