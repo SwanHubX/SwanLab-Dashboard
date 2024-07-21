@@ -1,6 +1,6 @@
 <template>
   <ChartToolbar :chart="chart" v-if="!zoom" />
-  <div></div>
+  <div class="overflow-hidden" ref="g2Ref"></div>
 </template>
 
 <script setup>
@@ -11,6 +11,7 @@
  **/
 import ChartToolbar from '../.components/ChartToolbar.vue'
 import { watch } from 'vue'
+import { watchMetric } from '../toolkit'
 const props = defineProps({
   /** 图表配置 */
   chart: {
@@ -30,15 +31,18 @@ const props = defineProps({
     default: true
   }
 })
-
-watch(
-  () => props.metricsData,
-  (newVal) => {},
-  { immediate: true }
-)
-
+/**
+ * 操作渲染区域的 DOM 引用
+ * @type {Ref<HTMLDivElement>}
+ */
+const g2Ref = ref(null)
 // ---------------------------------- 渲染函数 ----------------------------------
-const render = (/** @type {ScalarData[]} */ metricsData) => {}
+const render = (/** @type {ScalarData[]} */ metricsData) => {
+  // 逻辑处理
+}
+
+// ---------------------------------- 自动更新逻辑 ----------------------------------
+watchMetric(() => props.metricsData, render)
 </script>
 
 <style lang="scss" scoped></style>

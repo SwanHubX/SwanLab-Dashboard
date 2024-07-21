@@ -55,8 +55,8 @@ const chartComponent = computed(() => {
   return charts[props.chart.type.toLowerCase()]
 })
 
-/** @type {import('@swanlab-vue/board/ChartsBoard.vue').getMediaMetricsRequest | import('@swanlab-vue/board/ChartsBoard.vue').getScalarMetricsRequest} */
-const getter = props.chart.type === 'LINE' ? inject('ScalarGetter') : inject('MediaGetter')
+/** @type {import('@swanlab-vue/board/ChartsBoard.vue').MediaMetricsConstructor | import('@swanlab-vue/board/ChartsBoard.vue').ScalarMetricsConstructor} */
+const getter = props.chart.type === 'LINE' ? inject('ScalarConstructor') : inject('MediaConstructor')
 /** @type {ComputedRef<Number>} 是否继续轮询 */
 const interval = inject('Interval')
 

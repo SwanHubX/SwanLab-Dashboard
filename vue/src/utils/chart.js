@@ -258,20 +258,20 @@ export const formatLocalScalarData = (metricsData) => {
 
 // ---------------------------------- 请求媒体数据 ----------------------------------
 
-/** @type {import('@swanlab-vue/board/ChartsBoard.vue').getMediaMetricsRequest} */
+/** @type {import('@swanlab-vue/board/ChartsBoard.vue').MediaMetricsConstructor} */
 export const getMediaMetrics = async (metrics, step) => {
   console.log('getMediaMetrics', metrics, step)
   return []
 }
 
-/** @type {import('@swanlab-vue/board/ChartsBoard.vue').getMediaResourceRequest} */
+/** @type {import('@swanlab-vue/board/ChartsBoard.vue').MediaResourceConstructor} */
 export const getMediaResource = async (resource) => {
   console.log('getMediaResource', resource)
   return []
 }
 // ---------------------------------- 请求标量数据 ----------------------------------
 
-/** @type {import('@swanlab-vue/board/ChartsBoard.vue').getScalarMetricsRequest} */
+/** @type {import('@swanlab-vue/board/ChartsBoard.vue').ScalarMetricsConstructor} */
 export const getScalarMetrics = async (metrics) => {
   const res = await Promise.all(metrics.map((m) => http.get(`/experiment/${m.experimentId}/tag/${m.key}`)))
   return formatLocalScalarData(res.map((r) => r.data))

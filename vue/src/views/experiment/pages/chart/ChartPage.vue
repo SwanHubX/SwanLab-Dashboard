@@ -4,10 +4,10 @@
     <ChartsBoard
       :sections="sections"
       :charts="charts"
-      :get-media-metrics="C.getMediaMetrics"
-      :get-scalar-metrics="C.getScalarMetrics"
-      :get-media-resource="C.getMediaResource"
-      :move-chart-event-callback="moveChartEventCallback"
+      :MediaConstructor="C.getMediaMetrics"
+      :ScalarConstructor="C.getScalarMetrics"
+      :ResourceConstructor="C.getMediaResource"
+      :MoveChartConstructor="MoveChartConstructor"
       :interval="interval"
       v-if="charts?.length"
     />
@@ -44,8 +44,8 @@ const charts = ref()
 })()
 
 // ---------------------------------- 图表移动 ----------------------------------
-/** @type {import('@swanlab-vue/board/ChartsBoard.vue').moveChartEventCallback} */
-const moveChartEventCallback = async (cIndex, type) => {
+/** @type {import('@swanlab-vue/board/ChartsBoard.vue').MoveChartConstructor} */
+const MoveChartConstructor = async (cIndex, type) => {
   const data = await C.moveChartEventRequest(cIndex, type)
   const _ = C.formatLocalData(data)
   return {
