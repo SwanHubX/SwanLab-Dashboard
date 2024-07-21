@@ -19,6 +19,11 @@ const props = defineProps({
     /** @type {PropType< MediaData[]>} */
     type: [Array, null],
     required: true
+  },
+  /** 是否显示toolbar */
+  toolbar: {
+    type: Boolean,
+    default: true
   }
 })
 </script>

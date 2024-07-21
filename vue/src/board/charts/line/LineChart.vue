@@ -1,5 +1,5 @@
 <template>
-  <ChartToolbar :chart="chart" />
+  <ChartToolbar :chart="chart" v-if="toolbar" />
   <div></div>
 </template>
 
@@ -24,6 +24,11 @@ const props = defineProps({
     /** @type {PropType< ScalarData[]>} */
     type: [Array, null],
     required: true
+  },
+  /** 是否显示toolbar */
+  toolbar: {
+    type: Boolean,
+    default: true
   }
 })
 

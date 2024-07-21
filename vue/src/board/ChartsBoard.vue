@@ -65,6 +65,10 @@
  * @param {SectionId} [sIndex] - 当type为MOVE时，需要指定目标section的index
  * @param {Number} [index] - 当type为MOVE时，需要指定移动到目标section的排序
  */
+/**
+ * @callback zoomChatEvent 图表放大事件
+ * @returns {void}
+ */
 </script>
 
 <script setup>

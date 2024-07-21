@@ -62,7 +62,7 @@ import {
   EyeInvisibleOutlined,
   EyeOutlined
 } from '@ant-design/icons-vue'
-import { Dropdown, Menu, MenuItem } from 'ant-design-vue'
+import { Dropdown, Menu, MenuItem, Spin } from 'ant-design-vue'
 import { t } from '@swanlab-vue/i18n'
 
 const props = defineProps({
@@ -83,6 +83,7 @@ const props = defineProps({
  */
 const toolbarRef = ref(null)
 const emits = defineEmits(['zoom'])
+const handleZoom = inject('zoomChartEvent')
 /** @type {SectionType} */
 const sType = inject('SectionType')
 /** @type {import('@swanlab-vue/board/ChartsBoard.vue').moveChartEvent} */
@@ -109,6 +110,7 @@ const pinLoading = ref(false)
  * @type {ToolBarIconConfig[]} 工具栏图标配置
  */
 const toolBarIcons = [
+  // 置顶，取消置顶
   {
     icon: PinComponent,
     tip: sType === 'PINNED' ? t('chart.toolbar.tips.unPin') : t('chart.toolbar.tips.pin'),
@@ -121,12 +123,11 @@ const toolBarIcons = [
     loading: pinLoading,
     style: { color: sType === 'PINNED' ? 'var(--positive-default)' : '' }
   },
+  // 放大
   {
     icon: ExpandOutlined,
     tip: t('chart.toolbar.tips.zoom'),
-    handler: () => {
-      emits('zoom')
-    },
+    handler: handleZoom,
     hidden: true
   },
   ...props.icons
