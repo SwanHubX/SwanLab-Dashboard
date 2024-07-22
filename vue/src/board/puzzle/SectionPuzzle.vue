@@ -79,6 +79,7 @@ watch(
 // ---------------------------------- 当前section为PINNED、PUBLIC、HIDDEN中的哪一个 ----------------------------------
 
 provide('SectionType', props.section.type)
+provide('SectionIndex', props.section.index)
 </script>
 
 <style lang="scss" scoped>

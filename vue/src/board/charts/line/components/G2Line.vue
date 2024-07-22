@@ -41,8 +41,8 @@ onMounted(() => {})
  * @param {ScalarData[]} scalars
  */
 const render = (scalars) => {
-  const lindeData = L.fmtScalar2Line(scalars, props.colorFinder)
-  const chart = L.createLine(g2Ref.value, lindeData)
+  const { data, maps } = L.fmtScalar2Line(scalars, props.colorFinder)
+  const chart = L.createLine(g2Ref.value, data, props.chart.index, maps, props.zoom)
 }
 
 defineExpose({
