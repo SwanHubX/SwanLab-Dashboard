@@ -15,7 +15,7 @@
 
 /**
  * 跳转到某个实验的，需要返回url
- * @callback ExperimentURIConstructor
+ * @callback MetricURIConstructor
  * @param { IndexId } index - 当前图表的index
  * @param { IndexId } expId - 需要跳转到的实验的index
  * @returns { string }
@@ -36,14 +36,14 @@
 /**
  * 获取标量数据的构造
  * @callback ScalarMetricsConstructor
- * @param { MetricId[] } metrics - 需要获取的标量数据的id
+ * @param { ColumnId[] } metrics - 需要获取的标量数据的id
  * @returns { Promise<ScalarData[]> }
  */
 
 /**
  * 获取媒体数据的构造
  * @callback MediaMetricsConstructor
- * @param { MetricId[] } metrics - 需要获取的媒体数据的id
+ * @param { ColumnId[] } metrics - 需要获取的媒体数据的id
  * @param { number } [step] - 获取数据的确定步长，为undefined时代表初次获取
  * @returns { Promise<MediaData[]> }
  */
@@ -51,7 +51,7 @@
 /**
  * 获取某个媒体资源的构造
  * @callback MediaResourceConstructor
- * @param { MetricId } metric - 需要获取的媒体数据的id
+ * @param { ColumnId } metric - 需要获取的媒体数据的id
  * @param { string } path - 需要获取的媒体资源的路径，为 {@link MediaDetail.data} 中的一个元素
  * @returns {Promise<?>}
  */
@@ -135,8 +135,8 @@ const props = defineProps({
   /**
    * 获取实验跳转链接的请求依赖
    */
-  ExpURIConstructor: {
-    /** @type { PropType<ExperimentURIConstructor>} */
+  MetricURIConstructor: {
+    /** @type { PropType<MetricURIConstructor>} */
     // @ts-ignore
     type: Function,
     default: () => {}
@@ -211,6 +211,7 @@ const smooth = ref({})
 provide('ScalarConstructor', props.ScalarConstructor)
 provide('MediaConstructor', props.MediaConstructor)
 provide('ResourceConstructor', props.ResourceConstructor)
+provide('MetricURIConstructor', props.MetricURIConstructor)
 provide(
   'Interval',
   computed(() => (props.interval >= 0 ? props.interval : 0))

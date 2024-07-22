@@ -2,12 +2,12 @@ import { customRef } from 'vue'
 /**
  * 解析chart中包含的指标信息，只获取其中列为'CUSTOM'的指标
  * @param {Chart} chart 图表配置
- * @returns {{infos:Metric[], ids:MetricId[]}} 指标Id列表
+ * @returns {{infos:Metric[], ids:ColumnId[]}} 指标Id列表
  */
 export const parseChartMetrics = (chart) => {
   /** @type {Metric[]} */
   const infos = []
-  /** @type {MetricId[]} */
+  /** @type {ColumnId[]} */
   const ids = []
   for (const metric of chart.metrics) {
     if (metric.column.class === 'CUSTOM') {

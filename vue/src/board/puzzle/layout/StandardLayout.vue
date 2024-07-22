@@ -38,13 +38,13 @@
 /**
  * section列配置
  * @typedef {Object} SectionColumn
- * @property {ComputedRef<number>} width - 列的宽度，单位像素，结合 {@link columnsNum} 设置的列数，以及当前的容器高度，计算列宽度（不包含 {@link ChartSpacing}）
+ * @property {ComputedRef<number>} width - 列的宽度，单位像素，结合列数设置的列数，以及当前的容器高度，计算列宽度（不包含 {@link ChartSpacing}）
  */
 
 /**
  * section行配置
  * @typedef {Object} SectionRow
- * @property {ComputedRef<number>} height - 行的高度，单位像素，即为 {@link rowsHeight} 设置的行高
+ * @property {ComputedRef<number>} height - 行的高度，单位像素，即设置的行高
  */
 
 /**

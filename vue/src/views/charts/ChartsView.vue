@@ -7,10 +7,12 @@
         :MediaConstructor="C.getMediaMetrics"
         :ScalarConstructor="C.getScalarMetrics"
         :ResourceConstructor="C.getMediaResource"
-        :MoveChartConstructor="moveChartConstructor"
+        :MoveChartConstructor="MoveChartConstructor"
+        :MetricURIConstructor="MetricURIConstructor"
         :interval="interval"
         v-model:refresh="refresh"
         v-if="charts.length"
+        multi
       />
       <!-- 图表不存在 -->
       <p class="font-semibold pt-5 text-center" v-else>Empty Charts</p>
@@ -86,13 +88,19 @@ http.get('/project/charts').then(({ data }) => {
 
 // ---------------------------------- 图表移动 ----------------------------------
 /** @type {import('@swanlab-vue/board/ChartsBoard.vue').MoveChartConstructor} */
-const moveChartConstructor = async (cIndex, type) => {
+const MoveChartConstructor = async (cIndex, type) => {
   const data = await C.moveChartEventRequest(cIndex, type)
   const _ = C.formatLocalData(data, projectStore.experiments)
   return {
     sections: _[0],
     charts: _[1]
   }
+}
+
+// ---------------------------------- metric路径跳转 ----------------------------------
+/** @type {import('@swanlab-vue/board/ChartsBoard.vue').MetricURIConstructor} */
+const MetricURIConstructor = (index, expId) => {
+  return `/experiment/${expId}/chart`
 }
 </script>
 

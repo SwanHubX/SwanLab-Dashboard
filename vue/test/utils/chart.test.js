@@ -121,7 +121,7 @@ describe('formatLocalData => sections', () => {
     expect(sections[0].folded).toEqual(false)
     expect(sections[0].chartIndex.length).toEqual(0)
     expect(sections[4].type).toEqual('HIDDEN')
-    expect(sections[0].folded).toEqual(true)
+    expect(sections[4].folded).toEqual(true)
     expect(sections[4].chartIndex.length).toEqual(0)
   })
 
@@ -174,7 +174,7 @@ describe('formatLocalData => charts', () => {
       expect(chart.index).toEqual(String(oc.id))
       expect(chart.type).toEqual(oc.type === 'default' ? 'LINE' : oc.type.toUpperCase())
       expect(chart.title).toEqual(oc.name)
-      expect(chart.color).toEqual('#528d59')
+      expect(chart.colors).toEqual(['#528d59', '#528d59'])
       /** @type { Metric[] } */
       const metrics = chart.metrics
       /**
