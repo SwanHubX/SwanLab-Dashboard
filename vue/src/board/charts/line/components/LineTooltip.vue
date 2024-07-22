@@ -43,7 +43,7 @@ const show = computed(
     boardStore.$line.hoverInfo?.sIndex === sIndex &&
     toolTipContainerRef.value?.offsetWidth
 )
-const offset = 20
+const offset = 40
 // 动态计算当前提示框显示位置，主要是left
 const style = computed(() => {
   const x = boardStore.$line.hoverInfo?.x
@@ -52,7 +52,7 @@ const style = computed(() => {
   // if (props.cIndex !== cIndex) return { left: `${x + offset}px` }
   // 如果 x 在容器左边，显示在右边，否则显示在左边
   return {
-    left: `${x > toolTipContainerRef.value?.offsetWidth / 2 ? x - 240 - offset : x + offset}px`
+    left: `${x > toolTipContainerRef.value?.offsetWidth / 2 ? x - 220 - offset : x + offset}px`
   }
 })
 </script>
@@ -60,7 +60,7 @@ const style = computed(() => {
 <style lang="scss" scoped>
 .lc-tooltip {
   @apply py-2 px-3 absolute bg-default border rounded z-10 -top-7;
-  min-width: 180px;
+  min-width: 220px;
   box-shadow: rgba(21, 24, 31, 0.16) 0px 12px 24px 0px;
   visibility: visible;
 
