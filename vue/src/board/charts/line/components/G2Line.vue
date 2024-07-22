@@ -40,13 +40,19 @@ const g2Ref = ref(null)
  */
 const nowData = shallowRef([])
 
+/** @type {L.LineChart} */
+let plot = null
 /**
  * 渲染函数
  * @param {ScalarData[]} scalars
  */
 const render = (scalars) => {
   const { data, maps } = L.fmtScalar2Line(scalars, props.colorFinder)
-  const chart = L.createLine(g2Ref.value, data, props.chart.index, maps, props.zoom, (data) => (nowData.value = data))
+  if (!plot)
+    plot = L.createLine(g2Ref.value, data, props.chart.index, maps, props.zoom, (data) => (nowData.value = data))
+  else {
+    plot.change(data, maps)
+  }
 }
 
 defineExpose({

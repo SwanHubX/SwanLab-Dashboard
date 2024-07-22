@@ -76,7 +76,7 @@ const expIds = computed(() => {
 const refresh = ref(false)
 
 /** 用于规定轮询器状态，0为不轮询（关闭轮询） */
-const interval = ref(0)
+const interval = ref(5000)
 
 const getMediaMetrics = C.createGetMediaMetrics(true)
 const getScalarMetrics = C.createGetScalarMetrics(true)

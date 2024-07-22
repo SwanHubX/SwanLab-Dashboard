@@ -106,9 +106,51 @@ export const fmtScalar2Line = (scalars, colorFinder) => {
 }
 
 /**
+ * 将折线图内部元素分组
+ * @param {G2.Element[]} elements 元素列表
+ * @param {Map<IndexId, G2.Element[]>} elMap key为实验id，value为元素列表
+ * @param {Number} length 整个图表的元素类别数量
+ */
+const groupElementByExpId = (elements, elMap, length) => {
+  // FIXME 如果以后同一图表中出现相同实验不同key的数据，需要进一步明确
+  // 由于按照实验id加粗，所以需要根据实验id分组
+  const nameSet = new Set()
+  for (const el of elements) {
+    const model = el.getModel()
+    /** @type {SeriesDetail} */
+    let detail = null
+    // 需要注意的是每一个元素的data代表映射的样式数据，这可能是一个Object，也可能是一个Object[]
+    if (Array.isArray(model.data)) {
+      detail = model.data[0].detail
+    } else {
+      detail = model.data.detail
+    }
+    if (!nameSet.has(detail.name)) {
+      nameSet.add(detail.name)
+      elMap.get(detail.experimentId).push(el)
+    }
+    // 如果已经全部找到，就不再继续
+    if (nameSet.keys.length === length) break
+  }
+}
+
+/**
  * 当前hover数据发生更改的回调
  * @callback LineHoverDataUpdateCallback
  * @param {LineData[]} data
+ */
+
+/**
+ * @typedef {Object} LineChart
+ * @property {Line} line 折线图实例
+ * @property {LineDataChangeFunction} change 更新折线图数据方法
+ */
+
+/**
+ * 更新折线图数据
+ * @callback LineDataChangeFunction
+ * @param {LineData[]} lineData 标量数据
+ * @param {LineMaps} maps 一些计算好的的映射关系
  */
 
 /**
@@ -119,6 +161,7 @@ export const fmtScalar2Line = (scalars, colorFinder) => {
  * @param {LineMaps} maps 一些计算好的的映射关系
  * @param {Boolean} zoom 是否为缩放环境，如果是缩放环境的tooltip事件，不会被动触发
  * @param {LineHoverDataUpdateCallback} callback 当前hover数据发生更改的回调
+ * @return {LineChart}
  */
 export const createLine = (dom, lineData, cIndex, maps, zoom, callback) => {
   /** @type {IndexId} 图表所属section的id */
@@ -341,30 +384,10 @@ export const createLine = (dom, lineData, cIndex, maps, zoom, callback) => {
       line.chart.showTooltip({ x: newVal.x, y: newVal.y })
     }
   )
-  // FIXME 如果以后同一图表中出现相同实验不同key的数据，需要进一步明确
-  // 由于按照实验id加粗，所以需要根据实验id分组
-  const nameSet = new Set()
-  /**
-   * @type {Map<IndexId, G2.Element[]>}
-   */
-  const elMap = maps.experiment
-  for (const el of line.chart.getElements()) {
-    const model = el.getModel()
-    /** @type {SeriesDetail} */
-    let detail = null
-    // 需要注意的是每一个元素的data代表映射的样式数据，这可能是一个Object，也可能是一个Object[]
-    if (Array.isArray(model.data)) {
-      detail = model.data[0].detail
-    } else {
-      detail = model.data.detail
-    }
-    if (!nameSet.has(detail.name)) {
-      nameSet.add(detail.name)
-      elMap.get(detail.experimentId).push(el)
-    }
-    // 如果已经全部找到，就不再继续
-    if (nameSet.keys.length === maps.color.size) break
-  }
+
+  let elMap = maps.experiment
+  // 根据实验id分组元素
+  groupElementByExpId(line.chart.getElements(), maps.experiment, maps.color.size)
   // console.log('elMap', elMap)
 
   // 同一个实验的折线图，共享粗细信息
@@ -387,7 +410,15 @@ export const createLine = (dom, lineData, cIndex, maps, zoom, callback) => {
       }
     }
   )
+
   return {
-    plot: line
+    line,
+    /** @type {LineDataChangeFunction} */
+    change: (lineData, maps) => {
+      // 重新计算elMap映射
+      elMap = maps.experiment
+      groupElementByExpId(line.chart.getElements(), maps.experiment, maps.color.size)
+      line.changeData(lineData)
+    }
   }
 }
