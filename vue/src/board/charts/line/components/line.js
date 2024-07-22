@@ -23,29 +23,67 @@ G2.registerShape('point', 'last-point', {
     return shape
   }
 })
+
+/**
+ * 数据系列类型，继承自String，多一个config属性
+ */
+class Series extends String {
+  /**
+   * @param {IndexId} experimentId 实验id
+   * @param {String} key 数据的key
+   * @param {String} color 颜色
+   * @param {Boolean} [smooth=false] 是否平滑
+   */
+  constructor(experimentId, key, color, smooth = false) {
+    const string = `${smooth}-${experimentId}-${key}`
+    super(string)
+    /**
+     * @typedef {Object} SeriesConfig
+     * @property {IndexId} experimentId 实验id
+     * @property {String} key 数据的key
+     * @property {String} color 颜色
+     * @property {Boolean} smooth 是否平滑
+     */
+    /** @type {SeriesConfig} */
+    this.config = {
+      experimentId,
+      key,
+      color,
+      smooth
+    }
+  }
+}
+
 /**
  * @typedef {Object} LineData
  * @property {Number} data 数据
  * @property {Number} index 步数
- * @property {IndexId} series 数据系列，为 {@link ColumnId} 的 [experimentId]-[key]
- * @property {String} [smooth] 是否为平滑数据
- * @property {Boolean} [_last] 是否为最后一条数据
+ * @property {Series} series 数据系列
  */
 
 /**
  * 将标量数据展平为一维数组
  * @param {ScalarData[]} scalars
+ * @param {import('../../toolkit').colorFinder} colorFinder
  * @returns {LineData[]}
  */
-export const fmtScalar2Line = (scalars) => {
+export const fmtScalar2Line = (scalars, colorFinder) => {
   const lineData = []
   for (const scalar of scalars) {
     if (!scalar.metrics) continue
+    const s = new Series(
+      scalar.experimentId,
+      scalar.key,
+      colorFinder({
+        experimentId: scalar.experimentId,
+        key: scalar.key
+      })
+    )
     for (const metric of scalar.metrics) {
       lineData.push({
         data: metric.data,
         index: metric.index,
-        series: `${scalar.experimentId}-${scalar.key}`,
+        series: s,
         _last: metric._last
       })
     }
@@ -56,11 +94,9 @@ export const fmtScalar2Line = (scalars) => {
 /**
  * 创建折线图
  * @param {HTMLElement} dom 需要挂载的图表容器
- * @param {ScalarData[]} scalars 标量数据
- * @param {Object.<IndexId, String>} colorDict 颜色字典，key为series，value为颜色
+ * @param {LineData[]} lineData 标量数据
  */
-export const createLine = (dom, scalars, colorDict) => {
-  const lineData = fmtScalar2Line(scalars)
+export const createLine = (dom, lineData) => {
   const rootStyle = getComputedStyle(document.documentElement)
   const lineWidth = 1.5
   const thickerLineWidth = 3.5
@@ -78,7 +114,9 @@ export const createLine = (dom, scalars, colorDict) => {
     // 自己写图例
     legend: false,
     // 颜色通过回调拿到
-    color: ({ series }) => colorDict[series],
+    color: (/** @type {{series: Series}} */ { series }) => {
+      return series.config.color
+    },
     point: {
       shape: 'last-point'
     },
@@ -185,8 +223,6 @@ export const createLine = (dom, scalars, colorDict) => {
       }
     },
     // 大小相关
-    height: 200,
-    width: undefined,
     autoFit: true,
     // 开启一些交互
     // interactions: [{ type: 'element-active' }],

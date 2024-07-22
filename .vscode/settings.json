@@ -13,7 +13,7 @@
     "charts": "app",
     "board": "benchmark",
     "index": "home",
-    "line": "desktop",
+    "line": "components",
     "text": "config",
     "puzzle": "stack",
     "readme_files": "custom",

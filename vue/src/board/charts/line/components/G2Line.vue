@@ -1,5 +1,5 @@
 <template>
-  <div class="overflow-hidden" ref="g2Ref"></div>
+  <div class="overflow-hidden w-full h-full" ref="g2Ref"></div>
 </template>
 
 <script setup>
@@ -41,15 +41,8 @@ onMounted(() => {})
  * @param {ScalarData[]} scalars
  */
 const render = (scalars) => {
-  // 根据当前chart，生成颜色字典
-  const colorDict = {}
-  for (const metric of scalars) {
-    colorDict[`${metric.experimentId}-${metric.key}`] = props.colorFinder({
-      experimentId: metric.experimentId,
-      key: metric.key
-    })
-  }
-  const chart = L.createLine(g2Ref.value, scalars, colorDict)
+  const lindeData = L.fmtScalar2Line(scalars, props.colorFinder)
+  const chart = L.createLine(g2Ref.value, lindeData)
 }
 
 defineExpose({

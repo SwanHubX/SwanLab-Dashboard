@@ -130,7 +130,7 @@ export const useColorFinder = (chart, multi) => {
   const index = isDark ? 1 : 0
   /** @type {colorFinder} */
   return (columnId) => {
-    if (multi) return chart.colors[index]
+    if (!multi) return chart.colors[index]
     for (const metric of chart.metrics) {
       if (metric.expId === columnId.experimentId && metric.column.key === columnId.key) {
         return metric.colors[index]

@@ -15,7 +15,7 @@
 
 /**
  * 跳转到某个实验的，需要返回url
- * @callback ExperimentURIConstructor
+ * @callback MetricURIConstructor
  * @param { IndexId } index - 当前图表的index
  * @param { IndexId } expId - 需要跳转到的实验的index
  * @returns { string }
@@ -135,8 +135,8 @@ const props = defineProps({
   /**
    * 获取实验跳转链接的请求依赖
    */
-  ExpURIConstructor: {
-    /** @type { PropType<ExperimentURIConstructor>} */
+  MetricURIConstructor: {
+    /** @type { PropType<MetricURIConstructor>} */
     // @ts-ignore
     type: Function,
     default: () => {}
@@ -211,6 +211,7 @@ const smooth = ref({})
 provide('ScalarConstructor', props.ScalarConstructor)
 provide('MediaConstructor', props.MediaConstructor)
 provide('ResourceConstructor', props.ResourceConstructor)
+provide('MetricURIConstructor', props.MetricURIConstructor)
 provide(
   'Interval',
   computed(() => (props.interval >= 0 ? props.interval : 0))

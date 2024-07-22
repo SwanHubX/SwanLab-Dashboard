@@ -1,6 +1,13 @@
 <template>
-  <ChartToolbar :chart="chart" v-if="!zoom" />
-  <g2-line :chart="chart" :colorFinder="colorFinder" :zoom="zoom" ref="g2LineRef" />
+  <ChartToolbar :chart="chart" />
+  <LineLayout :multi="multi">
+    <template #legends>
+      <LineLegends :legends="legends" />
+    </template>
+    <template #chart>
+      <g2-line :chart="chart" :colorFinder="colorFinder" :zoom="zoom" ref="g2LineRef" />
+    </template>
+  </LineLayout>
 </template>
 
 <script setup>
@@ -12,6 +19,8 @@
 import ChartToolbar from '../.components/ChartToolbar.vue'
 import { useColorFinder, watchMetric } from '../toolkit'
 import G2Line from './components/G2Line.vue'
+import LineLayout from './components/LineLayout.vue'
+import LineLegends from './components/LineLegends.vue'
 const props = defineProps({
   /** 图表配置 */
   chart: {
@@ -40,6 +49,10 @@ const props = defineProps({
 /** 颜色查找器 */
 const colorFinder = useColorFinder(props.chart, props.multi)
 
+const metrics = computed(() => {
+  return props.chart.metrics.filter((metric) => metric.column.class !== 'SYSTEM')
+})
+
 const g2LineRef = ref(null)
 // ---------------------------------- 渲染函数 ----------------------------------
 const render = (/** @type {ScalarData[]} */ scalars) => {
@@ -48,6 +61,64 @@ const render = (/** @type {ScalarData[]} */ scalars) => {
 
 // ---------------------------------- 自动更新逻辑 ----------------------------------
 watchMetric(() => props.metricsData, render)
+
+// ---------------------------------- 图例配置 ----------------------------------
+/** @type {ComputedRef<import('./components/LineLegends.vue').LineLegends>} */
+const legends = computed(() => {
+  return {
+    captured: props.chart.captured,
+    /** @type {import('./components/LineLegends.vue').LineLegend[]} */
+    legends: metrics.value.map((m) => {
+      return {
+        name: m.name,
+        expId: m.expId,
+        color: colorFinder({ key: m.column.key, experimentId: m.expId })
+      }
+    })
+  }
+})
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+$legend-height: 15%;
+
+.line-legend {
+  height: $legend-height;
+  .legend-content {
+    height: calc(100%);
+    @apply overflow-y-auto flex flex-wrap justify-center;
+    @apply gap-y-0.5 gap-x-4;
+  }
+}
+
+.legend-item {
+  @apply flex flex-shrink-0 items-center hover:brightness-75 text-xs leading-none;
+  &:before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 2px;
+    margin-top: 2px;
+    margin-right: 4px;
+    background-color: currentColor;
+  }
+}
+
+.captured-line-legend {
+  height: calc(#{$legend-height} + 16px);
+  p {
+    height: 16px;
+  }
+  .legend-content {
+    height: calc(100% - 16px) !important;
+  }
+}
+
+.single-line-content {
+  height: 100% !important;
+}
+
+.line-content {
+  height: calc(100% - #{$legend-height});
+}
+</style>
