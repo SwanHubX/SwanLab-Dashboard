@@ -121,7 +121,7 @@ describe('formatLocalData => sections', () => {
     expect(sections[0].folded).toEqual(false)
     expect(sections[0].chartIndex.length).toEqual(0)
     expect(sections[4].type).toEqual('HIDDEN')
-    expect(sections[0].folded).toEqual(true)
+    expect(sections[4].folded).toEqual(true)
     expect(sections[4].chartIndex.length).toEqual(0)
   })
 
