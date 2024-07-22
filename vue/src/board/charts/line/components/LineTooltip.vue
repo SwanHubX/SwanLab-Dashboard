@@ -1,7 +1,7 @@
 <template>
   <div class="w-full relative" ref="toolTipContainerRef">
     <div class="lc-tooltip" ref="toolTipRef" v-show="show" :style="style">
-      <div class="lc-tooltip-item" v-for="item in data" :key="item.series" :style="{ color: item.detail.color }">
+      <div class="lc-tooltip-item" v-for="item in sortedData" :key="item.series" :style="{ color: item.detail.color }">
         <!-- 颜色 -->
         <span class="lc-tooltip-color lc-tooltip-color-rect"></span>
         <!-- 步数 -->
@@ -24,7 +24,7 @@
  **/
 import { useBoardStore } from '@swanlab-vue/board/store'
 import { formatNumber2SN } from '../../toolkit'
-defineProps({
+const props = defineProps({
   /** 提示框数据 */
   data: {
     /** @type {PropType<import('./line').LineData[]>} */
@@ -36,6 +36,12 @@ const boardStore = useBoardStore()
 const toolTipContainerRef = ref(null)
 const toolTipRef = ref(null)
 const sIndex = inject('SectionIndex')
+
+const sortedData = computed(() => {
+  const _ = [...props.data]
+  _.sort((a, b) => b.data - a.data)
+  return _
+})
 
 const show = computed(
   () =>

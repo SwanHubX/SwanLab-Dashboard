@@ -177,6 +177,22 @@ const stagingSections = ref(props.sections)
 const stagingCharts = ref(props.charts)
 const boardKey = ref(0)
 const emits = defineEmits(['fold', 'jump'])
+// 判断当前为apple还是其他平台
+const isApple = /iphone|ipad|ipod|mac/i.test(navigator.userAgent)
+// ---------------------------------- 监听cmd + c 或者 ctrl + c事件 ----------------------------------
+
+/**
+ * 监听复制事件
+ * @param {KeyboardEvent} e
+ */
+const handleKeydown = (e) => {
+  // apple cmd + c，其他平台 ctrl + c
+  if ((isApple && e.metaKey) || (!isApple && e.ctrlKey)) {
+    if (e.key === 'c') {
+      // TODO 复制事件
+    }
+  }
+}
 
 // ---------------------------------- 刷新 ----------------------------------
 
@@ -220,6 +236,7 @@ provide('Dark', props.dark)
 provide('Role', props.role)
 provide('ChangeChartPinOrHide', changeChartPinOrHide)
 provide('Multi', props.multi)
+provide('isApple', isApple)
 </script>
 
 <style lang="scss"></style>

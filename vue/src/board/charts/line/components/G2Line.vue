@@ -1,6 +1,9 @@
 <template>
-  <LineTooltip :data="nowData" />
-  <div class="overflow-hidden w-full h-full" ref="g2Ref"></div>
+  <!-- 被动触发时设置overflow hidden -->
+  <div class="w-full h-full" :class="{ 'overflow-x-clip': boardStore.$line.hoverInfo?.cIndex !== chart.index }">
+    <LineTooltip :data="nowData" />
+    <div class="overflow-hidden w-full h-full" ref="g2Ref"></div>
+  </div>
 </template>
 
 <script setup>
@@ -9,6 +12,7 @@
  * @file: G2Line.vue
  * @since: 2024-07-21 23:23:02
  **/
+import { useBoardStore } from '@swanlab-vue/board/store'
 import * as L from './line'
 import LineTooltip from './LineTooltip.vue'
 
@@ -39,6 +43,7 @@ const g2Ref = ref(null)
  * @type {Ref<L.LineData[]>}
  */
 const nowData = shallowRef([])
+const boardStore = useBoardStore()
 
 /** @type {L.LineChart} */
 let plot = null
