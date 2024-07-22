@@ -4,8 +4,8 @@
     <ChartsBoard
       :sections="sections"
       :charts="charts"
-      :MediaConstructor="C.getMediaMetrics"
-      :ScalarConstructor="C.getScalarMetrics"
+      :MediaConstructor="getMediaMetrics"
+      :ScalarConstructor="getScalarMetrics"
       :ResourceConstructor="C.getMediaResource"
       :MoveChartConstructor="MoveChartConstructor"
       :interval="interval"
@@ -43,6 +43,8 @@ const charts = ref()
   status.value = 'success'
 })()
 
+const getMediaMetrics = C.createGetMediaMetrics(false)
+const getScalarMetrics = C.createGetScalarMetrics(false)
 // ---------------------------------- 图表移动 ----------------------------------
 /** @type {import('@swanlab-vue/board/ChartsBoard.vue').MoveChartConstructor} */
 const MoveChartConstructor = async (cIndex, type) => {

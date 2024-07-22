@@ -4,8 +4,8 @@
       <ChartsBoard
         :sections="sections"
         :charts="charts"
-        :MediaConstructor="C.getMediaMetrics"
-        :ScalarConstructor="C.getScalarMetrics"
+        :MediaConstructor="getMediaMetrics"
+        :ScalarConstructor="getScalarMetrics"
         :ResourceConstructor="C.getMediaResource"
         :MoveChartConstructor="MoveChartConstructor"
         :MetricURIConstructor="MetricURIConstructor"
@@ -77,6 +77,9 @@ const refresh = ref(false)
 
 /** 用于规定轮询器状态，0为不轮询（关闭轮询） */
 const interval = ref(0)
+
+const getMediaMetrics = C.createGetMediaMetrics(true)
+const getScalarMetrics = C.createGetScalarMetrics(true)
 // ---------------------------------- 请求图表数据 ----------------------------------
 const ready = ref(false)
 http.get('/project/charts').then(({ data }) => {

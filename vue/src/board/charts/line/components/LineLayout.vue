@@ -47,6 +47,5 @@ $line-legend-height: 10%;
 }
 .line-chart-layout {
   height: 90%;
-  overflow: hidden;
 }
 </style>

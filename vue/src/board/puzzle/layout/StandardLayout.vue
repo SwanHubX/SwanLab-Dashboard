@@ -11,7 +11,8 @@
         :style="{
           transform: `translate(${getChartTranslateX(index)}px, ${getChartTranslateY(index)}px)`,
           height: `${L.row.height.value}px`,
-          width: `${L.col.width.value}px`
+          width: `${L.col.width.value}px`,
+          zIndex: nowCharts.length - index
         }"
       />
     </div>

@@ -1,20 +1,48 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
-/**
- * 当前鼠标悬浮的图表信息
- * @typedef {Object} ChartHovering
- * @property {SectionId} sIndex 所属section索引
- * @property {ChartId} cIndex 所属chart索引
- * @property {ExpId} eIndex 悬浮鼠标离哪个实验的指标最近
- * @property {{x: number, y: number}} position 鼠标位置
- */
 
 export const useBoardStore = defineStore('board', () => {
   // ---------------------------------- state ----------------------------------
+  /**
+   * 全局状态共享
+   */
+  const $global = {}
 
-  const hovering = ref({})
+  /** @type {LineState} 折线图共享状态*/
+  const $line = {
+    hoverInfo: shallowRef(null),
+    thickInfo: shallowRef(null)
+  }
 
   // ---------------------------------- action ----------------------------------
 
-  return {}
+  return {
+    $global,
+    $line
+  }
 })
+
+/**
+ * 折线图悬浮信息
+ * @typedef {Object} LineHoverInfo
+ * @property {Number} x 悬浮坐标在折线图中的相对横坐标位置（基于折线图canvas左边）
+ * @property {Number} y 悬浮坐标在折线图中的相对纵坐标位置（基于折线图canvas顶部）
+ * @property {import('./charts/line/components/line').SeriesDetail} detail 当前悬浮信息距离哪个系列最近（非平滑系列）
+ * @property {IndexId} cIndex 悬浮事件来源（来自哪个图表），用于防止栈溢出
+ * @property {IndexId} sIndex 悬浮事件图表所属的序列
+ * @property {Boolean} zoom 当前悬浮信息是否来自于zoom的图表，如果是则不触发粗细信息和悬浮信息的回调
+ * @property {import('./charts/line/components/line').LineData[]} data 当前悬浮信息的数据，包含平滑系列数据
+ */
+
+/**
+ * 折线图粗细信息，所有的粗细信息都为被动触发，只需要设置此信息即可
+ * @typedef {Object} ThickInfo
+ * @property {import('./charts/line/components/line').SeriesDetail} detail 当前加粗的系列
+ * @property {Boolean} zoom 当前加粗信息是否来自于zoom的图表，如果是则只触发zoom的加粗回调
+ */
+
+/**
+ * 折线图状态
+ * @typedef {Object} LineState
+ * @property {import('vue').ShallowRef<LineHoverInfo | null>} hoverInfo 悬浮信息
+ * @property {import('vue').ShallowRef<ThickInfo | null>} thickInfo 粗细信息
+ */
