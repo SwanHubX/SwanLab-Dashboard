@@ -1,4 +1,5 @@
 <template>
+  <LineTooltip :data="nowData" />
   <div class="overflow-hidden w-full h-full" ref="g2Ref"></div>
 </template>
 
@@ -9,6 +10,7 @@
  * @since: 2024-07-21 23:23:02
  **/
 import * as L from './line'
+import LineTooltip from './LineTooltip.vue'
 
 const props = defineProps({
   colorFinder: {
@@ -33,16 +35,18 @@ const props = defineProps({
 /** @type {Ref<HTMLDivElement>} */
 const g2Ref = ref(null)
 
-onMounted(() => {})
+/**
+ * @type {Ref<L.LineData[]>}
+ */
+const nowData = shallowRef([])
 
-// ---------------------------------- 其他 ----------------------------------
 /**
  * 渲染函数
  * @param {ScalarData[]} scalars
  */
 const render = (scalars) => {
   const { data, maps } = L.fmtScalar2Line(scalars, props.colorFinder)
-  const chart = L.createLine(g2Ref.value, data, props.chart.index, maps, props.zoom)
+  const chart = L.createLine(g2Ref.value, data, props.chart.index, maps, props.zoom, (data) => (nowData.value = data))
 }
 
 defineExpose({

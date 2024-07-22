@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
 
 export const useBoardStore = defineStore('board', () => {
   // ---------------------------------- state ----------------------------------
@@ -8,10 +7,11 @@ export const useBoardStore = defineStore('board', () => {
    */
   const $global = {}
 
-  /** @type {Ref<LineState>} 折线图共享状态*/
-  const $line = ref({
-    hoverInfo: null
-  })
+  /** @type {LineState} 折线图共享状态*/
+  const $line = {
+    hoverInfo: shallowRef(null),
+    thickInfo: shallowRef(null)
+  }
 
   // ---------------------------------- action ----------------------------------
 
@@ -43,6 +43,6 @@ export const useBoardStore = defineStore('board', () => {
 /**
  * 折线图状态
  * @typedef {Object} LineState
- * @property {LineHoverInfo | null} hoverInfo 悬浮信息
- * @property {ThickInfo} thickInfo 粗细信息
+ * @property {import('vue').ShallowRef<LineHoverInfo | null>} hoverInfo 悬浮信息
+ * @property {import('vue').ShallowRef<ThickInfo | null>} thickInfo 粗细信息
  */

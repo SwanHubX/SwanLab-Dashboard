@@ -50,8 +50,9 @@ import http from '@swanlab-vue/api/http'
 /**
  * 从后端获取到的原始指标数据格式
  * @typedef {Object} OriginalMetricData
- * @property {String} experiment_id 实验ID
- * @property {String} key 指标名称
+ * @property {ExpId} experiment_id 实验ID
+ * @property {String} experiment_name 所属实验名称
+ * @property {ColumnKey} key 指标名称
  * @property {ScalarDetail[]} list 指标数据
  */
 
@@ -246,12 +247,30 @@ const handleChartErrors = (chart, tempChart) => {
  * @param {OriginalMetricData[]} metricsData 指标数据集合
  * @returns {ScalarData[]} 格式化后的数据
  */
-export const formatLocalScalarData = (metricsData) => {
+const formatLocalScalarData = (metricsData) => {
   return metricsData.map((metric) => {
     return {
       experimentId: metric.experiment_id,
       key: metric.key,
       type: 'scalar',
+      name: metric.key,
+      metrics: metric.list
+    }
+  })
+}
+
+/**
+ * 在多实验图表下，针对本地版进行数据格式化
+ * @param {OriginalMetricData[]} metricsData 指标数据集合
+ * @returns {ScalarData[]} 格式化后的数据
+ */
+const formatLocalMultiScalarData = (metricsData) => {
+  return metricsData.map((metric) => {
+    return {
+      experimentId: metric.experiment_id,
+      key: metric.key,
+      type: 'scalar',
+      name: metric.experiment_name,
       metrics: metric.list
     }
   })
@@ -259,10 +278,12 @@ export const formatLocalScalarData = (metricsData) => {
 
 // ---------------------------------- 请求媒体数据 ----------------------------------
 
-/** @type {import('@swanlab-vue/board/ChartsBoard.vue').MediaMetricsConstructor} */
-export const getMediaMetrics = async (metrics, step) => {
-  console.log('getMediaMetrics', metrics, step)
-  return []
+export const createGetMediaMetrics = (multi) => {
+  /** @type {import('@swanlab-vue/board/ChartsBoard.vue').MediaMetricsConstructor} */
+  return async (metrics, step) => {
+    console.log('getMediaMetrics', metrics, step)
+    return []
+  }
 }
 
 /** @type {import('@swanlab-vue/board/ChartsBoard.vue').MediaResourceConstructor} */
@@ -271,11 +292,20 @@ export const getMediaResource = async (resource) => {
   return []
 }
 // ---------------------------------- 请求标量数据 ----------------------------------
-
-/** @type {import('@swanlab-vue/board/ChartsBoard.vue').ScalarMetricsConstructor} */
-export const getScalarMetrics = async (metrics) => {
-  const res = await Promise.all(metrics.map((m) => http.get(`/experiment/${m.experimentId}/tag/${m.key}`)))
-  return formatLocalScalarData(res.map((r) => r.data))
+/**
+ * 生成标量数据请求函数
+ * @param {boolean} multi 是否是多实验图表,单实验/多实验的格式化数据略有不同
+ * */
+export const createGetScalarMetrics = (multi) => {
+  /** @type {import('@swanlab-vue/board/ChartsBoard.vue').ScalarMetricsConstructor} */
+  return async (metrics) => {
+    const res = await Promise.all(metrics.map((m) => http.get(`/experiment/${m.experimentId}/tag/${m.key}`)))
+    if (multi) {
+      return formatLocalMultiScalarData(res.map((r) => r.data))
+    } else {
+      return formatLocalScalarData(res.map((r) => r.data))
+    }
+  }
 }
 
 // ---------------------------------- 组件移动事件 ----------------------------------

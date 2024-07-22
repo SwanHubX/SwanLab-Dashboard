@@ -220,6 +220,8 @@ def get_tag_data(experiment_id: int, tag: str) -> dict:
             "key": tag,
             # 标注此数据隶属于哪个实验
             "experiment_id": str(experiment_id),
+            # 此实验名称
+            "experiment_name": Experiment.get(experiment_id).name,
         }
     )
 

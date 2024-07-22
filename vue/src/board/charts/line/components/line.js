@@ -28,7 +28,8 @@ G2.registerShape('point', 'last-point', {
 /**
  * 这个数据类型的详细信息
  * @typedef {Object} SeriesDetail
- * @property {IndexId} name 数据唯一识别字符串，也就是series
+ * @property {IndexId} series 数据唯一识别字符串，也就是series
+ * @property {String} name 前端显示的名称
  * @property {IndexId} experimentId 实验id
  * @property {String} key 数据的key
  * @property {String} color 颜色
@@ -73,7 +74,8 @@ export const fmtScalar2Line = (scalars, colorFinder) => {
     const series = `${'common'}-${scalar.experimentId}-${scalar.key}`
     /** @type {SeriesDetail} */
     const detail = {
-      name: series,
+      name: scalar.name,
+      series,
       experimentId: scalar.experimentId,
       key: scalar.key,
       color: colorFinder({
@@ -104,14 +106,21 @@ export const fmtScalar2Line = (scalars, colorFinder) => {
 }
 
 /**
+ * 当前hover数据发生更改的回调
+ * @callback LineHoverDataUpdateCallback
+ * @param {LineData[]} data
+ */
+
+/**
  * 创建折线图
  * @param {HTMLElement} dom 需要挂载的图表容器
  * @param {LineData[]} lineData 标量数据
  * @param {IndexId} cIndex 图表id
  * @param {LineMaps} maps 一些计算好的的映射关系
  * @param {Boolean} zoom 是否为缩放环境，如果是缩放环境的tooltip事件，不会被动触发
+ * @param {LineHoverDataUpdateCallback} callback 当前hover数据发生更改的回调
  */
-export const createLine = (dom, lineData, cIndex, maps, zoom) => {
+export const createLine = (dom, lineData, cIndex, maps, zoom, callback) => {
   /** @type {IndexId} 图表所属section的id */
   const sIndex = inject('SectionIndex')
   const rootStyle = getComputedStyle(document.documentElement)
@@ -273,6 +282,7 @@ export const createLine = (dom, lineData, cIndex, maps, zoom) => {
 
   // 监听悬浮事件，当前图表主动触发此事件时，修改store中的hoverInfo
   line.on('tooltip:show', (/** @type {LineToolTipEvent} */ evt) => {
+    callback && callback(evt.data.items.map((item) => item.data))
     // 说明当前悬浮的数据是来自于其他图表，此时为被动触发事件，不需要更新
     if (boardStore.$line.hoverInfo && boardStore.$line.hoverInfo.cIndex !== cIndex) {
       return

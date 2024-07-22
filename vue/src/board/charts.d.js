@@ -83,7 +83,7 @@
  * 列数据超集
  * 注意，这里是列数据！
  * 约定metrics可以为undefined，此时对于chart层面而言，数据不存在，此请求无效
- * @typedef {ColumnId & { type: 'scalar'| 'media'}} MetricData
+ * @typedef {ColumnId & { type: 'scalar'| 'media', name: String}} MetricData
  */
 
 /**
