@@ -1,9 +1,11 @@
 <template>
   <div class="w-full h-full">
-    <div class="line-legend-layout">
+    <!-- 存在截断行为，height改为20%，暂时只有多实验有图例 -->
+    <div class="line-legend-layout" :style="{ height: legendHeight }" v-if="multi">
       <slot name="legends"></slot>
     </div>
-    <div class="line-chart-layout">
+    <!-- 存在截断行为，height改为80% -->
+    <div class="line-chart-layout" :style="{ height: chartHeight }">
       <slot name="chart"></slot>
     </div>
   </div>
@@ -18,15 +20,26 @@
 
 /** props */
 const props = defineProps({
-  /** 是否为多实验图表环境 */
   multi: {
     type: Boolean,
     default: false
+  },
+  captured: {
+    type: Number,
+    default: 0
   }
+})
+const legendHeight = computed(() => {
+  return props.captured ? '20%' : undefined
+})
+const chartHeight = computed(() => {
+  if (!props.multi) return '100%'
+  return props.captured ? '80%' : undefined
 })
 </script>
 
 <style lang="scss" scoped>
+// 基础样式
 $line-legend-height: 10%;
 .line-legend-layout {
   height: 10%;

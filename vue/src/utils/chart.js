@@ -196,9 +196,10 @@ const formatCharts = (charts, exps) => {
     }
 
     let source = chart.source
-    if (source.length > 10) {
-      tempChart.captured = 10
-      source = source.slice(0, 10)
+    const max = 10
+    if (source.length > max) {
+      tempChart.captured = max
+      source = source.slice(0, max)
     }
 
     source.forEach((m) => {

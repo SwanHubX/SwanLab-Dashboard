@@ -1,8 +1,8 @@
 <template>
   <ChartToolbar :chart="chart" />
-  <LineLayout :multi="multi">
+  <LineLayout :captured="props.chart.captured" :multi="multi">
     <template #legends>
-      <LineLegends :legends="legends" />
+      <LineLegends :legends="legends" :cIndex="chart.index" />
     </template>
     <template #chart>
       <g2-line :chart="chart" :colorFinder="colorFinder" :zoom="zoom" ref="g2LineRef" />
@@ -79,46 +79,4 @@ const legends = computed(() => {
 })
 </script>
 
-<style lang="scss" scoped>
-$legend-height: 15%;
-
-.line-legend {
-  height: $legend-height;
-  .legend-content {
-    height: calc(100%);
-    @apply overflow-y-auto flex flex-wrap justify-center;
-    @apply gap-y-0.5 gap-x-4;
-  }
-}
-
-.legend-item {
-  @apply flex flex-shrink-0 items-center hover:brightness-75 text-xs leading-none;
-  &:before {
-    content: '';
-    display: inline-block;
-    width: 8px;
-    height: 2px;
-    margin-top: 2px;
-    margin-right: 4px;
-    background-color: currentColor;
-  }
-}
-
-.captured-line-legend {
-  height: calc(#{$legend-height} + 16px);
-  p {
-    height: 16px;
-  }
-  .legend-content {
-    height: calc(100% - 16px) !important;
-  }
-}
-
-.single-line-content {
-  height: 100% !important;
-}
-
-.line-content {
-  height: calc(100% - #{$legend-height});
-}
-</style>
+<style lang="scss" scoped></style>
