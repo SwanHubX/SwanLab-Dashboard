@@ -108,3 +108,42 @@ export const formatNumber2SN = (value, max = 1e5, min = 1e-4, digits = 4) => {
   // 最后处理和返回的时候需要保证是字符串格式，不然，如果符合js自动转化的条件，会自动变成科学计数法
   return sign + value
 }
+
+/**
+ * 复制文本到剪贴板，异步函数，使用现代浏览器的API
+ * @param { String } text 要复制的文本
+ * @param { (success:Boolean)=>void } [callback] 回调函数 如果执行，回传复制成功与否的状态
+ */
+export const copyTextToClipboard = async (text, callback) => {
+  /**
+   * 使用旧的API复制文本到剪贴板，兼容性更好
+   * @param { string } text 要复制的文本
+   * @param { Function } callback 回调函数 如果执行，回传复制成功与否的状态
+   */
+  function fallbackCopyToClipboard(text, callback) {
+    try {
+      const textArea = document.createElement('textarea')
+      textArea.value = text
+      document.body.appendChild(textArea)
+      textArea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textArea)
+      callback(true)
+    } catch (e) {
+      callback(false)
+    }
+  }
+  let status = true
+  try {
+    await navigator.clipboard.writeText(text)
+  } catch (e) {
+    status = false
+  }
+
+  if (!status) {
+    fallbackCopyToClipboard(text, (/** @type {boolean}*/ success) => {
+      status = success
+    })
+  }
+  callback && callback(status)
+}

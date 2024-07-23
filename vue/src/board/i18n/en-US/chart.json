@@ -8,6 +8,10 @@
       "tip": "Click on the pencil icon (top right corner of this chart) to change the max number of runs displayed"
     }
   },
+  "copy": {
+    "success": "Copied",
+    "error": "Failed to copy"
+  },
   "zoom": {
     "close": "Close",
     "edit": "Edit",

@@ -72,9 +72,11 @@
  * @file: ChartsBoard.vue
  * @since: 2024-07-14 20:43:37
  **/
+import { useI18n } from 'vue-i18n'
 import SectionsWrapper from './components/SectionsWrapper.vue'
 import { useBoardStore } from './store'
-import { isApple } from './utils'
+import { copyTextToClipboard, formatNumber2SN, isApple } from './utils'
+import { message } from 'ant-design-vue'
 
 const refresh = defineModel('refresh', {
   type: Boolean,
@@ -181,7 +183,7 @@ const stagingCharts = ref(props.charts)
 const boardKey = ref(0)
 const emits = defineEmits(['fold', 'jump'])
 // ---------------------------------- 监听cmd + c 或者 ctrl + c事件 ----------------------------------
-
+const { t } = useI18n()
 /**
  * 监听复制事件
  * @param {KeyboardEvent} e
@@ -190,7 +192,21 @@ const handleKeydown = (e) => {
   // apple cmd + c，其他平台 ctrl + c
   if ((isApple && e.metaKey) || (!isApple && e.ctrlKey)) {
     if (e.key === 'c' && boardStore.$line.hoverInfo) {
-      console.log('复制事件', boardStore.$line.hoverInfo.data)
+      // console.log('复制事件', boardStore.$line.hoverInfo.data)
+      let text = ''
+      // 每一行为 {name} {格式化后的数据}
+      const lineData = [...boardStore.$line.hoverInfo.data]
+      lineData.sort((a, b) => b.data - a.data)
+      for (const { detail, data } of lineData) {
+        text += `${detail.name} ${formatNumber2SN(data)}\n`
+      }
+      copyTextToClipboard(text, (success) => {
+        if (success) {
+          message.success(t('chart.copy.success'))
+        } else {
+          message.error(t('chart.copy.error'))
+        }
+      })
     }
   }
 }
