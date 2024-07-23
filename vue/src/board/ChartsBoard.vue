@@ -251,10 +251,12 @@ const nowCharts = computed(() => {
  */
 const changeChartPinOrHide = async (cIndex, type) => {
   if (type === 'MOVE') throw new Error('MOVE事件还未完善')
-  const { sections: s, charts: c } = await props.MoveChartConstructor(cIndex, type)
-  sections.value = s
-  charts.value = c
-  refreshData()
+  const data = await props.MoveChartConstructor(cIndex, type)
+  sections.value = data.sections
+  charts.value = data.charts
+  setTimeout(() => {
+    refreshData()
+  }, 0)
 }
 // ---------------------------- 全局平滑配置 -------------------------------
 
