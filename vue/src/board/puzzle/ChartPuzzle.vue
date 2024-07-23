@@ -1,5 +1,5 @@
 <template>
-  <!-- 最外层接受父组件class，设置为absolute，当hover的时候z-index设置为9999 -->
+  <!-- 最外层接受父组件class，设置为absolute，当hover的时候设置z-index在最前 -->
   <div @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave" :style="{ zIndex }">
     <div class="w-full h-full bg-white-default border rounded relative">
       <ChartWrapper :chart="chart" />
@@ -73,9 +73,10 @@ const handleHidden = () => {
   open.value = false
 }
 
-// ---------------------------------- absolute配置，当hover的时候z-index设置为9999 ----------------------------------
+// ---------------------------------- absolute配置，当hover的时候设置z-index ----------------------------------
 const hovering = ref(false)
-const zIndex = computed(() => (hovering.value ? 9999 : undefined))
+// 不可设置大于等于1000，因为ant-design-vue的modal的z-index是1000
+const zIndex = computed(() => (hovering.value ? 999 : undefined))
 const handleMouseEnter = () => {
   hovering.value = true
 }
