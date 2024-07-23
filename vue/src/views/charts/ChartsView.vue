@@ -2,15 +2,15 @@
   <div class="flex flex-col min-h-full bg-higher">
     <template v-if="ready">
       <ChartsBoard
-        :sections="sections"
-        :charts="charts"
+        v-model:refresh="refresh"
+        v-model:sections="sections"
+        v-model:charts="charts"
         :MediaConstructor="getMediaMetrics"
         :ScalarConstructor="getScalarMetrics"
         :ResourceConstructor="C.getMediaResource"
         :MoveChartConstructor="MoveChartConstructor"
         :MetricURIConstructor="MetricURIConstructor"
         :interval="interval"
-        v-model:refresh="refresh"
         v-if="charts.length"
         multi
       />

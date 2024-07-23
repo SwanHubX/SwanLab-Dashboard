@@ -8,7 +8,7 @@
       @change="handleChange"
     />
     <!-- 刷新按钮 -->
-
+    <button class="board-refresh" v-if="refresh" @click="$emit('refresh')">{{ $t('chart.toolbar.refresh') }}</button>
     <!-- smooth配置 -->
     <SmoothComponent @smooth="handleSmooth" />
   </div>
@@ -25,8 +25,7 @@ import { InputSearch } from 'ant-design-vue'
 import { debounce } from '../utils'
 import SmoothComponent from './SmoothComponent.vue'
 import { useBoardStore } from '../store'
-
-const props = defineProps({
+defineProps({
   refresh: {
     type: Boolean,
     required: true
@@ -83,6 +82,12 @@ const debounceUpdateSmoothInfo = debounce(
   .ant-input-search-button {
     display: flex !important;
   }
+}
+
+.board-refresh {
+  @apply bg-opacity-75 px-2 rounded py-0.5;
+  @apply text-warning-dimmer border-warning-dimmest border;
+  @apply hover:ring-warning-dimmest hover:ring-1;
 }
 </style>
 

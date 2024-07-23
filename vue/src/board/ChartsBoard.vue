@@ -1,6 +1,6 @@
 <template>
   <div :key="boardKey">
-    <BoardToolBar :refresh="refresh" @filter="(value) => (filterKey = value)" />
+    <BoardToolBar :refresh="refresh" @filter="(value) => (filterKey = value)" @refresh="refreshData" />
     <SectionsWrapper :sections="stagingSections" :charts="nowCharts" />
   </div>
 </template>

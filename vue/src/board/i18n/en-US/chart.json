@@ -6,7 +6,8 @@
     "smooth": {
       "level": "Smoothing",
       "method": "Method"
-    }
+    },
+    "refresh": "Refresh"
   },
   "copy": {
     "success": "Copied",

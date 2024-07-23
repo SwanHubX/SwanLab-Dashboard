@@ -6,7 +6,8 @@
     "smooth": {
       "level": "平滑度",
       "method": "平滑方法"
-    }
+    },
+    "refresh": "刷新"
   },
   "copy": {
     "success": "复制成功",
