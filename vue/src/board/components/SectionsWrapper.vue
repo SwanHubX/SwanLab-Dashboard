@@ -1,14 +1,11 @@
 <template>
-  <div>
-    <SectionPuzzle
-      v-for="section in props.sections"
-      :key="section.index"
-      :section="section"
-      :charts="filterChartsBySection(section)"
-      :mobile="mobile"
-      @fold-change="handleSectionCollapseChange"
-    />
-  </div>
+  <SectionPuzzle
+    v-for="section in props.sections"
+    :key="section.index"
+    :section="section"
+    :charts="filterChartsBySection(section)"
+    :mobile="mobile"
+  />
 </template>
 
 <script setup>
@@ -25,8 +22,6 @@ import { debounce } from '../utils'
 // @ts-ignore
 const props = defineProps(['sections', 'charts'])
 
-const emits = defineEmits(['fold-change'])
-
 /**
  * 根据section过滤图表，获取到这个section包含的所有图表
  * @param {Section} section section配置
@@ -34,19 +29,6 @@ const emits = defineEmits(['fold-change'])
 const filterChartsBySection = (section) => {
   return props.charts.filter((chart) => section.chartIndex.includes(chart.index))
 }
-
-// ---------------------------------- 折叠、展开逻辑 ----------------------------------
-
-/**
- * 当section展开/折叠时触发此事件
- * @param {SectionId} index
- * @param {boolean} isFold
- * @returns {void}
- */
-const handleSectionCollapseChange = (index, isFold) => {
-  emits('fold-change', index, isFold)
-}
-
 // ---------------------------------- 移动端局切换 ----------------------------------
 /** 切换阈值，视口小于此值时切换 */
 const threshold = 768

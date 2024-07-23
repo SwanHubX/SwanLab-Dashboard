@@ -2,6 +2,7 @@
   <div class="flex flex-col min-h-full bg-higher">
     <template v-if="ready">
       <ChartsBoard
+        multi
         v-model:refresh="refresh"
         v-model:sections="sections"
         v-model:charts="charts"
@@ -12,7 +13,6 @@
         :MetricURIConstructor="MetricURIConstructor"
         :interval="interval"
         v-if="charts.length"
-        multi
       />
       <!-- 图表不存在 -->
       <p class="font-semibold pt-5 text-center" v-else>Empty Charts</p>
@@ -80,6 +80,7 @@ const interval = ref(0)
 
 const getMediaMetrics = C.createGetMediaMetrics(true)
 const getScalarMetrics = C.createGetScalarMetrics(true)
+
 // ---------------------------------- 请求图表数据 ----------------------------------
 const ready = ref(false)
 http.get('/project/charts').then(({ data }) => {
@@ -88,6 +89,10 @@ http.get('/project/charts').then(({ data }) => {
   _charts.value = r[1]
   ready.value = true
 })
+
+// ---------------------------------- 折叠事件 ----------------------------------
+
+// const handleFold = C.createFoldSectionCallBack(projectStore.)
 
 // ---------------------------------- 图表移动 ----------------------------------
 /** @type {import('@swanlab-vue/board/ChartsBoard.vue').MoveChartConstructor} */

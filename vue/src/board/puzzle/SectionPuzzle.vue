@@ -71,9 +71,12 @@ const sectionName = computed(() => {
 
 const isFold = ref(props.section.folded)
 
+/** @type {import('../ChartsBoard.vue').FoldSectionFunction} */
+const foldSection = inject('FoldSectionFunction')
+
 watch(
   () => isFold.value,
-  (v) => emits('fold-change', props.section.index, v)
+  (v) => foldSection(props.section.index, v)
 )
 
 // ---------------------------------- 当前section为PINNED、PUBLIC、HIDDEN中的哪一个 ----------------------------------

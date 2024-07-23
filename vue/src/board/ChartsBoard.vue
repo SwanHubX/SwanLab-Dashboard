@@ -15,6 +15,14 @@
  */
 
 /**
+ * 触发 {@link FoldSectionCallBack} 的函数
+ * @callback FoldSectionFunction
+ * @param { IndexId } index - 当前section的index
+ * @param { boolean } isFold - 当前section在点击后是否收起
+ * @returns { void }
+ */
+
+/**
  * 跳转到某个实验的，需要返回url
  * @callback MetricURIConstructor
  * @param { IndexId } index - 当前图表的index
@@ -238,7 +246,7 @@ const filterKey = ref('')
  * 当前显示在前端的所有图表（包括分页）
  */
 const nowCharts = computed(() => {
-  console.log(filterKey.value)
+  // console.log(filterKey.value)
   // 搜索过滤
   if (!filterKey.value) return stagingCharts.value
   return stagingCharts.value.filter((chart) => chart.title.includes(filterKey.value))
@@ -263,7 +271,9 @@ const changeChartPinOrHide = async (cIndex, type) => {
 const smooth = ref({})
 
 // ------------------------- 全局依赖/状态 ----------------------------------
-
+/** @type {FoldSectionFunction} 折叠触发事件 */
+const foldSection = (index, isFold) => emits('fold', index, isFold)
+provide('FoldSectionFunction', foldSection)
 provide('ScalarConstructor', props.ScalarConstructor)
 provide('MediaConstructor', props.MediaConstructor)
 provide('ResourceConstructor', props.ResourceConstructor)
