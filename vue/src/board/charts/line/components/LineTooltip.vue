@@ -7,11 +7,13 @@
         <!-- 步数 -->
         <span class="lc-tooltip-step">{{ item.index }}</span>
         <!-- 数据 -->
-        <span class="lc-tooltip-value">{{ formatNumber2SN(item.data) }}</span>
+        <span class="lc-tooltip-value">{{ U.formatNumber2SN(item.data) }}</span>
         <!-- 标签 -->
         <span class="lc-tooltip-tag">{{ item.detail.name }}</span>
       </div>
-      <p class="lc-tooltip-tip">{{ 1 }}</p>
+      <p class="lc-tooltip-tip" v-if="isManual">
+        {{ isApple ? $t('chart.line.tooltip.copy.apple') : $t('chart.line.tooltip.copy.win') }}
+      </p>
     </div>
   </div>
 </template>
@@ -23,8 +25,14 @@
  * @since: 2024-07-22 18:25:09
  **/
 import { useBoardStore } from '@swanlab-vue/board/store'
-import { formatNumber2SN } from '../../toolkit'
+import { U } from '../../toolkit'
+import { isApple } from '@swanlab-vue/board/utils'
 const props = defineProps({
+  cIndex: {
+    /** @type {PropType<ChartId>} */
+    type: String,
+    required: true
+  },
   /** 提示框数据 */
   data: {
     /** @type {PropType<import('./line').LineData[]>} */
@@ -36,6 +44,9 @@ const boardStore = useBoardStore()
 const toolTipContainerRef = ref(null)
 const toolTipRef = ref(null)
 const sIndex = inject('SectionIndex')
+
+/** 是否为主动触发 */
+const isManual = computed(() => boardStore.$line.hoverInfo?.cIndex === props.cIndex)
 
 const sortedData = computed(() => {
   const _ = [...props.data]

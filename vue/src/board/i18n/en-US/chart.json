@@ -34,5 +34,13 @@
       "pinned": "Pinned",
       "hidden": "Hidden"
     }
+  },
+  "line": {
+    "tooltip": {
+      "copy": {
+        "win": "Press Ctrl+C to copy this data",
+        "apple": "Press CMD+C to copy this data"
+      }
+    }
   }
 }

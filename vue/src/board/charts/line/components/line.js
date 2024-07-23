@@ -1,5 +1,5 @@
 import { Line, G2 } from '@antv/g2plot'
-import { formatNumber2SN } from '../../toolkit'
+import { U } from '../../toolkit'
 import { useBoardStore } from '@swanlab-vue/board/store'
 
 // 注册样式，最后一个点放大
@@ -230,7 +230,7 @@ export const createLine = (dom, lineData, cIndex, maps, zoom, callback) => {
       label: {
         // 在此处完成Y轴数据的格式化
         formatter: (data) => {
-          return formatNumber2SN(data)
+          return U.formatNumber2SN(data)
         }
       },
       // y轴坐标轴样式

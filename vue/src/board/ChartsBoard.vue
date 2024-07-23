@@ -73,6 +73,8 @@
  * @since: 2024-07-14 20:43:37
  **/
 import SectionsWrapper from './components/SectionsWrapper.vue'
+import { useBoardStore } from './store'
+import { isApple } from './utils'
 
 const refresh = defineModel('refresh', {
   type: Boolean,
@@ -173,12 +175,11 @@ const props = defineProps({
     default: false
   }
 })
+const boardStore = useBoardStore()
 const stagingSections = ref(props.sections)
 const stagingCharts = ref(props.charts)
 const boardKey = ref(0)
 const emits = defineEmits(['fold', 'jump'])
-// 判断当前为apple还是其他平台
-const isApple = /iphone|ipad|ipod|mac/i.test(navigator.userAgent)
 // ---------------------------------- 监听cmd + c 或者 ctrl + c事件 ----------------------------------
 
 /**
@@ -188,11 +189,19 @@ const isApple = /iphone|ipad|ipod|mac/i.test(navigator.userAgent)
 const handleKeydown = (e) => {
   // apple cmd + c，其他平台 ctrl + c
   if ((isApple && e.metaKey) || (!isApple && e.ctrlKey)) {
-    if (e.key === 'c') {
-      // TODO 复制事件
+    if (e.key === 'c' && boardStore.$line.hoverInfo) {
+      console.log('复制事件', boardStore.$line.hoverInfo.data)
     }
   }
 }
+
+onMounted(() => {
+  window.addEventListener('keydown', handleKeydown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeydown)
+})
 
 // ---------------------------------- 刷新 ----------------------------------
 

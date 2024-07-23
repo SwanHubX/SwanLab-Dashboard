@@ -34,5 +34,13 @@
       "pinned": "置顶",
       "hidden": "隐藏"
     }
+  },
+  "line": {
+    "tooltip": {
+      "copy": {
+        "win": "按 Ctrl+C 复制此数据",
+        "apple": "按 CMD+C 复制此数据"
+      }
+    }
   }
 }

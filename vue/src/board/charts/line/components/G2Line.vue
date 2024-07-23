@@ -1,7 +1,7 @@
 <template>
   <!-- 被动触发时设置overflow hidden -->
   <div class="w-full h-full" :class="{ 'overflow-x-clip': boardStore.$line.hoverInfo?.cIndex !== chart.index }">
-    <LineTooltip :data="nowData" />
+    <LineTooltip :data="nowData" :c-index="chart.index" />
     <div class="overflow-hidden w-full h-full" ref="g2Ref"></div>
   </div>
 </template>
