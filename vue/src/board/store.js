@@ -1,28 +1,17 @@
 import { defineStore } from 'pinia'
 
 export const useBoardStore = defineStore('board', () => {
-  // ---------------------------------- state ----------------------------------
-  /**
-   * 全局状态共享
-   * @type {GlobalState}
-   */
-  const $global = {
-    smooth: shallowRef({ type: null, value: 0 })
-  }
-
-  // section内部状态共享通过provide/inject实现，不在此定义
-
-  /** @type {LineState} 折线图共享状态*/
-  const $line = {
-    hover: shallowRef(null),
-    thick: shallowRef(null)
-  }
+  // ---------------------------------- 全局状态共享 ----------------------------------
+  const $smooth = shallowRef({ detail: null, value: 0 })
+  const $hover = shallowRef(null)
+  const $thick = shallowRef(null)
 
   // ---------------------------------- action ----------------------------------
 
   return {
-    $global,
-    $line
+    $smooth,
+    $hover,
+    $thick
   }
 })
 
@@ -41,7 +30,7 @@ export const useBoardStore = defineStore('board', () => {
 /**
  * 折线图平滑信息
  * @typedef {Object} LineSmoothInfo
- * @property {SmoothType} type 平滑类型, null表示不平滑，'TWE'表示Time Weighted EMA，'RA'表示Running Average，'GS'表示Gaussian Smoothing
+ * @property {import('./smooth').SmoothDetail} detail 平滑具体参数
  * @property {Number} value 平滑值
  */
 

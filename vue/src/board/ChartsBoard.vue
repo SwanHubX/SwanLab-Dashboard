@@ -193,11 +193,11 @@ const { t } = useI18n()
 const handleKeydown = (e) => {
   // apple cmd + c，其他平台 ctrl + c
   if ((isApple && e.metaKey) || (!isApple && e.ctrlKey)) {
-    if (e.key === 'c' && boardStore.$line.hover) {
-      // console.log('复制事件', boardStore.$line.hover.data)
+    if (e.key === 'c' && boardStore.$hover) {
+      // console.log('复制事件', boardStore.$hover.data)
       let text = ''
       // 每一行为 {name} {格式化后的数据}
-      const lineData = [...boardStore.$line.hover.data]
+      const lineData = [...boardStore.$hover.data]
       lineData.sort((a, b) => b.data - a.data)
       for (const { detail, data } of lineData) {
         text += `${detail.name} ${formatNumber2SN(data)}\n`
