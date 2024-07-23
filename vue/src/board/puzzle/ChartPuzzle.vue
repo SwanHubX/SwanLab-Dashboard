@@ -1,25 +1,28 @@
 <template>
-  <div class="w-full h-full bg-white-default border rounded relative">
-    <ChartWrapper :chart="chart" />
-    <a-modal v-model:open="open" width="100%" wrap-class-name="chart-zoom-modal">
-      <div class="w-full h-full" :key="modalKey">
-        <ChartWrapper :chart="chart" zoom v-if="mode == 'zoom'" />
-        <component :is="editComponent" :chart="chart" v-else />
-      </div>
-      <template #footer>
-        <div class="flex h-full w-full items-center justify-between">
-          <!-- 放大模式 -->
-          <template v-if="mode === 'zoom'">
-            <div v-tippy="{ content: $t('chart.zoom.tips.edit') }">
-              <Button size="large" disabled>{{ $t('chart.zoom.edit') }}</Button>
-            </div>
-            <Button size="large" class="font-semibold" @click="handleHidden">{{ $t('chart.zoom.close') }}</Button>
-          </template>
-          <!-- 编辑模式 -->
-          <template v-else> </template>
+  <!-- 最外层接受父组件class，设置为absolute，当hover的时候z-index设置为9999 -->
+  <div @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave" :style="{ zIndex }">
+    <div class="w-full h-full bg-white-default border rounded relative">
+      <ChartWrapper :chart="chart" />
+      <a-modal v-model:open="open" width="100%" wrap-class-name="chart-zoom-modal">
+        <div class="w-full h-full" :key="modalKey">
+          <ChartWrapper :chart="chart" zoom v-if="mode == 'zoom'" />
+          <component :is="editComponent" :chart="chart" v-else />
         </div>
-      </template>
-    </a-modal>
+        <template #footer>
+          <div class="flex h-full w-full items-center justify-between">
+            <!-- 放大模式 -->
+            <template v-if="mode === 'zoom'">
+              <div v-tippy="{ content: $t('chart.zoom.tips.edit') }">
+                <Button size="large" disabled>{{ $t('chart.zoom.edit') }}</Button>
+              </div>
+              <Button size="large" class="font-semibold" @click="handleHidden">{{ $t('chart.zoom.close') }}</Button>
+            </template>
+            <!-- 编辑模式 -->
+            <template v-else> </template>
+          </div>
+        </template>
+      </a-modal>
+    </div>
   </div>
 </template>
 
@@ -31,7 +34,7 @@
  **/
 import ChartWrapper from './chart/ChartWrapper.vue'
 import { Button } from 'ant-design-vue'
-const props = defineProps({
+defineProps({
   /** 图表配置 */
   chart: {
     /** @type {PropType<Chart>} */
@@ -69,6 +72,18 @@ provide('zoomChartEvent', () => {
 const handleHidden = () => {
   open.value = false
 }
+
+// ---------------------------------- absolute配置，当hover的时候z-index设置为9999 ----------------------------------
+const hovering = ref(false)
+const zIndex = computed(() => (hovering.value ? 9999 : undefined))
+const handleMouseEnter = () => {
+  hovering.value = true
+}
+const handleMouseLeave = () => {
+  hovering.value = false
+}
+
+provide('ShowToolbar', hovering)
 </script>
 
 <style lang="scss" scoped></style>
