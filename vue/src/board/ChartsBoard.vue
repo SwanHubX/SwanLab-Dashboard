@@ -84,24 +84,19 @@ const refresh = defineModel('refresh', {
   type: Boolean,
   default: false
 })
+/** @type { Ref<Section[]> } */
+const sections = defineModel('sections', {
+  type: Array,
+  default: () => []
+})
+
+/** @type { Ref<Chart[]> } */
+const charts = defineModel('charts', {
+  type: Array,
+  default: () => []
+})
 
 const props = defineProps({
-  /**
-   * section配置
-   */
-  sections: {
-    /** @type { PropType<Section[]> } */
-    type: Array,
-    required: true
-  },
-  /**
-   * chart配置
-   */
-  charts: {
-    /** @type { PropType<Chart[]> } */
-    type: Array,
-    required: true
-  },
   /**
    * 图表置顶/隐藏/移动等事件
    */
@@ -180,10 +175,10 @@ const props = defineProps({
   }
 })
 const boardStore = useBoardStore()
-const stagingSections = ref(props.sections)
-const stagingCharts = ref(props.charts)
+const stagingSections = ref(sections.value)
+const stagingCharts = ref(charts.value)
 const boardKey = ref(0)
-const emits = defineEmits(['fold', 'jump'])
+const emits = defineEmits(['fold'])
 // ---------------------------------- 监听cmd + c 或者 ctrl + c事件 ----------------------------------
 const { t } = useI18n()
 /**
@@ -223,6 +218,19 @@ onUnmounted(() => {
 
 // ---------------------------------- 刷新 ----------------------------------
 
+const refreshData = () => {
+  // 刷新图表数据，而不是刷新整个组件
+  stagingCharts.value = charts.value
+  stagingSections.value = sections.value
+  refresh.value = false
+}
+
+const refreshAll = () => {
+  // 强制刷新整个组件
+  refreshData()
+  boardKey.value++
+}
+
 // -------------------------------- 搜索 ----------------------------------
 
 const filterKey = ref('')
@@ -231,7 +239,7 @@ const filterKey = ref('')
  */
 const nowCharts = computed(() => {
   console.log(filterKey.value)
-  // TODO 搜索过滤
+  // 搜索过滤
   if (!filterKey.value) return stagingCharts.value
   return stagingCharts.value.filter((chart) => chart.title.includes(filterKey.value))
 })
@@ -243,11 +251,10 @@ const nowCharts = computed(() => {
  */
 const changeChartPinOrHide = async (cIndex, type) => {
   if (type === 'MOVE') throw new Error('MOVE事件还未完善')
-
-  const { sections, charts } = await props.MoveChartConstructor(cIndex, type)
-  stagingSections.value = sections
-  stagingCharts.value = charts
-  refresh.value = !refresh.value
+  const { sections: s, charts: c } = await props.MoveChartConstructor(cIndex, type)
+  sections.value = s
+  charts.value = c
+  refreshData()
 }
 // ---------------------------- 全局平滑配置 -------------------------------
 
@@ -268,6 +275,12 @@ provide('Role', props.role)
 provide('ChangeChartPinOrHide', changeChartPinOrHide)
 provide('Multi', props.multi)
 provide('isApple', isApple)
+
+// ---------------------------------- 暴露 ----------------------------------
+defineExpose({
+  refresh: refreshData,
+  refreshAll
+})
 </script>
 
 <style lang="scss"></style>
