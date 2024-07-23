@@ -1,7 +1,13 @@
 <template>
   <div class="w-full relative" ref="toolTipContainerRef">
     <div class="lc-tooltip" ref="toolTipRef" v-show="show" :style="style">
-      <div class="lc-tooltip-item" v-for="item in sortedData" :key="item.series" :style="{ color: item.detail.color }">
+      <div
+        class="lc-tooltip-item"
+        :class="{ 'lc-tooltip-item-focus': isFocus(item) }"
+        v-for="item in sortedData"
+        :key="item.series"
+        :style="{ color: item.detail.color }"
+      >
         <!-- 颜色 -->
         <span class="lc-tooltip-color lc-tooltip-color-rect"></span>
         <!-- 步数 -->
@@ -38,6 +44,11 @@ const props = defineProps({
     /** @type {PropType<import('./line').LineData[]>} */
     type: Array,
     required: true
+  },
+  /** 是否为多实验图表 */
+  multi: {
+    type: Boolean,
+    default: false
   }
 })
 const boardStore = useBoardStore()
@@ -72,11 +83,17 @@ const style = computed(() => {
     left: `${x > toolTipContainerRef.value?.offsetWidth / 2 ? x - 220 - offset : x + offset}px`
   }
 })
+
+/** 判断是否为焦点，只对多实验图表有效 */
+const isFocus = (/** @type {import('./line').LineData} */ item) => {
+  if (!props.multi) return false
+  return boardStore.$line.hoverInfo?.detail.experimentId === item.detail.experimentId
+}
 </script>
 
 <style lang="scss" scoped>
 .lc-tooltip {
-  @apply py-2 px-3 absolute bg-default border rounded z-10 -top-7;
+  @apply py-2 px-2 absolute bg-default border rounded z-10 -top-7;
   min-width: 220px;
   box-shadow: rgba(21, 24, 31, 0.16) 0px 12px 24px 0px;
   visibility: visible;
@@ -84,9 +101,12 @@ const style = computed(() => {
   p {
     @apply text-xs text-default font-semibold;
   }
+  .lc-tooltip-item-focus {
+    @apply bg-highest;
+  }
 
   .lc-tooltip-item {
-    @apply flex items-center gap-3;
+    @apply flex items-center gap-3 px-1 rounded;
     &:not(:last-child) {
       @apply mb-1.5;
     }

@@ -1,7 +1,7 @@
 <template>
   <!-- 被动触发时设置overflow hidden -->
   <div class="w-full h-full" :class="{ 'overflow-x-clip': boardStore.$line.hoverInfo?.cIndex !== chart.index }">
-    <LineTooltip :data="nowData" :c-index="chart.index" />
+    <LineTooltip :data="nowData" :c-index="chart.index" :multi="multi" />
     <div class="overflow-hidden w-full h-full" ref="g2Ref"></div>
   </div>
 </template>
@@ -31,6 +31,11 @@ const props = defineProps({
   },
   /** 是否为放大环境 */
   zoom: {
+    type: Boolean,
+    default: false
+  },
+  /** 是否为多实验图表 */
+  multi: {
     type: Boolean,
     default: false
   }
