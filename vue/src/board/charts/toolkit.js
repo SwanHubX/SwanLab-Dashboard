@@ -25,6 +25,7 @@ export class MediaGetter {
  * 输入columnId，返回颜色
  * @callback colorFinder
  * @param {ColumnId} columnId
+ * @returns {String}
  */
 
 /**

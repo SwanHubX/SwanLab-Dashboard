@@ -2,8 +2,11 @@ import { defineStore } from 'pinia'
 
 export const useBoardStore = defineStore('board', () => {
   // ---------------------------------- 全局状态共享 ----------------------------------
+  /** @type {import('vue').ShallowRef<LineSmoothInfo>} 折线图全局平滑 */
   const $smooth = shallowRef({ detail: null, value: 0 })
+  /** @type {import('vue').ShallowRef<LineHoverInfo>} 折线图全局悬浮 */
   const $hover = shallowRef(null)
+  /** @type {import('vue').ShallowRef<ThickInfo>} 折线图全局粗细 */
   const $thick = shallowRef(null)
 
   // ---------------------------------- action ----------------------------------
@@ -30,7 +33,7 @@ export const useBoardStore = defineStore('board', () => {
 /**
  * 折线图平滑信息
  * @typedef {Object} LineSmoothInfo
- * @property {import('./smooth').SmoothDetail} detail 平滑具体参数
+ * @property {import('./charts/line/components/smooth').SmoothDetail} detail 平滑具体参数
  * @property {Number} value 平滑值
  */
 
@@ -39,17 +42,4 @@ export const useBoardStore = defineStore('board', () => {
  * @typedef {Object} ThickInfo
  * @property {import('./charts/line/components/line').SeriesDetail} detail 当前加粗的系列
  * @property {Boolean} zoom 当前加粗信息是否来自于zoom的图表，如果是则只触发zoom的加粗回调
- */
-
-/**
- * 折线图状态
- * @typedef {Object} LineState
- * @property {import('vue').ShallowRef<LineHoverInfo | null>} hover 悬浮信息
- * @property {import('vue').ShallowRef<ThickInfo | null>} thick 粗细信息
- */
-
-/**
- * 全局状态
- * @typedef {Object} GlobalState
- * @property {import('vue').ShallowRef<LineSmoothInfo>} smooth 平滑信息
  */

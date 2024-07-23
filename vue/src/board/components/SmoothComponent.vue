@@ -50,7 +50,7 @@
 
 <script>
 /**
- * @typedef {(detail:import('../smooth').SmoothDetail, param: Number )=>void} SmoothEmit
+ * @typedef {(detail:import('../charts/line/components/smooth').SmoothDetail, param: Number )=>void} SmoothEmit
  */
 </script>
 
@@ -61,7 +61,7 @@
  * @since: 2024-07-23 17:54:32
  **/
 
-import S from '../smooth'
+import S from '../charts/line/components/smooth'
 import { Dropdown, Menu, Slider, Select, SelectOption, InputNumber } from 'ant-design-vue'
 import { SlidersOutlined } from '@ant-design/icons-vue'
 
@@ -69,8 +69,8 @@ const emits = defineEmits(['smooth'])
 
 const open = ref(false)
 // 默认平滑方式
-const method = ref(S.NULL.name)
-/** @type {ComputedRef<import('../smooth').SmoothDetail>} */
+const method = ref(S.TWE.name)
+/** @type {ComputedRef<import('../charts/line/components/smooth').SmoothDetail>} */
 const smoothDetail = computed(() => S[Object.keys(S).find((key) => S[key].name === method.value)])
 const param = ref(0)
 watch(smoothDetail, () => {
@@ -78,7 +78,7 @@ watch(smoothDetail, () => {
 })
 
 watch([param, smoothDetail], () => {
-  emits('smooth', { detail: smoothDetail, param: param.value })
+  emits('smooth', smoothDetail.value, param.value)
 })
 </script>
 

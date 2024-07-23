@@ -16,6 +16,7 @@
  * @file: LineChart.vue
  * @since: 2024-07-14 20:53:33
  **/
+import { useBoardStore } from '@swanlab-vue/board/store'
 import ChartToolbar from '../.components/ChartToolbar.vue'
 import { useColorFinder, watchMetric } from '../toolkit'
 import G2Line from './components/G2Line.vue'

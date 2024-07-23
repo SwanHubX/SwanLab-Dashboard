@@ -4,18 +4,18 @@
       <div
         class="lc-tooltip-item"
         :class="{ 'lc-tooltip-item-focus': isFocus(item) }"
-        v-for="item in sortedData"
+        v-for="item in processedData"
         :key="item.series"
-        :style="{ color: item.detail.color }"
+        :style="{ color: item.color }"
       >
         <!-- 颜色 -->
         <span class="lc-tooltip-color lc-tooltip-color-rect"></span>
         <!-- 步数 -->
         <span class="lc-tooltip-step">{{ item.index }}</span>
         <!-- 数据 -->
-        <span class="lc-tooltip-value">{{ U.formatNumber2SN(item.data) }}</span>
+        <span class="lc-tooltip-value">{{ showData(item) }}</span>
         <!-- 标签 -->
-        <span class="lc-tooltip-tag">{{ item.detail.name }}</span>
+        <span class="lc-tooltip-tag">{{ item.name }}</span>
       </div>
       <p class="lc-tooltip-tip" v-if="isManual">
         {{ isApple ? $t('chart.line.tooltip.copy.apple') : $t('chart.line.tooltip.copy.win') }}
@@ -64,10 +64,47 @@ const sIndex = inject('SectionIndex')
 /** 是否为主动触发 */
 const isManual = computed(() => boardStore.$hover?.cIndex === props.cIndex)
 
-const sortedData = computed(() => {
-  const _ = [...props.data]
-  _.sort((a, b) => b.data - a.data)
-  return _
+/**
+ * 处理后的数据，此时smooth为平滑后的值，如果未平滑则为undefined
+ * @typedef {Object} ProcessedData
+ * @property {Number} index 步数
+ * @property {String} data 数据
+ * @property {String} [smooth] 平滑数据
+ * @property {String} name 标签
+ * @property {IndexId} series 唯一标识
+ * @property {String} experimentId 实验ID
+ * @property {String} color 颜色
+ */
+
+/**
+ * 依据data降序排序（大到小）
+ * @type {ComputedRef<ProcessedData[]>}
+ */
+const processedData = computed(() => {
+  /** @type {ProcessedData[]} */
+  const pd = []
+  for (const item of props.data) {
+    // 如果为平滑数据，跳过
+    if (item.detail.smooth) {
+      continue
+    } else {
+      // 如果为非平滑数据，找到对应的平滑数据，添加到pd中
+      const smoothItem = props.data.find(
+        (d) => d.detail.smooth && d.detail.key === item.detail.key && d.detail.experimentId === item.detail.experimentId
+      )
+      pd.push({
+        index: item.index,
+        data: U.formatNumber2SN(item.data),
+        color: smoothItem?.detail.color ?? item.detail.color,
+        smooth: smoothItem ? U.formatNumber2SN(smoothItem.data) : undefined,
+        name: item.detail.name,
+        series: item.series,
+        experimentId: item.detail.experimentId
+      })
+    }
+  }
+
+  return pd
 })
 
 const show = computed(
@@ -86,21 +123,26 @@ const style = computed(() => {
   // if (props.cIndex !== cIndex) return { left: `${x + offset}px` }
   // 如果 x 在容器左边，显示在右边，否则显示在左边
   return {
-    left: `${x > toolTipContainerRef.value?.offsetWidth / 2 ? x - 220 - offset : x + offset}px`
+    left: `${x > toolTipContainerRef.value?.offsetWidth / 2 ? x - 250 - offset : x + offset}px`
   }
 })
 
 /** 判断是否为焦点，只对多实验图表有效 */
-const isFocus = (/** @type {import('./line').LineData} */ item) => {
+const isFocus = (/** @type {ProcessedData} */ item) => {
   if (!props.multi) return false
-  return boardStore.$hover?.detail.experimentId === item.detail.experimentId
+  return boardStore.$hover?.detail.experimentId === item.experimentId
+}
+
+/** 显示数据 */
+const showData = (/** @type {ProcessedData} */ item) => {
+  return item.smooth ? `${item.data}  (${item.smooth})` : item.data
 }
 </script>
 
 <style lang="scss" scoped>
 .lc-tooltip {
   @apply py-2 px-2 absolute bg-default border rounded z-10 -top-7;
-  min-width: 220px;
+  min-width: 250px;
   box-shadow: rgba(21, 24, 31, 0.16) 0px 12px 24px 0px;
   visibility: visible;
 

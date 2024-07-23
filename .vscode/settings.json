@@ -118,5 +118,5 @@
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
   "vue-i18n.i18nPaths": "vue/src/i18n",
-  "cSpell.words": ["apipa", "crosshairs", "netwo", "psutil", "swandb"]
+  "cSpell.words": ["apipa", "crosshairs", "debias", "netwo", "psutil", "swandb"]
 }

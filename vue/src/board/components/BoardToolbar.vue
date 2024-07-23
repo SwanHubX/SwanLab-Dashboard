@@ -65,7 +65,6 @@ const debounceUpdateSmoothInfo = debounce(
    */
   (detail, param) => {
     boardStore.$smooth = { detail, value: param }
-    console.log('smooth', boardStore.$smooth)
   },
   300
 )

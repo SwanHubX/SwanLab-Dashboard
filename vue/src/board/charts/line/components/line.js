@@ -26,6 +26,20 @@ G2.registerShape('point', 'last-point', {
 })
 
 /**
+ * 将颜色转为透明色
+ * @param {String} color 颜色值，必须为十六进制
+ * @param {Number} opacity 透明度，0-1之间
+ * @returns {String} 透明色
+ */
+const transparentColor = (color, opacity = 0.1) => {
+  // 将十六进制增加透明度通道
+  opacity = Math.floor(opacity * 255)
+  // opacity转为十六进制
+  const opacityHex = opacity.toString(16)
+  return color + opacityHex
+}
+
+/**
  * 这个数据类型的详细信息
  * @typedef {Object} SeriesDetail
  * @property {IndexId} series 数据唯一识别字符串，也就是series
@@ -61,27 +75,30 @@ G2.registerShape('point', 'last-point', {
  * 将标量数据展平为一维数组，并且形成type-color映射关系
  * @param {ScalarData[]} scalars
  * @param {import('../../toolkit').colorFinder} colorFinder
+ * @param {import('@swanlab-vue/board/store').LineSmoothInfo} [smooth]
  * @returns {fmtScalar2LineResult}
  */
-export const fmtScalar2Line = (scalars, colorFinder) => {
+export const fmtScalar2Line = (scalars, colorFinder, smooth) => {
   const lineData = []
   const colorMap = new Map()
   const experimentMap = new Map()
+  // 是否需要平滑
+  const shouldSmooth = smooth && smooth.detail.type !== 'NULL'
   for (const scalar of scalars) {
     if (!scalar.metrics) continue
-    // series格式为：{smooth/common}-{experimentId}-{columnKey}
-    // TODO 在此处判断平滑化
-    const series = `${'common'}-${scalar.experimentId}-${scalar.key}`
+    // series格式为：{smoothType}-{experimentId}-{columnKey}
+    const series = `NULL-${scalar.experimentId}-${scalar.key}`
+    const color = colorFinder({
+      experimentId: scalar.experimentId,
+      key: scalar.key
+    })
     /** @type {SeriesDetail} */
     const detail = {
       name: scalar.name,
       series,
       experimentId: scalar.experimentId,
       key: scalar.key,
-      color: colorFinder({
-        experimentId: scalar.experimentId,
-        key: scalar.key
-      }),
+      color: shouldSmooth ? transparentColor(color) : color,
       smooth: false
     }
     colorMap.set(series, detail.color)
@@ -95,6 +112,17 @@ export const fmtScalar2Line = (scalars, colorFinder) => {
         _last: metric._last
       })
     }
+    // 在此处判断平滑化
+    if (!smooth || smooth.detail.type === 'NULL') continue
+    const smoothSeries = `${smooth.detail.type}-${scalar.experimentId}-${scalar.key}`
+    const smoothDetail = {
+      ...detail,
+      series: smoothSeries,
+      smooth: true,
+      color
+    }
+    colorMap.set(smoothSeries, color)
+    smooth.detail.func(scalar, smooth.value, smoothDetail, lineData)
   }
   return {
     data: lineData,
@@ -112,9 +140,9 @@ export const fmtScalar2Line = (scalars, colorFinder) => {
  * @param {Number} length 整个图表的元素类别数量
  */
 const groupElementByExpId = (elements, elMap, length) => {
-  // FIXME 如果以后同一图表中出现相同实验不同key的数据，需要进一步明确
   // 由于按照实验id加粗，所以需要根据实验id分组
-  const nameSet = new Set()
+  const seriesSet = new Set()
+  // console.log('elements', elements)
   for (const el of elements) {
     const model = el.getModel()
     /** @type {SeriesDetail} */
@@ -125,12 +153,12 @@ const groupElementByExpId = (elements, elMap, length) => {
     } else {
       detail = model.data.detail
     }
-    if (!nameSet.has(detail.name)) {
-      nameSet.add(detail.name)
+    if (!seriesSet.has(detail.series)) {
+      seriesSet.add(detail.series)
       elMap.get(detail.experimentId).push(el)
     }
     // 如果已经全部找到，就不再继续
-    if (nameSet.keys.length === length) break
+    if (seriesSet.size === length) break
   }
 }
 
@@ -160,10 +188,11 @@ const groupElementByExpId = (elements, elMap, length) => {
  * @param {IndexId} cIndex 图表id
  * @param {LineMaps} maps 一些计算好的的映射关系
  * @param {Boolean} zoom 是否为缩放环境，如果是缩放环境的tooltip事件，不会被动触发
+ * @param {Boolean} multi 是否为多实验图表环境
  * @param {LineHoverDataUpdateCallback} callback 当前hover数据发生更改的回调
  * @return {LineChart}
  */
-export const createLine = (dom, lineData, cIndex, maps, zoom, callback) => {
+export const createLine = (dom, lineData, cIndex, maps, zoom, multi, callback) => {
   /** @type {IndexId} 图表所属section的id */
   const sIndex = inject('SectionIndex')
   const rootStyle = getComputedStyle(document.documentElement)
@@ -331,17 +360,22 @@ export const createLine = (dom, lineData, cIndex, maps, zoom, callback) => {
       return
     }
 
-    // 计算距离当前坐标最近的数据
+    // multi环境下，全部加粗，多实验环境下，加粗最近的实验
     const nowY = evt.data.y
-    let min = Infinity
     let detail = null
-    for (const item of evt.data.items) {
-      const y = item.y
-      const diff = Math.abs(y - nowY)
-      if (diff < min) {
-        min = diff
-        detail = item.data.detail
+    if (multi) {
+      let min = Infinity
+      for (const item of evt.data.items) {
+        const y = item.y
+        const diff = Math.abs(y - nowY)
+        if (diff < min) {
+          min = diff
+          detail = item.data.detail
+        }
       }
+    } else {
+      // 如果是单实验环境，直接取第一个，因为只有一个实验
+      detail = evt.data.items[0].data.detail
     }
     // 更新store中的hoverInfo
     boardStore.$hover = {
@@ -405,6 +439,7 @@ export const createLine = (dom, lineData, cIndex, maps, zoom, callback) => {
         // 需要注意的是每一个元素的data代表映射的样式数据，这可能是一个Object，也可能是一个Object[]
         const els = elMap.get(newVal.detail.experimentId)
         if (!els) return
+        console.log('els', els)
         for (const el of els) el.update({ ...el.getModel(), style: { lineWidth: thickerLineWidth } })
         lastThickEls = els
       }
@@ -414,11 +449,12 @@ export const createLine = (dom, lineData, cIndex, maps, zoom, callback) => {
   return {
     line,
     /** @type {LineDataChangeFunction} */
-    change: (lineData, maps) => {
+    change: (lineData, newMaps) => {
+      maps = newMaps
       // 重新计算elMap映射
       elMap = maps.experiment
-      groupElementByExpId(line.chart.getElements(), maps.experiment, maps.color.size)
       line.changeData(lineData)
+      groupElementByExpId(line.chart.getElements(), maps.experiment, maps.color.size)
     }
   }
 }
