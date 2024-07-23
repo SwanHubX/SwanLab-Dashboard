@@ -4,13 +4,18 @@ export const useBoardStore = defineStore('board', () => {
   // ---------------------------------- state ----------------------------------
   /**
    * 全局状态共享
+   * @type {GlobalState}
    */
-  const $global = {}
+  const $global = {
+    smooth: shallowRef({ type: null, value: 0 })
+  }
+
+  // section内部状态共享通过provide/inject实现，不在此定义
 
   /** @type {LineState} 折线图共享状态*/
   const $line = {
-    hoverInfo: shallowRef(null),
-    thickInfo: shallowRef(null)
+    hover: shallowRef(null),
+    thick: shallowRef(null)
   }
 
   // ---------------------------------- action ----------------------------------
@@ -34,6 +39,13 @@ export const useBoardStore = defineStore('board', () => {
  */
 
 /**
+ * 折线图平滑信息
+ * @typedef {Object} LineSmoothInfo
+ * @property {null | 'TWE' | 'RA' | 'GS'} type 平滑类型, null表示不平滑，'TWE'表示Time Weighted EMA，'RA'表示Running Average，'GS'表示Gaussian Smoothing
+ * @property {Number} value 平滑值
+ */
+
+/**
  * 折线图粗细信息，所有的粗细信息都为被动触发，只需要设置此信息即可
  * @typedef {Object} ThickInfo
  * @property {import('./charts/line/components/line').SeriesDetail} detail 当前加粗的系列
@@ -43,6 +55,12 @@ export const useBoardStore = defineStore('board', () => {
 /**
  * 折线图状态
  * @typedef {Object} LineState
- * @property {import('vue').ShallowRef<LineHoverInfo | null>} hoverInfo 悬浮信息
- * @property {import('vue').ShallowRef<ThickInfo | null>} thickInfo 粗细信息
+ * @property {import('vue').ShallowRef<LineHoverInfo | null>} hover 悬浮信息
+ * @property {import('vue').ShallowRef<ThickInfo | null>} thick 粗细信息
+ */
+
+/**
+ * 全局状态
+ * @typedef {Object} GlobalState
+ * @property {import('vue').ShallowRef<LineSmoothInfo>} smooth 平滑信息
  */

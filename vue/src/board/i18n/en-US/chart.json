@@ -1,11 +1,7 @@
 {
-  "chart": {
-    "error": {
-      "unknown": "This chart is not displayed correctly"
-    },
-    "limit": {
-      "title": "Showing first {count} runs",
-      "tip": "Click on the pencil icon (top right corner of this chart) to change the max number of runs displayed"
+  "toolbar": {
+    "search": {
+      "placeholder": "Search chart"
     }
   },
   "copy": {
@@ -19,15 +15,6 @@
       "edit": "Coming soon"
     }
   },
-  "toolbar": {
-    "tips": {
-      "pin": "Pin",
-      "zoom": "Zoom in",
-      "hide": "Hide",
-      "unHide": "Un hide",
-      "unPin": "Un pin"
-    }
-  },
   "section": {
     "name": {
       "Text": "Text",
@@ -37,6 +24,24 @@
       "default": "Charts",
       "pinned": "Pinned",
       "hidden": "Hidden"
+    }
+  },
+  "chart": {
+    "toolbar": {
+      "tips": {
+        "pin": "Pin",
+        "zoom": "Zoom in",
+        "hide": "Hide",
+        "unHide": "Un hide",
+        "unPin": "Un pin"
+      }
+    },
+    "error": {
+      "unknown": "This chart is not displayed correctly"
+    },
+    "limit": {
+      "title": "Showing first {count} runs",
+      "tip": "Click on the pencil icon (top right corner of this chart) to change the max number of runs displayed"
     }
   },
   "line": {

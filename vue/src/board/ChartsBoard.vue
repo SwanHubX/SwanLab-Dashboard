@@ -1,5 +1,6 @@
 <template>
   <div :key="boardKey">
+    <BoardToolBar :refresh="refresh" @filter="(value) => (filterKey = value)" />
     <SectionsWrapper :sections="stagingSections" :charts="nowCharts" />
   </div>
 </template>
@@ -77,6 +78,7 @@ import SectionsWrapper from './components/SectionsWrapper.vue'
 import { useBoardStore } from './store'
 import { copyTextToClipboard, formatNumber2SN, isApple } from './utils'
 import { message } from 'ant-design-vue'
+import BoardToolBar from './components/BoardToolbar.vue'
 
 const refresh = defineModel('refresh', {
   type: Boolean,
@@ -191,11 +193,11 @@ const { t } = useI18n()
 const handleKeydown = (e) => {
   // apple cmd + c，其他平台 ctrl + c
   if ((isApple && e.metaKey) || (!isApple && e.ctrlKey)) {
-    if (e.key === 'c' && boardStore.$line.hoverInfo) {
-      // console.log('复制事件', boardStore.$line.hoverInfo.data)
+    if (e.key === 'c' && boardStore.$line.hover) {
+      // console.log('复制事件', boardStore.$line.hover.data)
       let text = ''
       // 每一行为 {name} {格式化后的数据}
-      const lineData = [...boardStore.$line.hoverInfo.data]
+      const lineData = [...boardStore.$line.hover.data]
       lineData.sort((a, b) => b.data - a.data)
       for (const { detail, data } of lineData) {
         text += `${detail.name} ${formatNumber2SN(data)}\n`
@@ -222,12 +224,16 @@ onUnmounted(() => {
 // ---------------------------------- 刷新 ----------------------------------
 
 // -------------------------------- 搜索 ----------------------------------
+
+const filterKey = ref('')
 /**
  * 当前显示在前端的所有图表（包括分页）
  */
 const nowCharts = computed(() => {
+  console.log(filterKey.value)
   // TODO 搜索过滤
-  return stagingCharts.value
+  if (!filterKey.value) return stagingCharts.value
+  return stagingCharts.value.filter((chart) => chart.title.includes(filterKey.value))
 })
 
 // ---------------------------- 图表置顶/隐藏 ------------------------------

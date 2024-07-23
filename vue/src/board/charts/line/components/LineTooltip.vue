@@ -49,6 +49,11 @@ const props = defineProps({
   multi: {
     type: Boolean,
     default: false
+  },
+  /** 是否为放大环境 */
+  zoom: {
+    type: Boolean,
+    default: false
   }
 })
 const boardStore = useBoardStore()
@@ -57,7 +62,7 @@ const toolTipRef = ref(null)
 const sIndex = inject('SectionIndex')
 
 /** 是否为主动触发 */
-const isManual = computed(() => boardStore.$line.hoverInfo?.cIndex === props.cIndex)
+const isManual = computed(() => boardStore.$line.hover?.cIndex === props.cIndex)
 
 const sortedData = computed(() => {
   const _ = [...props.data]
@@ -67,14 +72,15 @@ const sortedData = computed(() => {
 
 const show = computed(
   () =>
-    boardStore.$line.hoverInfo !== null &&
-    boardStore.$line.hoverInfo?.sIndex === sIndex &&
+    boardStore.$line.hover !== null &&
+    boardStore.$line.hover?.zoom === props.zoom &&
+    boardStore.$line.hover?.sIndex === sIndex &&
     toolTipContainerRef.value?.offsetWidth
 )
 const offset = 40
 // 动态计算当前提示框显示位置，主要是left
 const style = computed(() => {
-  const x = boardStore.$line.hoverInfo?.x
+  const x = boardStore.$line.hover?.x
   // console.log('x', x)
   if (!x) return {}
   // if (props.cIndex !== cIndex) return { left: `${x + offset}px` }
@@ -87,7 +93,7 @@ const style = computed(() => {
 /** 判断是否为焦点，只对多实验图表有效 */
 const isFocus = (/** @type {import('./line').LineData} */ item) => {
   if (!props.multi) return false
-  return boardStore.$line.hoverInfo?.detail.experimentId === item.detail.experimentId
+  return boardStore.$line.hover?.detail.experimentId === item.detail.experimentId
 }
 </script>
 

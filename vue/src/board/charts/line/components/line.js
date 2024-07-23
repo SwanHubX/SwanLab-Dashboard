@@ -327,7 +327,7 @@ export const createLine = (dom, lineData, cIndex, maps, zoom, callback) => {
   line.on('tooltip:show', (/** @type {LineToolTipEvent} */ evt) => {
     callback && callback(evt.data.items.map((item) => item.data))
     // 说明当前悬浮的数据是来自于其他图表，此时为被动触发事件，不需要更新
-    if (boardStore.$line.hoverInfo && boardStore.$line.hoverInfo.cIndex !== cIndex) {
+    if (boardStore.$line.hover && boardStore.$line.hover.cIndex !== cIndex) {
       return
     }
 
@@ -344,7 +344,7 @@ export const createLine = (dom, lineData, cIndex, maps, zoom, callback) => {
       }
     }
     // 更新store中的hoverInfo
-    boardStore.$line.hoverInfo = {
+    boardStore.$line.hover = {
       x: evt.data.x,
       y: evt.data.y,
       detail,
@@ -354,7 +354,7 @@ export const createLine = (dom, lineData, cIndex, maps, zoom, callback) => {
       zoom
     }
     // 更新store中的thickInfo
-    boardStore.$line.thickInfo = {
+    boardStore.$line.thick = {
       detail,
       zoom
     }
@@ -362,16 +362,16 @@ export const createLine = (dom, lineData, cIndex, maps, zoom, callback) => {
   // 当前图表主动触发隐藏事件时，重置store中的hoverInfo
   line.on('tooltip:hide', () => {
     // 如果当前悬浮的数据是来自于其他图表，此时为被动触发事件，不需要更新
-    if (boardStore.$line.hoverInfo && boardStore.$line.hoverInfo.cIndex !== cIndex) {
+    if (boardStore.$line.hover && boardStore.$line.hover.cIndex !== cIndex) {
       return
     }
-    boardStore.$line.hoverInfo = null
-    boardStore.$line.thickInfo = null
+    boardStore.$line.hover = null
+    boardStore.$line.thick = null
   })
 
   // 监听hoverInfo变化，被动hide和被动show
   watch(
-    () => boardStore.$line.hoverInfo,
+    () => boardStore.$line.hover,
     (newVal) => {
       // 如果新数据为null，代表hide
       if (!newVal) return line.chart.hideTooltip()
@@ -393,7 +393,7 @@ export const createLine = (dom, lineData, cIndex, maps, zoom, callback) => {
   // 同一个实验的折线图，共享粗细信息
   let lastThickEls = [] // 上一个加粗的元素列表
   watch(
-    () => boardStore.$line.thickInfo,
+    () => boardStore.$line.thick,
     (newVal) => {
       // 取消加粗
       for (const el of lastThickEls) el.update({ ...el.getModel(), style: { lineWidth } })
