@@ -1,23 +1,20 @@
 import { defineStore } from 'pinia'
 
 export const useBoardStore = defineStore('board', () => {
-  // ---------------------------------- state ----------------------------------
-  /**
-   * 全局状态共享
-   */
-  const $global = {}
-
-  /** @type {LineState} 折线图共享状态*/
-  const $line = {
-    hoverInfo: shallowRef(null),
-    thickInfo: shallowRef(null)
-  }
+  // ---------------------------------- 全局状态共享 ----------------------------------
+  /** @type {import('vue').ShallowRef<LineSmoothInfo>} 折线图全局平滑 */
+  const $smooth = shallowRef({ detail: null, value: 0 })
+  /** @type {import('vue').ShallowRef<LineHoverInfo>} 折线图全局悬浮 */
+  const $hover = shallowRef(null)
+  /** @type {import('vue').ShallowRef<ThickInfo>} 折线图全局粗细 */
+  const $thick = shallowRef(null)
 
   // ---------------------------------- action ----------------------------------
 
   return {
-    $global,
-    $line
+    $smooth,
+    $hover,
+    $thick
   }
 })
 
@@ -34,15 +31,15 @@ export const useBoardStore = defineStore('board', () => {
  */
 
 /**
+ * 折线图平滑信息
+ * @typedef {Object} LineSmoothInfo
+ * @property {import('./charts/line/components/smooth').SmoothDetail} detail 平滑具体参数
+ * @property {Number} value 平滑值
+ */
+
+/**
  * 折线图粗细信息，所有的粗细信息都为被动触发，只需要设置此信息即可
  * @typedef {Object} ThickInfo
  * @property {import('./charts/line/components/line').SeriesDetail} detail 当前加粗的系列
  * @property {Boolean} zoom 当前加粗信息是否来自于zoom的图表，如果是则只触发zoom的加粗回调
- */
-
-/**
- * 折线图状态
- * @typedef {Object} LineState
- * @property {import('vue').ShallowRef<LineHoverInfo | null>} hoverInfo 悬浮信息
- * @property {import('vue').ShallowRef<ThickInfo | null>} thickInfo 粗细信息
  */

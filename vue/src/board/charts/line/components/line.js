@@ -1,5 +1,5 @@
 import { Line, G2 } from '@antv/g2plot'
-import { formatNumber2SN } from '../../toolkit'
+import { U } from '../../toolkit'
 import { useBoardStore } from '@swanlab-vue/board/store'
 
 // 注册样式，最后一个点放大
@@ -24,6 +24,20 @@ G2.registerShape('point', 'last-point', {
     return shape
   }
 })
+
+/**
+ * 将颜色转为透明色
+ * @param {String} color 颜色值，必须为十六进制
+ * @param {Number} opacity 透明度，0-1之间
+ * @returns {String} 透明色
+ */
+const transparentColor = (color, opacity = 0.1) => {
+  // 将十六进制增加透明度通道
+  opacity = Math.floor(opacity * 255)
+  // opacity转为十六进制
+  const opacityHex = opacity.toString(16)
+  return color + opacityHex
+}
 
 /**
  * 这个数据类型的详细信息
@@ -61,27 +75,30 @@ G2.registerShape('point', 'last-point', {
  * 将标量数据展平为一维数组，并且形成type-color映射关系
  * @param {ScalarData[]} scalars
  * @param {import('../../toolkit').colorFinder} colorFinder
+ * @param {import('@swanlab-vue/board/store').LineSmoothInfo} [smooth]
  * @returns {fmtScalar2LineResult}
  */
-export const fmtScalar2Line = (scalars, colorFinder) => {
+export const fmtScalar2Line = (scalars, colorFinder, smooth) => {
   const lineData = []
   const colorMap = new Map()
   const experimentMap = new Map()
+  // 是否需要平滑
+  const shouldSmooth = smooth && smooth.detail.type !== 'NULL'
   for (const scalar of scalars) {
     if (!scalar.metrics) continue
-    // series格式为：{smooth/common}-{experimentId}-{columnKey}
-    // TODO 在此处判断平滑化
-    const series = `${'common'}-${scalar.experimentId}-${scalar.key}`
+    // series格式为：{smoothType}-{experimentId}-{columnKey}
+    const series = `NULL-${scalar.experimentId}-${scalar.key}`
+    const color = colorFinder({
+      experimentId: scalar.experimentId,
+      key: scalar.key
+    })
     /** @type {SeriesDetail} */
     const detail = {
       name: scalar.name,
       series,
       experimentId: scalar.experimentId,
       key: scalar.key,
-      color: colorFinder({
-        experimentId: scalar.experimentId,
-        key: scalar.key
-      }),
+      color: shouldSmooth ? transparentColor(color) : color,
       smooth: false
     }
     colorMap.set(series, detail.color)
@@ -95,6 +112,17 @@ export const fmtScalar2Line = (scalars, colorFinder) => {
         _last: metric._last
       })
     }
+    // 在此处判断平滑化
+    if (!smooth || smooth.detail.type === 'NULL') continue
+    const smoothSeries = `${smooth.detail.type}-${scalar.experimentId}-${scalar.key}`
+    const smoothDetail = {
+      ...detail,
+      series: smoothSeries,
+      smooth: true,
+      color
+    }
+    colorMap.set(smoothSeries, color)
+    smooth.detail.func(scalar, smooth.value, smoothDetail, lineData)
   }
   return {
     data: lineData,
@@ -106,9 +134,51 @@ export const fmtScalar2Line = (scalars, colorFinder) => {
 }
 
 /**
+ * 将折线图内部元素分组
+ * @param {G2.Element[]} elements 元素列表
+ * @param {Map<IndexId, G2.Element[]>} elMap key为实验id，value为元素列表
+ * @param {Number} length 整个图表的元素类别数量
+ */
+const groupElementByExpId = (elements, elMap, length) => {
+  // 由于按照实验id加粗，所以需要根据实验id分组
+  const seriesSet = new Set()
+  // console.log('elements', elements)
+  for (const el of elements) {
+    const model = el.getModel()
+    /** @type {SeriesDetail} */
+    let detail = null
+    // 需要注意的是每一个元素的data代表映射的样式数据，这可能是一个Object，也可能是一个Object[]
+    if (Array.isArray(model.data)) {
+      detail = model.data[0].detail
+    } else {
+      detail = model.data.detail
+    }
+    if (!seriesSet.has(detail.series)) {
+      seriesSet.add(detail.series)
+      elMap.get(detail.experimentId).push(el)
+    }
+    // 如果已经全部找到，就不再继续
+    if (seriesSet.size === length) break
+  }
+}
+
+/**
  * 当前hover数据发生更改的回调
  * @callback LineHoverDataUpdateCallback
  * @param {LineData[]} data
+ */
+
+/**
+ * @typedef {Object} LineChart
+ * @property {Line} line 折线图实例
+ * @property {LineDataChangeFunction} change 更新折线图数据方法
+ */
+
+/**
+ * 更新折线图数据
+ * @callback LineDataChangeFunction
+ * @param {LineData[]} lineData 标量数据
+ * @param {LineMaps} maps 一些计算好的的映射关系
  */
 
 /**
@@ -118,9 +188,11 @@ export const fmtScalar2Line = (scalars, colorFinder) => {
  * @param {IndexId} cIndex 图表id
  * @param {LineMaps} maps 一些计算好的的映射关系
  * @param {Boolean} zoom 是否为缩放环境，如果是缩放环境的tooltip事件，不会被动触发
+ * @param {Boolean} multi 是否为多实验图表环境
  * @param {LineHoverDataUpdateCallback} callback 当前hover数据发生更改的回调
+ * @return {LineChart}
  */
-export const createLine = (dom, lineData, cIndex, maps, zoom, callback) => {
+export const createLine = (dom, lineData, cIndex, maps, zoom, multi, callback) => {
   /** @type {IndexId} 图表所属section的id */
   const sIndex = inject('SectionIndex')
   const rootStyle = getComputedStyle(document.documentElement)
@@ -187,7 +259,7 @@ export const createLine = (dom, lineData, cIndex, maps, zoom, callback) => {
       label: {
         // 在此处完成Y轴数据的格式化
         formatter: (data) => {
-          return formatNumber2SN(data)
+          return U.formatNumber2SN(data)
         }
       },
       // y轴坐标轴样式
@@ -284,24 +356,29 @@ export const createLine = (dom, lineData, cIndex, maps, zoom, callback) => {
   line.on('tooltip:show', (/** @type {LineToolTipEvent} */ evt) => {
     callback && callback(evt.data.items.map((item) => item.data))
     // 说明当前悬浮的数据是来自于其他图表，此时为被动触发事件，不需要更新
-    if (boardStore.$line.hoverInfo && boardStore.$line.hoverInfo.cIndex !== cIndex) {
+    if (boardStore.$hover && boardStore.$hover.cIndex !== cIndex) {
       return
     }
 
-    // 计算距离当前坐标最近的数据
+    // multi环境下，全部加粗，多实验环境下，加粗最近的实验
     const nowY = evt.data.y
-    let min = Infinity
     let detail = null
-    for (const item of evt.data.items) {
-      const y = item.y
-      const diff = Math.abs(y - nowY)
-      if (diff < min) {
-        min = diff
-        detail = item.data.detail
+    if (multi) {
+      let min = Infinity
+      for (const item of evt.data.items) {
+        const y = item.y
+        const diff = Math.abs(y - nowY)
+        if (diff < min) {
+          min = diff
+          detail = item.data.detail
+        }
       }
+    } else {
+      // 如果是单实验环境，直接取第一个，因为只有一个实验
+      detail = evt.data.items[0].data.detail
     }
     // 更新store中的hoverInfo
-    boardStore.$line.hoverInfo = {
+    boardStore.$hover = {
       x: evt.data.x,
       y: evt.data.y,
       detail,
@@ -311,7 +388,7 @@ export const createLine = (dom, lineData, cIndex, maps, zoom, callback) => {
       zoom
     }
     // 更新store中的thickInfo
-    boardStore.$line.thickInfo = {
+    boardStore.$thick = {
       detail,
       zoom
     }
@@ -319,16 +396,16 @@ export const createLine = (dom, lineData, cIndex, maps, zoom, callback) => {
   // 当前图表主动触发隐藏事件时，重置store中的hoverInfo
   line.on('tooltip:hide', () => {
     // 如果当前悬浮的数据是来自于其他图表，此时为被动触发事件，不需要更新
-    if (boardStore.$line.hoverInfo && boardStore.$line.hoverInfo.cIndex !== cIndex) {
+    if (boardStore.$hover && boardStore.$hover.cIndex !== cIndex) {
       return
     }
-    boardStore.$line.hoverInfo = null
-    boardStore.$line.thickInfo = null
+    boardStore.$hover = null
+    boardStore.$thick = null
   })
 
   // 监听hoverInfo变化，被动hide和被动show
   watch(
-    () => boardStore.$line.hoverInfo,
+    () => boardStore.$hover,
     (newVal) => {
       // 如果新数据为null，代表hide
       if (!newVal) return line.chart.hideTooltip()
@@ -341,36 +418,16 @@ export const createLine = (dom, lineData, cIndex, maps, zoom, callback) => {
       line.chart.showTooltip({ x: newVal.x, y: newVal.y })
     }
   )
-  // FIXME 如果以后同一图表中出现相同实验不同key的数据，需要进一步明确
-  // 由于按照实验id加粗，所以需要根据实验id分组
-  const nameSet = new Set()
-  /**
-   * @type {Map<IndexId, G2.Element[]>}
-   */
-  const elMap = maps.experiment
-  for (const el of line.chart.getElements()) {
-    const model = el.getModel()
-    /** @type {SeriesDetail} */
-    let detail = null
-    // 需要注意的是每一个元素的data代表映射的样式数据，这可能是一个Object，也可能是一个Object[]
-    if (Array.isArray(model.data)) {
-      detail = model.data[0].detail
-    } else {
-      detail = model.data.detail
-    }
-    if (!nameSet.has(detail.name)) {
-      nameSet.add(detail.name)
-      elMap.get(detail.experimentId).push(el)
-    }
-    // 如果已经全部找到，就不再继续
-    if (nameSet.keys.length === maps.color.size) break
-  }
+
+  let elMap = maps.experiment
+  // 根据实验id分组元素
+  groupElementByExpId(line.chart.getElements(), maps.experiment, maps.color.size)
   // console.log('elMap', elMap)
 
   // 同一个实验的折线图，共享粗细信息
   let lastThickEls = [] // 上一个加粗的元素列表
   watch(
-    () => boardStore.$line.thickInfo,
+    () => boardStore.$thick,
     (newVal) => {
       // 取消加粗
       for (const el of lastThickEls) el.update({ ...el.getModel(), style: { lineWidth } })
@@ -387,7 +444,16 @@ export const createLine = (dom, lineData, cIndex, maps, zoom, callback) => {
       }
     }
   )
+
   return {
-    plot: line
+    line,
+    /** @type {LineDataChangeFunction} */
+    change: (lineData, newMaps) => {
+      maps = newMaps
+      // 重新计算elMap映射
+      elMap = maps.experiment
+      line.changeData(lineData)
+      groupElementByExpId(line.chart.getElements(), maps.experiment, maps.color.size)
+    }
   }
 }

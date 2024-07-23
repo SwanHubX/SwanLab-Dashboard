@@ -29,13 +29,13 @@
                   <template v-if="sType !== 'HIDDEN'">
                     <LoadingOutlined v-if="hiddenLoading" />
                     <EyeInvisibleOutlined v-else />
-                    {{ $t('chart.toolbar.tips.hide') }}
+                    {{ $t('chart.chart.toolbar.tips.hide') }}
                   </template>
                   <!-- 当前在隐藏列 -->
                   <template v-else>
                     <LoadingOutlined v-if="hiddenLoading" />
                     <EyeOutlined v-else />
-                    {{ $t('chart.toolbar.tips.unHide') }}
+                    {{ $t('chart.chart.toolbar.tips.unHide') }}
                   </template>
                 </div>
               </MenuItem>
@@ -114,7 +114,7 @@ const toolBarIcons = [
   // 置顶，取消置顶
   {
     icon: PinComponent,
-    tip: sType === 'PINNED' ? t('chart.toolbar.tips.unPin') : t('chart.toolbar.tips.pin'),
+    tip: sType === 'PINNED' ? t('chart.chart.toolbar.tips.unPin') : t('chart.chart.toolbar.tips.pin'),
     handler: () => {
       pinLoading.value = true
       changeChartPinOrHide(props.chart.index, sType === 'PINNED' ? 'PUBLIC' : 'PINNED')
@@ -127,7 +127,7 @@ const toolBarIcons = [
   // 放大
   {
     icon: ExpandOutlined,
-    tip: t('chart.toolbar.tips.zoom'),
+    tip: t('chart.chart.toolbar.tips.zoom'),
     handler: handleZoom
   },
   ...props.icons

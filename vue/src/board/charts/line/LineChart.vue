@@ -5,7 +5,7 @@
       <LineLegends :legends="legends" :cIndex="chart.index" />
     </template>
     <template #chart>
-      <g2-line :chart="chart" :colorFinder="colorFinder" :zoom="zoom" ref="g2LineRef" />
+      <g2-line :chart="chart" :colorFinder="colorFinder" :zoom="zoom" :multi="multi" ref="g2LineRef" />
     </template>
   </LineLayout>
 </template>

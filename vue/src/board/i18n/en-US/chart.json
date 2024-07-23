@@ -1,27 +1,23 @@
 {
-  "chart": {
-    "error": {
-      "unknown": "This chart is not displayed correctly"
+  "toolbar": {
+    "search": {
+      "placeholder": "Search chart"
     },
-    "limit": {
-      "title": "Showing first {count} runs",
-      "tip": "Click on the pencil icon (top right corner of this chart) to change the max number of runs displayed"
-    }
+    "smooth": {
+      "level": "Smoothing",
+      "method": "Method"
+    },
+    "refresh": "Refresh"
+  },
+  "copy": {
+    "success": "Copied",
+    "error": "Failed to copy"
   },
   "zoom": {
     "close": "Close",
     "edit": "Edit",
     "tips": {
       "edit": "Coming soon"
-    }
-  },
-  "toolbar": {
-    "tips": {
-      "pin": "Pin",
-      "zoom": "Zoom in",
-      "hide": "Hide",
-      "unHide": "Un hide",
-      "unPin": "Un pin"
     }
   },
   "section": {
@@ -33,6 +29,32 @@
       "default": "Charts",
       "pinned": "Pinned",
       "hidden": "Hidden"
+    }
+  },
+  "chart": {
+    "toolbar": {
+      "tips": {
+        "pin": "Pin",
+        "zoom": "Zoom in",
+        "hide": "Hide",
+        "unHide": "Un hide",
+        "unPin": "Un pin"
+      }
+    },
+    "error": {
+      "unknown": "This chart is not displayed correctly"
+    },
+    "limit": {
+      "title": "Showing first {count} runs",
+      "tip": "Click on the pencil icon (top right corner of this chart) to change the max number of runs displayed"
+    }
+  },
+  "line": {
+    "tooltip": {
+      "copy": {
+        "win": "Press Ctrl+C to copy this data",
+        "apple": "Press CMD+C to copy this data"
+      }
     }
   }
 }

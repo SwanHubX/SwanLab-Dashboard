@@ -1,27 +1,23 @@
 {
-  "chart": {
-    "error": {
-      "unknown": "此图表显示出现问题"
+  "toolbar": {
+    "search": {
+      "placeholder": "搜索图表"
     },
-    "limit": {
-      "title": "只显示前 {count} 个实验",
-      "tip": "点击铅笔图标（此图表右上角）以更改显示的最大实验数量"
-    }
+    "smooth": {
+      "level": "平滑度",
+      "method": "平滑方法"
+    },
+    "refresh": "刷新"
+  },
+  "copy": {
+    "success": "复制成功",
+    "error": "复制失败"
   },
   "zoom": {
     "close": "关闭",
     "edit": "编辑",
     "tips": {
       "edit": "敬请期待"
-    }
-  },
-  "toolbar": {
-    "tips": {
-      "pin": "置顶",
-      "zoom": "放大展示",
-      "hide": "隐藏",
-      "unHide": "取消隐藏",
-      "unPin": "取消置顶"
     }
   },
   "section": {
@@ -33,6 +29,32 @@
       "default": "图表",
       "pinned": "置顶",
       "hidden": "隐藏"
+    }
+  },
+  "chart": {
+    "toolbar": {
+      "tips": {
+        "pin": "置顶",
+        "zoom": "放大展示",
+        "hide": "隐藏",
+        "unHide": "取消隐藏",
+        "unPin": "取消置顶"
+      }
+    },
+    "error": {
+      "unknown": "此图表显示出现问题"
+    },
+    "limit": {
+      "title": "只显示前 {count} 个实验",
+      "tip": "点击铅笔图标（此图表右上角）以更改显示的最大实验数量"
+    }
+  },
+  "line": {
+    "tooltip": {
+      "copy": {
+        "win": "按 Ctrl+C 复制此数据",
+        "apple": "按 CMD+C 复制此数据"
+      }
     }
   }
 }

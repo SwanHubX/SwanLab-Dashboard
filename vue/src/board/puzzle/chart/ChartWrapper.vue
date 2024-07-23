@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="h-full w-full relative top-0 left-0 rounded py-4 px-3"
-    @mouseenter="handleMouseEnter"
-    @mouseleave="handleMouseLeave"
-  >
+  <div class="h-full w-full relative top-0 left-0 rounded py-4 px-3">
     <div class="flex items-center justify-center h-full z-10" v-if="state === 'loading'">
       <Spin />
     </div>
@@ -136,21 +132,6 @@ onMounted(() => {
 })
 
 onUnmounted(() => poller.stop())
-
-// ---------------------------------- toolbar显示逻辑 ----------------------------------
-const chartHovering = ref(false)
-provide(
-  'ShowToolbar',
-  computed(() => {
-    return !props.zoom && chartHovering.value
-  })
-)
-const handleMouseEnter = () => {
-  chartHovering.value = true
-}
-const handleMouseLeave = () => {
-  chartHovering.value = false
-}
 </script>
 
 <style lang="scss" scoped>
