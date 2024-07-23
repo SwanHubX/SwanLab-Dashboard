@@ -41,7 +41,7 @@ export const useBoardStore = defineStore('board', () => {
 /**
  * 折线图平滑信息
  * @typedef {Object} LineSmoothInfo
- * @property {null | 'TWE' | 'RA' | 'GS'} type 平滑类型, null表示不平滑，'TWE'表示Time Weighted EMA，'RA'表示Running Average，'GS'表示Gaussian Smoothing
+ * @property {SmoothType} type 平滑类型, null表示不平滑，'TWE'表示Time Weighted EMA，'RA'表示Running Average，'GS'表示Gaussian Smoothing
  * @property {Number} value 平滑值
  */
 

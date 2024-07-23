@@ -2,6 +2,10 @@
   "toolbar": {
     "search": {
       "placeholder": "搜索图表"
+    },
+    "smooth": {
+      "level": "平滑度",
+      "method": "平滑方法"
     }
   },
   "copy": {

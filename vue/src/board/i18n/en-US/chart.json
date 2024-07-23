@@ -2,6 +2,10 @@
   "toolbar": {
     "search": {
       "placeholder": "Search chart"
+    },
+    "smooth": {
+      "level": "Smoothing",
+      "method": "Method"
     }
   },
   "copy": {
