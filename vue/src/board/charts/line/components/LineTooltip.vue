@@ -3,7 +3,7 @@
     <div class="lc-tooltip" ref="toolTipRef" v-show="show" :style="style">
       <div
         class="lc-tooltip-item"
-        :class="{ 'lc-tooltip-item-focus': isFocus(item) }"
+        :class="{ 'lc-tooltip-item-focus': processedData.length > 1 && isFocus(item) }"
         v-for="item in processedData"
         :key="item.series"
         :style="{ color: item.color }"
@@ -142,7 +142,7 @@ const showData = (/** @type {ProcessedData} */ item) => {
 <style lang="scss" scoped>
 .lc-tooltip {
   @apply py-2 px-2 absolute bg-default border rounded z-10 -top-7;
-  min-width: 250px;
+  width: 260px;
   box-shadow: rgba(21, 24, 31, 0.16) 0px 12px 24px 0px;
   visibility: visible;
 
@@ -150,7 +150,9 @@ const showData = (/** @type {ProcessedData} */ item) => {
     @apply text-xs text-default font-semibold;
   }
   .lc-tooltip-item-focus {
-    @apply bg-highest;
+    @apply bg-higher;
+    // 亮度调暗
+    filter: brightness(0.95);
   }
 
   .lc-tooltip-item {

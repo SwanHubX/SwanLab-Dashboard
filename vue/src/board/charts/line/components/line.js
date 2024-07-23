@@ -439,7 +439,6 @@ export const createLine = (dom, lineData, cIndex, maps, zoom, multi, callback) =
         // 需要注意的是每一个元素的data代表映射的样式数据，这可能是一个Object，也可能是一个Object[]
         const els = elMap.get(newVal.detail.experimentId)
         if (!els) return
-        console.log('els', els)
         for (const el of els) el.update({ ...el.getModel(), style: { lineWidth: thickerLineWidth } })
         lastThickEls = els
       }
