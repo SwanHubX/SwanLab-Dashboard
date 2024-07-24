@@ -10,6 +10,7 @@
       :MoveChartConstructor="MoveChartConstructor"
       :interval="interval"
       v-if="charts?.length"
+      @fold="handleFold"
     />
   </div>
 </template>
@@ -55,6 +56,9 @@ const MoveChartConstructor = async (cIndex, type) => {
     charts: _[1]
   }
 }
+
+// ---------------------------------- section开合 ----------------------------------
+const handleFold = C.createFoldSectionCallBack(undefined, experimentStore.id)
 </script>
 
 <style lang="scss" scoped>

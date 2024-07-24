@@ -13,6 +13,7 @@
         :MetricURIConstructor="MetricURIConstructor"
         :interval="interval"
         v-if="charts.length"
+        @fold="handleFold"
       />
       <!-- 图表不存在 -->
       <p class="font-semibold pt-5 text-center" v-else>Empty Charts</p>
@@ -92,7 +93,7 @@ http.get('/project/charts').then(({ data }) => {
 
 // ---------------------------------- 折叠事件 ----------------------------------
 
-// const handleFold = C.createFoldSectionCallBack(projectStore.)
+const handleFold = C.createFoldSectionCallBack(projectStore.id)
 
 // ---------------------------------- 图表移动 ----------------------------------
 /** @type {import('@swanlab-vue/board/ChartsBoard.vue').MoveChartConstructor} */

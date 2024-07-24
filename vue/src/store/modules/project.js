@@ -10,6 +10,7 @@ export const useProjectStore = defineStore('project', () => {
   const dark = ref(false)
 
   /** getter */
+  const id = computed(() => project.value?.id)
   const name = computed(() => (project.value?.name ? project.value.name : 'my-machine-learning-project'))
   const description = computed(() => (project.value?.description ? project.value.description : ''))
   const experiments = computed(() => project.value?.experiments)
@@ -117,6 +118,7 @@ export const useProjectStore = defineStore('project', () => {
     return experiment.show
   }
   return {
+    id,
     sum,
     name,
     description,

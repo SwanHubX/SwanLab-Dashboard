@@ -324,3 +324,21 @@ export const moveChartEventRequest = async (cIndex, type) => {
   })
   return data
 }
+
+// ---------------------------------- 生成fold事件 ----------------------------------
+
+/**
+ * 生成fold事件回调
+ * @param {Number} [project_id] 项目ID
+ * @param {Number} [experiment_id] 实验ID
+ */
+export const createFoldSectionCallBack = (project_id, experiment_id) => {
+  /** @type {import('@swanlab-vue/board/ChartsBoard.vue').FoldSectionCallBack} */
+  return (index, folded) => {
+    return http.patch(`/namespace/${index}/opened`, {
+      project_id,
+      experiment_id,
+      opened: folded ? 0 : 1
+    })
+  }
+}
