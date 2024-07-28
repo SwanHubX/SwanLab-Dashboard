@@ -3,7 +3,7 @@
   <div class="text-base">
     <div class="zoom-chart-title">{{ chart.title }}</div>
     <div class="zoom-chart-content">
-      <component :is="chartComponent" />
+      <component :is="chartComponent.chart" />
     </div>
   </div>
 </template>
@@ -27,7 +27,7 @@ const props = defineProps({
 })
 const boardStore = useBoardStore()
 
-/** @type {ComputedRef<Component>} */
+/** @type {ComputedRef<{chart:Component, toolbar:Component}>} */
 const chartComponent = computed(() => {
   return charts[props.chart.type.toLowerCase()]
 })
