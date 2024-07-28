@@ -3,32 +3,47 @@
   <ZIndexFull>
     <div class="w-full h-full bg-white-default border rounded relative">
       <ChartWrapper class="chart-wrapper" :chart="chart" />
-      <a-modal v-model:open="open" width="100%" wrap-class-name="chart-zoom-modal">
+      <a-modal
+        v-model:open="open"
+        width="100%"
+        :wrap-class-name="modalWrapperClass || 'chart-zoom-modal'"
+        :footer="null"
+      >
         <template #closeIcon></template>
         <div class="w-full h-full" :key="modalKey">
           <!-- 放大 -->
-          <ZoomWrapper class="chart-wrapper" :chart="chart" v-if="mode == 'zoom'" />
-          <!-- 编辑 -->
-          <component :is="editComponent" :chart="chart" v-else-if="mode == 'edit'" />
-          <!-- 下载 -->
-        </div>
-        <template #footer>
-          <div class="flex h-full w-full items-center justify-between">
-            <!-- 放大模式 -->
-            <template v-if="mode === 'zoom'">
+          <div class="zoom-modal" v-if="mode == 'zoom'">
+            <div class="zoom-modal-body">
+              <ZoomWrapper class="chart-wrapper" :chart="chart" />
+            </div>
+            <div class="zoom-modal-footer">
               <div v-tippy="{ content: $t('chart.zoom.tips.edit') }">
                 <Button size="large" disabled>{{ $t('chart.zoom.edit') }}</Button>
               </div>
               <Button size="large" class="font-semibold" @click="handleHidden">{{ $t('chart.zoom.close') }}</Button>
-            </template>
-            <!-- 编辑模式 -->
-            <template v-else-if="mode == 'edit'"> </template>
+            </div>
           </div>
-        </template>
+          <!-- 编辑或下载 -->
+          <component :is="modalComponent" :chart="chart" v-else />
+        </div>
       </a-modal>
     </div>
   </ZIndexFull>
 </template>
+
+<script>
+/**
+ * 模态框模式
+ * @typedef {'zoom' | 'edit' | 'download' | null} ModalMode
+ */
+
+/**
+ * @callback OpenModalEvent
+ * @param {ModalMode} m 模态框模式
+ * @param {Component} [c] 下载或者编辑模式下传递来动态渲染的组件
+ * @param {String} [cl] 模态框的类名，用于控制大小，注意必须是全局类名
+ */
+</script>
 
 <script setup>
 /**
@@ -57,7 +72,7 @@ defineProps({
 /**
  * 放大模式还是编辑模式，放大模式下重新渲染一个ChartWrapper组件
  * 编辑模式下需要使用事件传递来来的组件完成渲染
- * @type {Ref<'zoom' | 'edit' | null>}
+ * @type {Ref<'zoom' | 'edit' | 'download' | null>}
  */
 const mode = ref('zoom')
 /** 控制模态框的显示 */
@@ -65,23 +80,42 @@ const open = ref(false)
 /** @type {Ref<Number>} 模态框key，控制内部组件强制刷新 */
 const modalKey = ref(0)
 /** @type {Ref<Component>} 编辑模式下通过事件传递来的的组件 */
-const editComponent = shallowRef(null)
+const modalComponent = shallowRef(null)
+const modalWrapperClass = ref(null)
 
-// ---------------------------------- 关闭/开启模态框 ----------------------------------
+// ---------------------------------- 关闭/开启模态框事件 ----------------------------------
 
-provide('zoomChartEvent', () => {
-  open.value = true
-  mode.value = 'zoom'
-  modalKey.value += 1
-})
+provide(
+  'openModalEvent',
+  /** @type {OpenModalEvent} */ (m, c, cl) => {
+    open.value = true
+    mode.value = m
+    modalKey.value += 1
+    modalWrapperClass.value = cl
+    modalComponent.value = null
+  }
+)
 const handleHidden = () => {
   open.value = false
   mode.value = null
-  // 清空$zoom状态
+  modalComponent.value = null
+  modalWrapperClass.value = null
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.zoom-modal {
+  @apply w-full h-full;
+  .zoom-modal-body {
+    height: 90%;
+  }
+  .zoom-modal-footer {
+    height: 10%;
+    @apply py-4 px-6  bg-higher border-t  rounded-b-lg;
+    @apply flex items-center justify-between;
+  }
+}
+</style>
 <style lang="scss">
 .chart-zoom-modal {
   @apply flex justify-center items-center;
@@ -97,7 +131,7 @@ const handleHidden = () => {
   }
   .ant-modal-body {
     width: 100%;
-    height: 90%;
+    height: 100%;
   }
   .ant-modal-footer {
     height: 10%;
