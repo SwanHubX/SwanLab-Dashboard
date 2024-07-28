@@ -12,7 +12,8 @@
       <!-- 标题 -->
       <div class="chart-title">{{ chart.title }}</div>
       <div class="chart-content">
-        <component :is="chartComponent" />
+        <component :is="chartComponent.toolbar" />
+        <component :is="chartComponent.chart" />
       </div>
     </div>
   </div>
@@ -26,7 +27,7 @@
  **/
 import { onErrorCaptured } from 'vue'
 import { Spin } from 'ant-design-vue'
-import charts from '@swanlab-vue/board/charts'
+import charts from './charts'
 import { parseChartMetrics } from './utils'
 import Poller from './poller'
 const props = defineProps({
@@ -42,7 +43,7 @@ const props = defineProps({
     default: false
   }
 })
-/** @type {ComputedRef<Component>} */
+/** @type {ComputedRef<{chart:Component, toolbar:Component}>} */
 const chartComponent = computed(() => {
   if (state.value === 'error') return charts.error
   if (state.value === 'empty') return charts.empty

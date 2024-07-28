@@ -2,9 +2,9 @@
 
 <script setup>
 /**
- * @description: 文本图表组件
- * @file: TextChart.vue
- * @since: 2024-07-14 20:53:41
+ * @description:
+ * @file: LineToolbar.vue
+ * @since: 2024-07-28 23:21:30
  **/
 </script>
 

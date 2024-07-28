@@ -85,7 +85,6 @@ const boardStore = useBoardStore()
  * @type {Ref<HTMLDivElement>}
  */
 const toolbarRef = ref(null)
-const emits = defineEmits(['zoom'])
 /** @type {import('../../puzzle/ChartPuzzle.vue').OpenModalEvent} */
 const openModalEvent = inject('openModalEvent')
 /** @type {SectionType} */

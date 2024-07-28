@@ -23,7 +23,8 @@
     "unit": "test",
     "migrate": "Husky",
     "business": "components",
-    "empty": "error"
+    "empty": "error",
+    "toolbar": "tools"
   },
   "material-icon-theme.files.associations": {
     ".env.mock": "Tune"
