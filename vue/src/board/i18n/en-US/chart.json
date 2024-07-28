@@ -44,6 +44,9 @@
     "error": {
       "unknown": "This chart is not displayed correctly"
     },
+    "empty": {
+      "description": "No Data"
+    },
     "limit": {
       "title": "Showing first {count} runs",
       "tip": "Click on the pencil icon (top right corner of this chart) to change the max number of runs displayed"
