@@ -1,5 +1,5 @@
 <template>
-  <ChartToolBar :chart="chart" no-zoom />
+  <ChartToolBar no-zoom />
   <div class="flex flex-col justify-center h-full pb-5">
     <Empty :image="simpleImage">
       <template #description>
@@ -18,8 +18,6 @@
 import { Empty } from 'ant-design-vue'
 import ChartToolBar from '../.components/ChartToolBar.vue'
 const simpleImage = Empty.PRESENTED_IMAGE_SIMPLE
-/** @type {ComputedRef<Chart>} */
-const chart = inject('Chart')
 </script>
 
 <style lang="scss" scoped></style>

@@ -74,11 +74,6 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
-  chart: {
-    /** @type {PropType<Chart>} */
-    type: Object,
-    required: true
-  },
   // 是否显示放大按钮
   noZoom: {
     type: Boolean,
@@ -98,6 +93,8 @@ const sType = inject('SectionType')
 const changeChartPinOrHide = inject('ChangeChartPinOrHide')
 const PinComponent = sType === 'PINNED' ? PushpinFilled : PushpinOutlined
 const metricsData = inject('MetricsData')
+/** @type {ComputedRef<Chart>} */
+const chart = inject('Chart')
 
 const handleZoom = () => {
   boardStore.$zoom = { data: metricsData.value }
@@ -130,7 +127,7 @@ const toolBarIcons = [
     tip: sType === 'PINNED' ? t('chart.chart.toolbar.tips.unPin') : t('chart.chart.toolbar.tips.pin'),
     handler: () => {
       pinLoading.value = true
-      changeChartPinOrHide(props.chart.index, sType === 'PINNED' ? 'PUBLIC' : 'PINNED')
+      changeChartPinOrHide(chart.value.index, sType === 'PINNED' ? 'PUBLIC' : 'PINNED')
     },
     show: sType === 'PINNED',
     disabled,
@@ -146,7 +143,6 @@ const toolBarIcons = [
   },
   ...props.icons
 ]
-
 // ---------------------------------- 控制菜单的显示和隐藏，所有菜单都需要手动关闭 ----------------------------------
 
 const open = ref(false)
@@ -165,7 +161,7 @@ const handleMenuClick = (e) => {
 const hiddenLoading = ref(false)
 const handleHidden = () => {
   hiddenLoading.value = true
-  changeChartPinOrHide(props.chart.index, sType === 'HIDDEN' ? 'PUBLIC' : 'HIDDEN')
+  changeChartPinOrHide(chart.value.index, sType === 'HIDDEN' ? 'PUBLIC' : 'HIDDEN')
 }
 
 // ---------------------------------- toolbar显示和隐藏 ----------------------------------

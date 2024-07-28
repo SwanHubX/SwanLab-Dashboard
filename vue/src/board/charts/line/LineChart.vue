@@ -1,5 +1,5 @@
 <template>
-  <ChartToolBar :chart="chart" />
+  <ChartToolBar />
   <LineLayout :captured="chart.captured" :multi="multi">
     <template #legends>
       <LineLegends :legends="legends" :cIndex="chart.index" />
@@ -27,8 +27,6 @@ const render = (/** @type {ScalarData[]} */ scalars) => {
 }
 
 const { multi, zoom, chart } = watchMetric(render)
-
-console.log('zoom', zoom)
 
 // ---------------------------------- 其他 ----------------------------------
 
