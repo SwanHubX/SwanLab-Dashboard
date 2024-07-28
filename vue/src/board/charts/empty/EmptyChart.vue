@@ -1,13 +1,24 @@
-<template>image</template>
+<template>
+  <ChartToolBar :chart="chart" no-zoom />
+  <div class="flex flex-col justify-center h-full pb-5">
+    <Empty :image="simpleImage">
+      <template #description>
+        <span>{{ $t('chart.chart.empty.description') }}</span>
+      </template>
+    </Empty>
+  </div>
+</template>
 
 <script setup>
 /**
- * @description: 图片图表组件
- * @file: ImageChart.vue
- * @since: 2024-07-14 20:53:17
+ * @description: 空图表，此时代表图表数据为空
+ * @file: EmptyChart.vue
+ * @since: 2024-07-28 16:12:42
  **/
+import { Empty } from 'ant-design-vue'
 import ChartToolBar from '../.components/ChartToolBar.vue'
-const props = defineProps({
+const simpleImage = Empty.PRESENTED_IMAGE_SIMPLE
+defineProps({
   /** 图表配置 */
   chart: {
     /** @type {PropType<Chart>} */

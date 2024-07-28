@@ -1,5 +1,5 @@
 <template>
-  <ChartToolbar :chart="chart" />
+  <ChartToolBar :chart="chart" />
   <LineLayout :captured="props.chart.captured" :multi="multi">
     <template #legends>
       <LineLegends :legends="legends" :cIndex="chart.index" />
@@ -16,7 +16,7 @@
  * @file: LineChart.vue
  * @since: 2024-07-14 20:53:33
  **/
-import ChartToolbar from '../.components/ChartToolbar.vue'
+import ChartToolBar from '../.components/ChartToolBar.vue'
 import { useColorFinder, watchMetric } from '../toolkit'
 import G2Line from './components/G2Line.vue'
 import LineLayout from './components/LineLayout.vue'

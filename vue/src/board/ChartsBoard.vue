@@ -86,7 +86,7 @@ import SectionsWrapper from './components/SectionsWrapper.vue'
 import { useBoardStore } from './store'
 import { copyTextToClipboard, formatNumber2SN, isApple } from './utils'
 import { message } from 'ant-design-vue'
-import BoardToolBar from './components/BoardToolbar.vue'
+import BoardToolBar from './components/BoardToolBar.vue'
 
 const refresh = defineModel('refresh', {
   type: Boolean,

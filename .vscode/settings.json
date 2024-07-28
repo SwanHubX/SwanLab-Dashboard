@@ -23,7 +23,7 @@
     "unit": "test",
     "migrate": "Husky",
     "business": "components",
-    "dog": "Husky"
+    "empty": "error"
   },
   "material-icon-theme.files.associations": {
     ".env.mock": "Tune"

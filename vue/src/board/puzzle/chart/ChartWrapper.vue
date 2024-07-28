@@ -46,12 +46,10 @@ const props = defineProps({
     default: false
   }
 })
-
-const isChartError = computed(() => false)
-
 /** @type {ComputedRef<Component>} */
 const chartComponent = computed(() => {
-  if (isChartError.value) return charts.error
+  if (state.value === 'error') return charts.error
+  if (state.value === 'empty') return charts.empty
   return charts[props.chart.type.toLowerCase()]
 })
 
@@ -67,7 +65,7 @@ const multi = inject('Multi')
 const metricsData = shallowRef(null)
 // ---------------------------------- 处理子组件状态 ----------------------------------
 
-/** @type {Ref<'loading' | 'error' | 'success'>} */
+/** @type {Ref<'loading' | 'error' | 'success' | 'empty'>} */
 const state = customRef((track, trigger) => {
   // 默认为loading状态
   /** @type {'loading' | 'error' | 'success'} */
@@ -124,6 +122,8 @@ onMounted(() => {
         // console.log('获取数据成功:', msd)
         state.value = 'success'
       }
+      // 如果interval为0，代表组件为空，此时切换为empty组件
+      if (interval.value === 0 && !msd.length) state.value = 'empty'
     } catch (e) {
       console.error('获取数据失败:', e)
       state.value = 'error'

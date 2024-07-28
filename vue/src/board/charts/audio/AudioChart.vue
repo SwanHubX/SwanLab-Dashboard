@@ -6,7 +6,7 @@
  * @file: AudioChart.vue
  * @since: 2024-07-14 20:53:08
  **/
-import ChartToolbar from '../.components/ChartToolbar.vue'
+import ChartToolBar from '../.components/ChartToolBar.vue'
 const props = defineProps({
   /** 图表配置 */
   chart: {

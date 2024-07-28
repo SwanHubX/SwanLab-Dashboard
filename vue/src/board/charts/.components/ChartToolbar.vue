@@ -51,7 +51,7 @@
 <script setup>
 /**
  * @description: 图表工具栏，共享部分逻辑，同时满足定制化需求
- * @file: ChartToolbar.vue
+ * @file: ChartToolBar.vue
  * @since: 2024-07-20 15:14:01
  **/
 import {
@@ -77,6 +77,11 @@ const props = defineProps({
     /** @type {PropType<Chart>} */
     type: Object,
     required: true
+  },
+  // 是否显示放大按钮
+  noZoom: {
+    type: Boolean,
+    default: false
   }
 })
 /**
@@ -94,7 +99,7 @@ const PinComponent = sType === 'PINNED' ? PushpinFilled : PushpinOutlined
 /**
  * 工具栏图标配置属性
  * @typedef {Object} ToolBarIconConfig
- * @property {Component} icon - 图标组件
+ * @property {import('vue').Component} icon - 图标组件
  * @property {string} tip - 图标提示
  * @property {Function} handler - 图标点击事件
  * @property {Boolean} [show] - 当鼠标没有hover在工具栏上时隐藏，为true则始终显示
@@ -128,7 +133,8 @@ const toolBarIcons = [
   {
     icon: ExpandOutlined,
     tip: t('chart.chart.toolbar.tips.zoom'),
-    handler: handleZoom
+    handler: handleZoom,
+    disabled: props.noZoom || disabled
   },
   ...props.icons
 ]
