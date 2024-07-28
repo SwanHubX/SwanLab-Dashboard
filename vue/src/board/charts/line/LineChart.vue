@@ -28,6 +28,8 @@ const render = (/** @type {ScalarData[]} */ scalars) => {
 
 const { multi, zoom, chart } = watchMetric(render)
 
+console.log('zoom', zoom)
+
 // ---------------------------------- 其他 ----------------------------------
 
 /** 颜色查找器 */

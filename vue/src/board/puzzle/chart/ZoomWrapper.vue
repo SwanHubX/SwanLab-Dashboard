@@ -1,9 +1,9 @@
 <template>
   <!-- 外部统一设置节点样式 -->
   <div class="text-base">
-    <div class="chart-title">{{ chart.title }}</div>
-    <div class="chart-content">
-      <component :is="chartComponent" :chart="chart" :metricsData="metricsData" />
+    <div class="zoom-chart-title">{{ chart.title }}</div>
+    <div class="zoom-chart-content">
+      <component :is="chartComponent" />
     </div>
   </div>
 </template>
@@ -35,6 +35,13 @@ const chartComponent = computed(() => {
 const metricsData = computed(() => {
   return boardStore.$zoom?.data
 })
+
+provide('Zoom', true)
+provide('MetricsData', metricsData)
+provide(
+  'Chart',
+  computed(() => props.chart)
+)
 </script>
 
 <style lang="scss" scoped>

@@ -63,8 +63,9 @@ import {
   EyeInvisibleOutlined,
   EyeOutlined
 } from '@ant-design/icons-vue'
-import { Dropdown, Menu, MenuItem, Spin } from 'ant-design-vue'
+import { Dropdown, Menu, MenuItem } from 'ant-design-vue'
 import { t } from '@swanlab-vue/i18n'
+import { useBoardStore } from '@swanlab-vue/board/store'
 
 const props = defineProps({
   // 图表工具栏图标配置
@@ -84,17 +85,24 @@ const props = defineProps({
     default: false
   }
 })
+const boardStore = useBoardStore()
 /**
  * @type {Ref<HTMLDivElement>}
  */
 const toolbarRef = ref(null)
 const emits = defineEmits(['zoom'])
-const handleZoom = inject('zoomChartEvent')
+const zoomChartEvent = inject('zoomChartEvent')
 /** @type {SectionType} */
 const sType = inject('SectionType')
 /** @type {import('@swanlab-vue/board/ChartsBoard.vue').moveChartEvent} */
 const changeChartPinOrHide = inject('ChangeChartPinOrHide')
 const PinComponent = sType === 'PINNED' ? PushpinFilled : PushpinOutlined
+const metricsData = inject('MetricsData')
+
+const handleZoom = () => {
+  boardStore.$zoom = { data: metricsData.value }
+  zoomChartEvent()
+}
 
 /**
  * 工具栏图标配置属性

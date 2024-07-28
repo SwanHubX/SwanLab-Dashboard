@@ -7,7 +7,7 @@
         <div class="w-full h-full" :key="modalKey">
           <!-- 放大 -->
           <ZoomWrapper class="chart-wrapper" :chart="chart" v-if="mode == 'zoom'" />
-          <component :is="editComponent" :chart="chart" v-else />
+          <component :is="editComponent" :chart="chart" v-else-if="mode == 'edit'" />
         </div>
         <template #footer>
           <div class="flex h-full w-full items-center justify-between">
@@ -54,7 +54,7 @@ defineProps({
 /**
  * 放大模式还是编辑模式，放大模式下重新渲染一个ChartWrapper组件
  * 编辑模式下需要使用事件传递来来的组件完成渲染
- * @type {Ref<'zoom' | 'edit'>}
+ * @type {Ref<'zoom' | 'edit' | null>}
  */
 const mode = ref('zoom')
 /** 控制模态框的显示 */
@@ -73,6 +73,8 @@ provide('zoomChartEvent', () => {
 })
 const handleHidden = () => {
   open.value = false
+  mode.value = null
+  // 清空$zoom状态
 }
 </script>
 

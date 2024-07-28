@@ -102,7 +102,6 @@ const poller = new Poller()
 
 onMounted(() => {
   // 如果图表本身存在error字段，直接显示error图表而不开启轮询和获取数据
-
   poller.start(interval, async () => {
     try {
       /** @type {MetricData[]} */
@@ -129,7 +128,7 @@ onMounted(() => {
 onUnmounted(() => poller.stop())
 
 // ---------------------------------- 注入到图表组件 ----------------------------------
-// multi已经在上层注入
+// multi和zoom已经在上层注入
 provide('MetricsData', metricsData)
 provide(
   'Chart',
