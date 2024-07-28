@@ -66,7 +66,7 @@ export const useColorFinder = (chart, multi) => {
 /**
  * 监听指标变化，当指标变化时触发回调
  * 会立即触发一次，此时触发将在组件挂载的回调中执行，不用担心组件未挂载时的问题
- * @param {renderChart} render
+ * @param {renderChart} [render]
  * @returns {watchMetricResult}
  */
 export const watchMetric = (render) => {
@@ -75,8 +75,9 @@ export const watchMetric = (render) => {
   const multi = inject('Multi')
   const zoom = inject('Zoom', false)
   const chart = inject('Chart')
-  onMounted(() => {
-    watch(data, render, { immediate: true })
-  })
+  render &&
+    onMounted(() => {
+      watch(data, render, { immediate: true })
+    })
   return { chart, zoom, multi }
 }

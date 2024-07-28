@@ -22,7 +22,7 @@
         <Dropdown class="toolbar-button" v-model:open="open">
           <more-outlined style="transform: rotate(90deg)" />
           <template #overlay>
-            <Menu style="width: 120px" @click="handleMenuClick">
+            <Menu style="width: 150px" @click="handleMenuClick">
               <MenuItem auto-close @click="handleHidden" :disabled="hiddenLoading || disabled">
                 <div class="flex items-center gap-3">
                   <!-- 当前在非隐藏列 -->
@@ -171,6 +171,7 @@ const showToolbar = inject('ShowToolbar')
 <style lang="scss" scoped>
 .chart-toolbar {
   @apply absolute w-full h-6 top-0 left-0 pt-1 pr-2 z-full;
+  @apply hidden md:block;
   .panel {
     @apply flex justify-end w-full items-center gap-2 text-dimmer;
   }

@@ -4,10 +4,13 @@
     <div class="w-full h-full bg-white-default border rounded relative">
       <ChartWrapper class="chart-wrapper" :chart="chart" />
       <a-modal v-model:open="open" width="100%" wrap-class-name="chart-zoom-modal">
+        <template #closeIcon></template>
         <div class="w-full h-full" :key="modalKey">
           <!-- 放大 -->
           <ZoomWrapper class="chart-wrapper" :chart="chart" v-if="mode == 'zoom'" />
+          <!-- 编辑 -->
           <component :is="editComponent" :chart="chart" v-else-if="mode == 'edit'" />
+          <!-- 下载 -->
         </div>
         <template #footer>
           <div class="flex h-full w-full items-center justify-between">
@@ -19,7 +22,7 @@
               <Button size="large" class="font-semibold" @click="handleHidden">{{ $t('chart.zoom.close') }}</Button>
             </template>
             <!-- 编辑模式 -->
-            <template v-else> </template>
+            <template v-else-if="mode == 'edit'"> </template>
           </div>
         </template>
       </a-modal>
@@ -100,16 +103,6 @@ const handleHidden = () => {
     height: 10%;
     margin-top: 0;
     @apply py-4 px-6  bg-higher border-t  rounded-b-lg;
-  }
-  .ant-modal-close {
-    display: none;
-    width: 50px;
-    height: 50px;
-    .ant-modal-close-x {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
   }
 }
 

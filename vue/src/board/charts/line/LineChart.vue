@@ -1,11 +1,11 @@
 <template>
-  <ChartToolBar />
+  <LineToolBar />
   <LineLayout :captured="chart.captured" :multi="multi">
     <template #legends>
       <LineLegends :legends="legends" :cIndex="chart.index" />
     </template>
     <template #chart>
-      <g2-line :chart="chart" :colorFinder="colorFinder" :zoom="zoom" :multi="multi" ref="g2LineRef" />
+      <g2-line :chart="chart" :zoom="zoom" :multi="multi" ref="g2LineRef" />
     </template>
   </LineLayout>
 </template>
@@ -16,7 +16,7 @@
  * @file: LineChart.vue
  * @since: 2024-07-14 20:53:33
  **/
-import ChartToolBar from '../.components/ChartToolBar.vue'
+import LineToolBar from './components/LineToolBar.vue'
 import { useColorFinder, watchMetric } from '../toolkit'
 import G2Line from './components/G2Line.vue'
 import LineLayout from './components/LineLayout.vue'
@@ -32,6 +32,7 @@ const { multi, zoom, chart } = watchMetric(render)
 
 /** 颜色查找器 */
 const colorFinder = useColorFinder(chart.value, multi)
+provide('ColorFinder', colorFinder)
 
 const metrics = computed(() => {
   return chart.value.metrics.filter((metric) => metric.column.class !== 'SYSTEM')
