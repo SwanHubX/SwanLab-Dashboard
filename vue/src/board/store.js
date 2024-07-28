@@ -6,15 +6,18 @@ export const useBoardStore = defineStore('board', () => {
   const $smooth = shallowRef({ detail: null, value: 0 })
   /** @type {import('vue').ShallowRef<LineHoverInfo>} 折线图全局悬浮 */
   const $hover = shallowRef(null)
-  /** @type {import('vue').ShallowRef<ThickInfo>} 折线图全局粗细 */
+  /** @type {import('vue').ShallowRef<LineThickInfo>} 折线图全局粗细 */
   const $thick = shallowRef(null)
+  /** @type {import('vue').ShallowRef<ZoomInfo>} 图表放大信息 */
+  const $zoom = shallowRef(null)
 
   // ---------------------------------- action ----------------------------------
 
   return {
     $smooth,
     $hover,
-    $thick
+    $thick,
+    $zoom
   }
 })
 
@@ -39,7 +42,13 @@ export const useBoardStore = defineStore('board', () => {
 
 /**
  * 折线图粗细信息，所有的粗细信息都为被动触发，只需要设置此信息即可
- * @typedef {Object} ThickInfo
+ * @typedef {Object} LineThickInfo
  * @property {import('./charts/line/components/line').SeriesDetail} detail 当前加粗的系列
  * @property {Boolean} zoom 当前加粗信息是否来自于zoom的图表，如果是则只触发zoom的加粗回调
+ */
+
+/**
+ * 图表放大信息
+ * @typedef {Object} ZoomInfo
+ * @property {MetricData[]} data
  */

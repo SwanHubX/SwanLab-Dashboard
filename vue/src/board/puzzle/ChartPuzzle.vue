@@ -1,11 +1,12 @@
 <template>
   <!-- 最外层接受父组件class，设置为absolute，当hover的时候设置z-index在最前 -->
-  <div @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave" :style="{ zIndex }">
+  <ZIndexFull>
     <div class="w-full h-full bg-white-default border rounded relative">
-      <ChartWrapper :chart="chart" />
+      <ChartWrapper class="chart-wrapper" :chart="chart" />
       <a-modal v-model:open="open" width="100%" wrap-class-name="chart-zoom-modal">
         <div class="w-full h-full" :key="modalKey">
-          <ChartWrapper :chart="chart" zoom v-if="mode == 'zoom'" />
+          <!-- 放大 -->
+          <ZoomWrapper class="chart-wrapper" :chart="chart" v-if="mode == 'zoom'" />
           <component :is="editComponent" :chart="chart" v-else />
         </div>
         <template #footer>
@@ -23,7 +24,7 @@
         </template>
       </a-modal>
     </div>
-  </div>
+  </ZIndexFull>
 </template>
 
 <script setup>
@@ -33,6 +34,8 @@
  * @since: 2024-07-14 20:57:49
  **/
 import ChartWrapper from './chart/ChartWrapper.vue'
+import ZIndexFull from './chart/ZIndexFull.vue'
+import ZoomWrapper from './chart/ZoomWrapper.vue'
 import { Button } from 'ant-design-vue'
 defineProps({
   /** 图表配置 */
@@ -47,7 +50,6 @@ defineProps({
     default: false
   }
 })
-
 // ---------------------------------- 模态框选择 ----------------------------------
 /**
  * 放大模式还是编辑模式，放大模式下重新渲染一个ChartWrapper组件
@@ -72,19 +74,6 @@ provide('zoomChartEvent', () => {
 const handleHidden = () => {
   open.value = false
 }
-
-// ---------------------------------- absolute配置，当hover的时候设置z-index ----------------------------------
-const hovering = ref(false)
-// 999为toolbar的sticky z-index，不可设置大于等于1000，因为ant-design-vue的modal的z-index是1000
-const zIndex = computed(() => (hovering.value ? 998 : undefined))
-const handleMouseEnter = () => {
-  hovering.value = true
-}
-const handleMouseLeave = () => {
-  hovering.value = false
-}
-
-provide('ShowToolbar', hovering)
 </script>
 
 <style lang="scss" scoped></style>
@@ -120,5 +109,9 @@ provide('ShowToolbar', hovering)
       justify-content: center;
     }
   }
+}
+
+.chart-wrapper {
+  @apply h-full w-full relative top-0 left-0 rounded py-4 px-3;
 }
 </style>

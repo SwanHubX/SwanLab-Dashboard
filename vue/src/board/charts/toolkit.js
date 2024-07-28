@@ -56,19 +56,27 @@ export const useColorFinder = (chart, multi) => {
  */
 
 /**
- * 用于监听指标变化的函数
- * @callback MetricWatchFunc
- * @returns {MetricData[]}
+ * 执行 {@link watchMetric} 后的返回值
+ * @typedef {Object} watchMetricResult
+ * @property {ComputedRef<Chart>} chart 当前图表配置
+ * @property {Boolean} zoom 此图表是否处于缩放状态
+ * @property {Boolean} multi 此图表是否为多实验图表
  */
 
 /**
  * 监听指标变化，当指标变化时触发回调
  * 会立即触发一次，此时触发将在组件挂载的回调中执行，不用担心组件未挂载时的问题
- * @param {MetricWatchFunc} getter
  * @param {renderChart} render
+ * @returns {watchMetricResult}
  */
-export const watchMetric = (getter, render) => {
+export const watchMetric = (render) => {
+  /** @type {import('vue').ShallowRef<MetricData[]>} */
+  const data = inject('MetricsData')
+  const multi = inject('Multi')
+  const zoom = inject('Zoom', false)
+  const chart = inject('Chart')
   onMounted(() => {
-    watch(getter, render, { immediate: true })
+    watch(data, render, { immediate: true })
   })
+  return { chart, zoom, multi }
 }

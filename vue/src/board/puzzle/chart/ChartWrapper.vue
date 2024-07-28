@@ -1,5 +1,6 @@
 <template>
-  <div class="h-full w-full relative top-0 left-0 rounded py-4 px-3">
+  <!-- 外部统一设置节点样式 -->
+  <div>
     <div class="flex items-center justify-center h-full z-10" v-if="state === 'loading'">
       <Spin />
     </div>
@@ -9,9 +10,9 @@
     </div>
     <div class="w-full h-full text-base" v-else>
       <!-- 标题 -->
-      <div class="chart-title" :class="{ 'zoom-chart-title': zoom }">{{ chart.title }}</div>
-      <div class="chart-content" :class="{ 'zoom-chart-content': zoom }">
-        <component :is="chartComponent" :chart="chart" :metricsData="metricsData" :zoom="zoom" :multi="multi" />
+      <div class="chart-title">{{ chart.title }}</div>
+      <div class="chart-content">
+        <component :is="chartComponent" />
       </div>
     </div>
   </div>
@@ -39,11 +40,6 @@ const props = defineProps({
   draggable: {
     type: Boolean,
     default: false
-  },
-  /** 是否为放大环境 */
-  zoom: {
-    type: Boolean,
-    default: false
   }
 })
 /** @type {ComputedRef<Component>} */
@@ -57,7 +53,6 @@ const chartComponent = computed(() => {
 const getter = props.chart.type === 'LINE' ? inject('ScalarConstructor') : inject('MediaConstructor')
 /** @type {ComputedRef<Number>} 是否继续轮询 */
 const interval = inject('Interval')
-const multi = inject('Multi')
 /**
  * 此图表的数据
  * @type {import("vue").ShallowRef<null | MetricData[]>}
@@ -132,27 +127,24 @@ onMounted(() => {
 })
 
 onUnmounted(() => poller.stop())
+
+// ---------------------------------- 注入到图表组件 ----------------------------------
+// multi已经在上层注入
+provide('MetricsData', metricsData)
+provide(
+  'Chart',
+  computed(() => props.chart)
+)
 </script>
 
 <style lang="scss" scoped>
 $chart-title-height: 13%;
-$chart-title-zoom-height: 8%;
 .chart-title {
   @apply flex items-center justify-center font-semibold pb-1 pt-2;
   height: $chart-title-height;
 }
 
-.zoom-chart-title {
-  @apply text-2xl;
-  padding-bottom: 0.5rem !important;
-  height: $chart-title-zoom-height !important;
-}
-
 .chart-content {
   height: calc(100% - #{$chart-title-height});
-}
-
-.zoom-chart-content {
-  height: calc(100% - #{$chart-title-zoom-height});
 }
 </style>

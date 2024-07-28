@@ -387,7 +387,7 @@ export const createLine = (dom, lineData, cIndex, maps, zoom, multi, callback) =
       data: evt.data.items.map((item) => item.data),
       zoom
     }
-    // 更新store中的thickInfo
+    // 更新store中的LineThickInfo
     boardStore.$thick = {
       detail,
       zoom
