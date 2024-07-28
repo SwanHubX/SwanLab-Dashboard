@@ -3,7 +3,7 @@
   <div class="flex flex-col justify-center h-full pb-5">
     <Empty :image="simpleImage">
       <template #description>
-        <span>{{ $t('chart.chart.empty.description') }}</span>
+        <span class="select-none">{{ $t('chart.chart.empty.description') }}</span>
       </template>
     </Empty>
   </div>
