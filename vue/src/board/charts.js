@@ -1,11 +1,18 @@
 import C from './.charts'
 import T from './toolbar'
-
-/**
- * @typedef {Object} ChartComponents
- * @property {Component} chart
- * @property {Component} toolbar
- */
+import Z from './zoom'
+class ChartComponents {
+  /**
+   * @param {Component} chart 图表组件
+   * @param {Component} [toolbar] 工具栏组件
+   * @param {Component} [zoom] 缩放组件
+   */
+  constructor(chart, toolbar = T.chart, zoom = Z.zoom) {
+    this.chart = chart
+    this.toolbar = toolbar
+    this.zoom = zoom
+  }
+}
 
 /**
  * @typedef {Object} ChartsComponents
@@ -21,28 +28,10 @@ import T from './toolbar'
  * @type {ChartsComponents} 图表组件
  */
 export default {
-  line: {
-    chart: C.line,
-    toolbar: T.line
-  },
-  audio: {
-    chart: C.audio,
-    toolbar: T.chart
-  },
-  image: {
-    chart: C.image,
-    toolbar: T.chart
-  },
-  text: {
-    chart: C.text,
-    toolbar: T.chart
-  },
-  error: {
-    chart: C.error,
-    toolbar: T.chart
-  },
-  empty: {
-    chart: C.empty,
-    toolbar: T.empty
-  }
+  line: new ChartComponents(C.line, T.line),
+  audio: new ChartComponents(C.audio),
+  image: new ChartComponents(C.image),
+  text: new ChartComponents(C.text),
+  error: new ChartComponents(C.error),
+  empty: new ChartComponents(C.empty, T.empty)
 }

@@ -42,7 +42,7 @@ const colorFinder = inject('ColorFinder')
 const g2Ref = ref(null)
 
 /**
- * @type {Ref<L.LineData[]>}
+ * @type {Ref<LineData[]>}
  */
 const nowData = shallowRef([])
 const boardStore = useBoardStore()

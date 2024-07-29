@@ -8,21 +8,14 @@ export const useBoardStore = defineStore('board', () => {
   const $hover = shallowRef(null)
   /** @type {import('vue').ShallowRef<LineThickInfo>} 折线图全局粗细 */
   const $thick = shallowRef(null)
-  /** @type {import('vue').ShallowRef<ZoomInfo>} 图表放大信息 */
-  const $zoom = shallowRef(null)
+  /** @type {import('vue').ShallowRef<ChartPuzzleModalInfo>} 模态框信息 */
+  const $modal = shallowRef(null)
 
   // ---------------------------------- action ----------------------------------
-
   return {
     $smooth,
     $hover,
     $thick,
-    $zoom
+    $modal
   }
 })
-
-/**
- * 图表放大信息
- * @typedef {Object} ZoomInfo
- * @property {MetricData[]} data
- */

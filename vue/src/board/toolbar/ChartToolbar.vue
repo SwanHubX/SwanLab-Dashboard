@@ -85,8 +85,6 @@ const boardStore = useBoardStore()
  * @type {Ref<HTMLDivElement>}
  */
 const toolbarRef = ref(null)
-/** @type {import('../../puzzle/ChartPuzzle.vue').OpenModalEvent} */
-const openModalEvent = inject('openModalEvent')
 /** @type {SectionType} */
 const sType = inject('SectionType')
 /** @type {import('@swanlab-vue/board/ChartsBoard.vue').moveChartEvent} */
@@ -97,8 +95,12 @@ const metricsData = inject('MetricsData')
 const chart = inject('Chart')
 
 const handleZoom = () => {
-  boardStore.$zoom = { data: metricsData.value }
-  openModalEvent('zoom')
+  boardStore.$modal = {
+    mode: 'zoom',
+    chart: chart.value,
+    zoom: metricsData.value,
+    cl: 'chart-zoom-modal'
+  }
 }
 
 /**

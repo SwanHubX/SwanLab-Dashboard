@@ -1,4 +1,3 @@
-import { customRef } from 'vue'
 /**
  * 解析chart中包含的指标信息，只获取其中列为'CUSTOM'的指标
  * @param {Chart} chart 图表配置

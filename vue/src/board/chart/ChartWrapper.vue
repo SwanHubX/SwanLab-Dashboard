@@ -1,6 +1,6 @@
 <template>
-  <!-- 外部统一设置节点样式 -->
-  <div>
+  <!-- 为了保持与缩放后padding等属性的一致性，此处必须得设置为chart-wrapper,来自ChartPuzzle.vue -->
+  <div class="chart-wrapper">
     <div class="flex items-center justify-center h-full z-10" v-if="state === 'loading'">
       <Spin />
     </div>
@@ -27,31 +27,27 @@
  **/
 import { onErrorCaptured } from 'vue'
 import { Spin } from 'ant-design-vue'
-import charts from '../../charts'
+import charts from '../charts'
 import { parseChartMetrics } from './utils'
 import Poller from './poller'
-const props = defineProps({
-  /** 图表配置 */
-  chart: {
-    /** @type {PropType<Chart>} */
-    type: Object,
-    required: true
-  },
+defineProps({
   /** 是否可拖拽 */
   draggable: {
     type: Boolean,
     default: false
   }
 })
+/** @type {ComputedRef<Chart>} */
+const chart = inject('Chart')
 /** @type {ComputedRef<{chart:Component, toolbar:Component}>} */
 const chartComponent = computed(() => {
   if (state.value === 'error') return charts.error
   if (state.value === 'empty') return charts.empty
-  return charts[props.chart.type.toLowerCase()]
+  return charts[chart.value.type.toLowerCase()]
 })
 
 /** @type {import('@swanlab-vue/board/ChartsBoard.vue').MediaMetricsConstructor | import('@swanlab-vue/board/ChartsBoard.vue').ScalarMetricsConstructor} */
-const getter = props.chart.type === 'LINE' ? inject('ScalarConstructor') : inject('MediaConstructor')
+const getter = chart.value.type === 'LINE' ? inject('ScalarConstructor') : inject('MediaConstructor')
 /** @type {ComputedRef<Number>} 是否继续轮询 */
 const interval = inject('Interval')
 /**
@@ -98,7 +94,7 @@ onErrorCaptured((err) => {
 
 // ---------------------------------- metric获取/更新 ----------------------------------
 
-const metrics = parseChartMetrics(props.chart)
+const metrics = parseChartMetrics(chart.value)
 const poller = new Poller()
 
 onMounted(() => {
@@ -129,12 +125,7 @@ onMounted(() => {
 onUnmounted(() => poller.stop())
 
 // ---------------------------------- 注入到图表组件 ----------------------------------
-// multi和zoom已经在上层注入
 provide('MetricsData', metricsData)
-provide(
-  'Chart',
-  computed(() => props.chart)
-)
 </script>
 
 <style lang="scss" scoped>

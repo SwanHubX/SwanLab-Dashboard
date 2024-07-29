@@ -1,9 +1,20 @@
 <template>
-  <!-- 外部统一设置节点样式 -->
-  <div class="text-base">
-    <div class="zoom-chart-title">{{ chart.title }}</div>
-    <div class="zoom-chart-content">
-      <component :is="chartComponent.chart" />
+  <!-- 放大 -->
+  <div class="zoom-modal">
+    <div class="zoom-modal-body">
+      <!-- 为了保持与缩放前padding等属性的一致性，此处必须得设置为chart-wrapper,来自ChartPuzzle.vue -->
+      <div class="text-base chart-wrapper">
+        <div class="zoom-chart-title">{{ chart.title }}</div>
+        <div class="zoom-chart-content">
+          <component :is="chartComponent.chart" />
+        </div>
+      </div>
+    </div>
+    <div class="zoom-modal-footer">
+      <div v-tippy="{ content: $t('chart.zoom.tips.edit') }">
+        <Button size="large" disabled>{{ $t('chart.zoom.edit') }}</Button>
+      </div>
+      <Button size="large" class="font-semibold" @click="handleHidden">{{ $t('chart.zoom.close') }}</Button>
     </div>
   </div>
 </template>
@@ -15,33 +26,29 @@
  * @file: ZoomWrapper.vue
  * @since: 2024-07-28 17:08:20
  **/
+import { Button } from 'ant-design-vue'
 import { useBoardStore } from '@swanlab-vue/board/store'
 import charts from '../charts'
-const props = defineProps({
-  /** 图表配置 */
-  chart: {
-    /** @type {PropType<Chart>} */
-    type: Object,
-    required: true
-  }
-})
 const boardStore = useBoardStore()
+const chart = computed(() => boardStore.$modal.chart)
 
 /** @type {ComputedRef<{chart:Component, toolbar:Component}>} */
 const chartComponent = computed(() => {
-  return charts[props.chart.type.toLowerCase()]
+  return charts[boardStore.$modal.chart.type.toLocaleLowerCase()]
 })
 
+/** @type {ComputedRef<ChartPuzzleModalZoomInfo>} */
 const metricsData = computed(() => {
-  return boardStore.$zoom?.data
+  return boardStore.$modal.zoom
 })
 
 provide('Zoom', true)
 provide('MetricsData', metricsData)
-provide(
-  'Chart',
-  computed(() => props.chart)
-)
+
+// ---------------------------------- 关闭 ----------------------------------
+const handleHidden = () => {
+  boardStore.$modal = null
+}
 </script>
 
 <style lang="scss" scoped>
@@ -55,5 +62,43 @@ $chart-title-zoom-height: 8%;
 
 .zoom-chart-content {
   height: calc(100% - #{$chart-title-zoom-height});
+}
+
+.zoom-modal {
+  @apply w-full h-full;
+  .zoom-modal-body {
+    height: 90%;
+  }
+  .zoom-modal-footer {
+    height: 10%;
+    @apply py-4 px-6  bg-higher border-t  rounded-b-lg;
+    @apply flex items-center justify-between;
+  }
+}
+</style>
+
+<style lang="scss">
+// 通过cl传递给模态框设置样式
+.chart-zoom-modal {
+  @apply flex justify-center items-center;
+  .ant-modal {
+    max-width: 80%;
+    top: 0;
+    padding-bottom: 0;
+    margin: 0;
+  }
+  .ant-modal-content {
+    height: calc(80vh);
+    padding: 0;
+  }
+  .ant-modal-body {
+    width: 100%;
+    height: 100%;
+  }
+  .ant-modal-footer {
+    height: 10%;
+    margin-top: 0;
+    @apply py-4 px-6  bg-higher border-t  rounded-b-lg;
+  }
 }
 </style>
