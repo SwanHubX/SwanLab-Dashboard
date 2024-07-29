@@ -28,6 +28,7 @@
  * ChartPuzzle模态框下载信息，目前的下载只单纯为下载折线图，这将在toolbar内部屏蔽其他图表的下载
  * @typedef {Object} ChartPuzzleModalDownloadInfo
  * @property {'png'} type 下载类型，目前只支持png
+ * @property {MetricData[]} data 下载的数据
  */
 
 /**

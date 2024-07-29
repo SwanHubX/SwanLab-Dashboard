@@ -62,16 +62,20 @@
     "toolbar": {
       "download": {
         "title": "Download",
-        "png": {
-          "menuItem": "PNG",
-          "title": "Export PNG",
-          "button": "Download PNG"
-        },
-        "csv": {
-          "menuItem": "CSV (Coming soon)",
-          "title": "Export CSV",
-          "button": "Download CSV"
-        }
+        "png": "PNG",
+        "csv": "CSV (Coming soon)"
+      }
+    }
+  },
+  "download": {
+    "line": {
+      "png": {
+        "title": "Export PNG",
+        "button": "Download PNG"
+      },
+      "csv": {
+        "title": "Export CSV",
+        "button": "Download CSV"
       }
     }
   }

@@ -62,16 +62,20 @@
     "toolbar": {
       "download": {
         "title": "下载",
-        "png": {
-          "menuItem": "PNG",
-          "title": "导出为PNG",
-          "button": "下载PNG"
-        },
-        "csv": {
-          "menuItem": "CSV (即将推出)",
-          "title": "导出为CSV",
-          "button": "下载CSV"
-        }
+        "png": "PNG",
+        "csv": "CSV (即将推出)"
+      }
+    }
+  },
+  "download": {
+    "line": {
+      "png": {
+        "title": "导出为PNG",
+        "button": "下载PNG"
+      },
+      "csv": {
+        "title": "导出为CSV",
+        "button": "下载CSV"
       }
     }
   }

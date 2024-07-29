@@ -12,7 +12,7 @@
  **/
 
 const hovering = ref(false)
-// 999为toolbar的sticky z-index，不可设置大于等于1000，因为ant-design-vue的modal的z-index是1000
+// 999为toolbar的sticky z-index，不可设置大于等于1500，因为ant-design-vue的modal的z-index被设置为了1500
 const zIndex = computed(() => (hovering.value ? 998 : undefined))
 const handleMouseEnter = () => {
   hovering.value = true

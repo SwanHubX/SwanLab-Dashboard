@@ -41,7 +41,7 @@ const props = defineProps({
   },
   /** 提示框数据 */
   data: {
-    /** @type {PropType<import('./line').LineData[]>} */
+    /** @type {PropType<LineData[]>} */
     type: Array,
     required: true
   },
