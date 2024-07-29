@@ -12,10 +12,16 @@ export const useBoardStore = defineStore('board', () => {
   const $modal = shallowRef(null)
 
   // ---------------------------------- action ----------------------------------
+  /**
+   * 关闭模态框，[ChartPuzzle.vue](./puzzle/ChartPuzzle.vue) 将会监听此事件
+   * 这用于在模态框内部关闭模态框——即使这个函数不做任何事情
+   */
+  const closeModal = () => {}
   return {
     $smooth,
     $hover,
     $thick,
-    $modal
+    $modal,
+    closeModal
   }
 })

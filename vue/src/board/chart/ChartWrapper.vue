@@ -1,6 +1,6 @@
 <template>
-  <!-- 为了保持与缩放后padding等属性的一致性，此处必须得设置为chart-wrapper,来自ChartPuzzle.vue -->
-  <div class="chart-wrapper">
+  <!-- 这串class与zoom目前为一致的 -->
+  <div class="h-full w-full relative top-0 left-0 rounded py-4 px-3">
     <div class="flex items-center justify-center h-full z-10" v-if="state === 'loading'">
       <Spin />
     </div>

@@ -6,7 +6,7 @@
       <a-modal v-model:open="open" width="100%" :wrap-class-name="modalWrapperClass" :footer="null">
         <template #closeIcon></template>
         <div class="w-full h-full">
-          <component :is="chartComponents[mode]" v-if="mode" />
+          <component :is="chartComponents[mode]" :key="key" v-if="mode" />
         </div>
       </a-modal>
     </div>
@@ -48,24 +48,28 @@ const mode = computed(() => boardStore.$modal?.mode)
 const modalWrapperClass = computed(() => boardStore.$modal?.cl)
 /** 控制模态框的显示 */
 const open = ref(false)
-watch(
-  () => boardStore.$modal,
-  (newVal) => {
-    if (newVal === null) return (open.value = false)
-    if (newVal.chart.index !== props.chart.index) return
-    open.value = true
-  }
-)
-watch(open, (newVal) => {
-  if (!newVal) {
-    boardStore.$modal = null
+/**
+ * 为了防止抖动，当模态框关闭时不应该立即清空modal状态，而是等待模态框再次开启时清空
+ * 因此需要增加一个key，用于开启时强制刷新组件
+ */
+const key = ref(0)
+// 监听模态框关闭
+boardStore.$onAction(({ name }) => {
+  if (name === 'closeModal') {
+    open.value = false
   }
 })
+
+// 设置 $modal 时模态框开启
+watch(
+  () => boardStore.$modal,
+  () => {
+    if (boardStore.$modal && boardStore.$modal.chart.index === props.chart.index) {
+      open.value = true
+      key.value++
+    }
+  }
+)
 </script>
 
 <style lang="scss" scoped></style>
-<style lang="scss">
-.chart-wrapper {
-  @apply h-full w-full relative top-0 left-0 rounded py-4 px-3;
-}
-</style>

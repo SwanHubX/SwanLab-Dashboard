@@ -1,9 +1,8 @@
 <template>
-  <!-- 放大 -->
-  <div class="zoom-modal">
-    <div class="zoom-modal-body">
-      <!-- 为了保持与缩放前padding等属性的一致性，此处必须得设置为chart-wrapper,来自ChartPuzzle.vue -->
-      <div class="text-base chart-wrapper">
+  <div class="w-full h-full">
+    <div class="zoom-wrapper">
+      <!--  这串class与chart目前是一致的 -->
+      <div class="h-full w-full relative top-0 left-0 rounded py-4 px-3">
         <div class="zoom-chart-title">{{ chart.title }}</div>
         <div class="zoom-chart-content">
           <component :is="chartComponent.chart" />
@@ -47,33 +46,29 @@ provide('MetricsData', metricsData)
 
 // ---------------------------------- 关闭 ----------------------------------
 const handleHidden = () => {
-  boardStore.$modal = null
+  boardStore.closeModal()
 }
 </script>
 
 <style lang="scss" scoped>
 $chart-title-zoom-height: 8%;
-
-.zoom-chart-title {
-  @apply flex items-center justify-center font-semibold py-2;
-  @apply text-2xl;
-  height: $chart-title-zoom-height;
-}
-
-.zoom-chart-content {
-  height: calc(100% - #{$chart-title-zoom-height});
-}
-
-.zoom-modal {
-  @apply w-full h-full;
-  .zoom-modal-body {
-    height: 90%;
+.zoom-wrapper {
+  height: 90%;
+  .zoom-chart-title {
+    @apply flex items-center justify-center font-semibold py-2;
+    @apply text-2xl;
+    height: $chart-title-zoom-height;
   }
-  .zoom-modal-footer {
-    height: 10%;
-    @apply py-4 px-6  bg-higher border-t  rounded-b-lg;
-    @apply flex items-center justify-between;
+
+  .zoom-chart-content {
+    height: calc(100% - #{$chart-title-zoom-height});
+    @apply text-base;
   }
+}
+.zoom-modal-footer {
+  height: 10%;
+  @apply py-4 px-6  bg-higher border-t  rounded-b-lg;
+  @apply flex items-center justify-between;
 }
 </style>
 
