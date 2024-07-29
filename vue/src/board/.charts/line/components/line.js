@@ -40,26 +40,6 @@ const transparentColor = (color, opacity = 0.1) => {
 }
 
 /**
- * 这个数据类型的详细信息
- * @typedef {Object} SeriesDetail
- * @property {IndexId} series 数据唯一识别字符串，也就是series
- * @property {String} name 前端显示的名称
- * @property {IndexId} experimentId 实验id
- * @property {String} key 数据的key
- * @property {String} color 颜色
- * @property {Boolean} smooth 是否平滑
- */
-
-/**
- * @typedef {Object} LineData
- * @property {Number} data 数据
- * @property {Number} index 步数
- * @property {string} series 数据类型标识，这b图表不支持使用类型，只能用字符串 🤡
- * @property {SeriesDetail} detail 数据配置，包含这个series的更多信息
- * @property {Boolean} _last 是否是最后一个点
- */
-
-/**
  * @typedef {Object} LineMaps
  * @property {Map} color key为series，value为color
  * @property {Map} experiment key为实验id，value为空列表（进一步计算element映射时使用）
@@ -75,7 +55,7 @@ const transparentColor = (color, opacity = 0.1) => {
  * 将标量数据展平为一维数组，并且形成type-color映射关系
  * @param {ScalarData[]} scalars
  * @param {import('../../toolkit').colorFinder} colorFinder
- * @param {import('@swanlab-vue/board/store').LineSmoothInfo} [smooth]
+ * @param {LineSmoothInfo} [smooth]
  * @returns {fmtScalar2LineResult}
  */
 export const fmtScalar2Line = (scalars, colorFinder, smooth) => {
@@ -92,7 +72,7 @@ export const fmtScalar2Line = (scalars, colorFinder, smooth) => {
       experimentId: scalar.experimentId,
       key: scalar.key
     })
-    /** @type {SeriesDetail} */
+    /** @type {LineSeriesDetail} */
     const detail = {
       name: scalar.name,
       series,
@@ -145,7 +125,7 @@ const groupElementByExpId = (elements, elMap, length) => {
   // console.log('elements', elements)
   for (const el of elements) {
     const model = el.getModel()
-    /** @type {SeriesDetail} */
+    /** @type {LineSeriesDetail} */
     let detail = null
     // 需要注意的是每一个元素的data代表映射的样式数据，这可能是一个Object，也可能是一个Object[]
     if (Array.isArray(model.data)) {

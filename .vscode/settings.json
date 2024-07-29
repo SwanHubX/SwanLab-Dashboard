@@ -24,7 +24,9 @@
     "migrate": "Husky",
     "business": "components",
     "empty": "error",
-    "toolbar": "tools"
+    "toolbar": "tools",
+    "zoom": "desktop",
+    "edit": "custom"
   },
   "material-icon-theme.files.associations": {
     ".env.mock": "Tune"

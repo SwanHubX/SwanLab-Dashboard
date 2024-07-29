@@ -31,20 +31,6 @@
   </ZIndexFull>
 </template>
 
-<script>
-/**
- * 模态框模式
- * @typedef {'zoom' | 'edit' | 'download' | null} ModalMode
- */
-
-/**
- * @callback OpenModalEvent
- * @param {ModalMode} m 模态框模式
- * @param {Component} [c] 下载或者编辑模式下传递来动态渲染的组件
- * @param {String} [cl] 模态框的类名，用于控制大小，注意必须是全局类名
- */
-</script>
-
 <script setup>
 /**
  * @description: 图表拼图容器，关注拖拽逻辑和放大等逻辑，而不关心具体图表是什么以及里面的状态
@@ -55,6 +41,7 @@ import ChartWrapper from './chart/ChartWrapper.vue'
 import ZIndexFull from './chart/ZIndexFull.vue'
 import ZoomWrapper from './chart/ZoomWrapper.vue'
 import { Button } from 'ant-design-vue'
+import charts from '../charts'
 defineProps({
   /** 图表配置 */
   chart: {
@@ -87,7 +74,7 @@ const modalWrapperClass = ref(null)
 
 provide(
   'openModalEvent',
-  /** @type {OpenModalEvent} */ (m, c, cl) => {
+  /** @type {ChartPuzzleModalEvent} */ (m, c, cl) => {
     open.value = true
     mode.value = m
     modalKey.value += 1
