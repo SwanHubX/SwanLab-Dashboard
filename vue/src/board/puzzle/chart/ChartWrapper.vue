@@ -27,7 +27,7 @@
  **/
 import { onErrorCaptured } from 'vue'
 import { Spin } from 'ant-design-vue'
-import charts from './charts'
+import charts from '../../charts'
 import { parseChartMetrics } from './utils'
 import Poller from './poller'
 const props = defineProps({

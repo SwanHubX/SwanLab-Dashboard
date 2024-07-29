@@ -16,7 +16,7 @@
  * @since: 2024-07-28 17:08:20
  **/
 import { useBoardStore } from '@swanlab-vue/board/store'
-import charts from './charts'
+import charts from '../../charts'
 const props = defineProps({
   /** 图表配置 */
   chart: {
