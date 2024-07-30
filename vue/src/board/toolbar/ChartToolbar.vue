@@ -90,6 +90,7 @@ const sType = inject('SectionType')
 /** @type {import('@swanlab-vue/board/ChartsBoard.vue').moveChartEvent} */
 const changeChartPinOrHide = inject('ChangeChartPinOrHide')
 const PinComponent = sType === 'PINNED' ? PushpinFilled : PushpinOutlined
+/** @type {ComputedRef<MetricData[]>} */
 const metricsData = inject('MetricsData')
 /** @type {ComputedRef<Chart>} */
 const chart = inject('Chart')
@@ -98,7 +99,12 @@ const handleZoom = () => {
   boardStore.$modal = {
     mode: 'zoom',
     chart: chart.value,
-    zoom: metricsData.value,
+    /**
+     * @type {ChartPuzzleModalZoomInfo}
+     */
+    zoom: {
+      data: metricsData.value
+    },
     cl: 'chart-zoom-modal'
   }
 }

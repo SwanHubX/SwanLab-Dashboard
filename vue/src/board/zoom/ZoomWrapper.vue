@@ -36,9 +36,9 @@ const chartComponent = computed(() => {
   return charts[boardStore.$modal.chart.type.toLocaleLowerCase()]
 })
 
-/** @type {ComputedRef<ChartPuzzleModalZoomInfo>} */
+/** @type {ComputedRef<MetricData[]>} */
 const metricsData = computed(() => {
-  return boardStore.$modal.zoom
+  return boardStore.$modal.zoom.data
 })
 
 provide('Zoom', true)
@@ -75,7 +75,6 @@ $chart-title-zoom-height: 8%;
 <style lang="scss">
 // 通过cl传递给模态框设置样式
 .chart-zoom-modal {
-  @apply flex justify-center items-center;
   .ant-modal {
     max-width: 80%;
     top: 0;

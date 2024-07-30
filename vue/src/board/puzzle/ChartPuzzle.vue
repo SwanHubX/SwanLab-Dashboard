@@ -3,7 +3,14 @@
   <ZIndexFull>
     <div class="w-full h-full bg-white-default border rounded relative">
       <ChartWrapper />
-      <a-modal v-model:open="open" width="100%" :z-index="1500" :wrap-class-name="modalWrapperClass" :footer="null">
+      <a-modal
+        v-model:open="open"
+        width="100%"
+        :z-index="1500"
+        centered
+        :wrap-class-name="modalWrapperClass"
+        :footer="null"
+      >
         <template #closeIcon></template>
         <div class="w-full h-full">
           <component :is="chartComponents[mode]" :key="key" v-if="mode" />
