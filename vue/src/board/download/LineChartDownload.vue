@@ -21,7 +21,7 @@
       </div>
       <!-- 展示部分 -->
       <div class="show-container">
-        <div class="mx-auto" :style="{ width: width + 'px', height: height + 'px' }">
+        <div class="mx-auto" :style="{ width: width + 'px', height: height + 'px' }" ref="chartRef">
           <!-- 标题 -->
           <div class="show-title">
             <h1 class="text-center w-full text-base font-semibold">{{ boardStore.$modal.chart.title }}</h1>
@@ -50,6 +50,7 @@ import { Button, Input } from 'ant-design-vue'
 import { useBoardStore } from '../store'
 import { useI18n } from 'vue-i18n'
 import InputSlider from './components/InputSlider.vue'
+import html2canvas from 'html2canvas'
 const { t } = useI18n()
 
 const boardStore = useBoardStore()
@@ -61,7 +62,7 @@ const title = {
 const btnText = {
   png: t('chart.download.line.png.button')
 }
-
+const chartRef = ref(null)
 const metricsData = computed(() => boardStore.$modal.download.data)
 
 const type = computed(() => boardStore.$modal?.download?.type)
@@ -79,7 +80,23 @@ const placeholder = 'SwanLab-Chart_' + new Date().toLocaleString().replace(/[- :
 
 // ---------------------------------- 下载 ----------------------------------
 const handleDownload = () => {
-  console.log('下载')
+  // TODO 需要解藕
+  html2canvas(chartRef.value).then(async (canvas) => {
+    // 新建canvas，为canvas本身增加一圈白色边框
+    const borderWidth = 32
+    const newCanvas = document.createElement('canvas')
+    const ctx = newCanvas.getContext('2d')
+    newCanvas.width = canvas.width + borderWidth * 2
+    newCanvas.height = canvas.height + borderWidth * 2
+    ctx.fillStyle = '#fff'
+    ctx.fillRect(0, 0, newCanvas.width, newCanvas.height)
+    ctx.drawImage(canvas, borderWidth, borderWidth)
+    // 创建一个临时链接元素
+    const link = document.createElement('a')
+    link.href = newCanvas.toDataURL('image/png')
+    link.download = `${name.value || placeholder}.png`
+    link.click()
+  })
 }
 </script>
 
