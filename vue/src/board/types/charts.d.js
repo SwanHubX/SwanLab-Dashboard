@@ -80,14 +80,21 @@
  */
 
 /**
- * 列数据超集
- * 注意，这里是列数据！
- * 约定metrics可以为undefined，此时对于chart层面而言，数据不存在，此请求无效
- * @typedef {ColumnId & { type: 'scalar'| 'media', name: String}} MetricData
+ * 指标信息
+ * @typedef {Object} MetricInfo
+ * @property {String} name 指标名
+ * @property {'scalar'| 'media'} type 指标类型
  */
 
 /**
- * 标量数据存储对象
+ * 列数据超集
+ * 注意，这里是列数据！
+ * 约定metrics可以为undefined，此时对于chart层面而言，数据不存在，此请求无效
+ * @typedef {ColumnId & MetricInfo} MetricData
+ */
+
+/**
+ * 标量数据存储对象，单个图表下标量数据以数组形式存储，每个元素为此对象
  * 约定metrics可以为undefined，此时对于chart层面而言，数据不存在，此请求无效
  * @typedef {MetricData & {metrics?: ScalarDetail[], type: 'scalar'}} ScalarData
  */
@@ -101,49 +108,34 @@
  */
 
 /**
- * 媒体数据存储对象
+ * 媒体数据存储对象，与{@link ScalarData}不同，图表下媒体数据为此对象，而不是数组。
+ * 因此将{@link MediasData}作为一个图表数据集合
+ * @typedef {Object} MediasData
+ * @property {Number[]} steps 所有步数
+ * @property {Number} step 当前步数
+ * @property {MediaData[]} [metrics] 媒体数据
+ */
+
+/**
+ * 单个 {@link ColumnId} 对应的媒体数据
  * 约定metrics可以为undefined，此时对于chart层面而言，数据不存在，此请求无效
- * @typedef {MetricData & {metrics?: MediaDetail[], steps: Number[], type: 'media'}} MediaData
+ * @typedef {MetricData & {metrics?: MediaDetail[], type: 'media'}} MediaData
  */
 
 /**
  * 媒体更多信息存储超集
  * @typedef {Object} MediaMoreDetail
- * @property {String} caption 媒体描述
+ * @property {String} [caption] 媒体描述
  */
 
 /**
- * 针对对于单个指标的详细数据存储结构
- * @typedef {Object} MediaDetail
+ * @typedef {Object} MediaInfo
  * @property {Number} index 步数
- * @property {String[]} data 指标数据
+ * @property {String[]} metrics 指标数据
  * @property {Array<MediaMoreDetail|null>} [more] 指标数据的更多信息
  */
 
-// ---------------------------------- 折线图数据结构 ----------------------------------
-
 /**
- * 折线图图表配置
- * @typedef { Chart & {type: 'LINE'} } LineChart
- */
-
-// ---------------------------------- 图像数据结构 ----------------------------------
-
-/**
- * 图像图表配置
- * @typedef {Chart & {type: 'IMAGE'} } ImageChart
- */
-
-// ---------------------------------- 音频数据结构 ----------------------------------
-
-/**
- * 音频图表配置
- * @typedef {Chart & {type: 'AUDIO'} } AudioChart
- */
-
-// ---------------------------------- 文字图数据结构 ----------------------------------
-
-/**
- * 文字图表配置
- * @typedef {Chart & {type: 'TEXT'} } TextChart
+ * 针对对于单个媒体指标的详细数据存储结构
+ * @typedef {MediaInfo & MetricData} MediaDetail
  */

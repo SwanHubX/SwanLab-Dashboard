@@ -53,7 +53,7 @@ import http from '@swanlab-vue/api/http'
  * @property {ExpId} experiment_id 实验ID
  * @property {String} experiment_name 所属实验名称
  * @property {ColumnKey} key 指标名称
- * @property {ScalarDetail[]} list 指标数据
+ * @property {ScalarDetail[]|MediaDetail[]} list 指标数据
  */
 
 const generateXAxis = () => {
@@ -281,7 +281,32 @@ const formatLocalMultiScalarData = (metricsData) => {
 export const createGetMediaMetrics = (multi) => {
   /** @type {import('@swanlab-vue/board/ChartsBoard.vue').MediaMetricsConstructor} */
   return async (metrics, step) => {
-    console.log('getMediaMetrics', metrics, step)
+    /** @type {{data:OriginalMetricData}[]} */
+    const res = await Promise.all(metrics.map((m) => http.get(`/experiment/${m.experimentId}/tag/${m.key}`)))
+    /**
+     * @type {MediasData}
+     */
+    const md = { steps: [], step: step, metrics: [] }
+    const stepsMap = new Map()
+    // 查询res中对应的step数据
+
+    // 按照metrics的顺序，将数据格式化到md中
+    metrics.forEach((metric) => {
+      const r = res.find((v) => v.data.key === metric.key && v.data.experiment_id === metric.experimentId)
+      if (!r) return
+      const { experiment_id, experiment_name, key, list } = r.data
+      if (list?.length === 0) return // 无数据则忽略
+      /** @type {MediaData} */
+      const mediaData = {
+        type: 'media',
+        experimentId: experiment_id,
+        key,
+        name: multi ? experiment_name : key,
+        // @ts-ignore
+        metrics: list
+      }
+    })
+
     return []
   }
 }
