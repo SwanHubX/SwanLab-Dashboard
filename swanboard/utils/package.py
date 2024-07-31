@@ -7,7 +7,7 @@ r"""
 @Description:
     包相关的工具函数
 """
-import pkg_resources
+from importlib.metadata import version
 
 
 def get_package_version() -> str:
@@ -23,8 +23,8 @@ def get_package_version() -> str:
     str
         swanlab的版本号
     """
+    # 获取已安装包的版本
     try:
-        version = pkg_resources.get_distribution("swanlab").version
-        return version
-    except pkg_resources.DistributionNotFound:
-        return "swanlab package is not installed"
+        return version('swanlab')
+    except Exception as e:  # noqa
+        print('swanlab is not installed')
