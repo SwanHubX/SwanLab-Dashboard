@@ -1,6 +1,6 @@
 <template>
   <div :key="boardKey">
-    <BoardToolBar :refresh="refresh" @filter="(value) => (filterKey = value)" @refresh="refreshData" />
+    <BoardToolbar :refresh="refresh" @filter="(value) => (filterKey = value)" @refresh="refreshData" />
     <SectionsWrapper :sections="stagingSections" :charts="nowCharts" />
   </div>
 </template>
@@ -86,7 +86,7 @@ import SectionsWrapper from './components/SectionsWrapper.vue'
 import { useBoardStore } from './store'
 import { copyTextToClipboard, formatNumber2SN, isApple } from './utils'
 import { message } from 'ant-design-vue'
-import BoardToolBar from './components/BoardToolBar.vue'
+import BoardToolbar from './components/BoardToolbar.vue'
 
 const refresh = defineModel('refresh', {
   type: Boolean,
