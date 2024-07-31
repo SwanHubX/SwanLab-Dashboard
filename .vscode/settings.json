@@ -23,7 +23,10 @@
     "unit": "test",
     "migrate": "Husky",
     "business": "components",
-    "empty": "error"
+    "empty": "error",
+    "toolbar": "tools",
+    "zoom": "desktop",
+    "edit": "custom"
   },
   "material-icon-theme.files.associations": {
     ".env.mock": "Tune"

@@ -58,6 +58,30 @@
         "win": "Press Ctrl+C to copy this data",
         "apple": "Press CMD+C to copy this data"
       }
+    },
+    "toolbar": {
+      "download": {
+        "title": "Download",
+        "png": "PNG",
+        "csv": "CSV (Coming soon)"
+      }
+    }
+  },
+  "download": {
+    "panel": {
+      "name": "Name:",
+      "width": "Width:",
+      "height": "Height:"
+    },
+    "line": {
+      "png": {
+        "title": "Export PNG",
+        "button": "Download PNG"
+      },
+      "csv": {
+        "title": "Export CSV",
+        "button": "Download CSV"
+      }
     }
   }
 }

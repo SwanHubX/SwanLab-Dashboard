@@ -17,12 +17,6 @@ import * as L from './line'
 import LineTooltip from './LineTooltip.vue'
 
 const props = defineProps({
-  colorFinder: {
-    /** @type {PropType<import('../../toolkit').colorFinder>} */
-    // @ts-ignore
-    type: Function,
-    required: true
-  },
   /** 图表配置 */
   chart: {
     /** @type {PropType<Chart>} */
@@ -41,11 +35,14 @@ const props = defineProps({
   }
 })
 
+/** @type {import('../../toolkit').colorFinder} */
+const colorFinder = inject('ColorFinder')
+
 /** @type {Ref<HTMLDivElement>} */
 const g2Ref = ref(null)
 
 /**
- * @type {Ref<L.LineData[]>}
+ * @type {Ref<LineData[]>}
  */
 const nowData = shallowRef([])
 const boardStore = useBoardStore()
@@ -62,7 +59,7 @@ let scalars = null
 const render = (rawData) => {
   const smooth = boardStore.$smooth.detail ? boardStore.$smooth : null
   scalars = rawData
-  const { data, maps } = L.fmtScalar2Line(rawData, props.colorFinder, smooth)
+  const { data, maps } = L.fmtScalar2Line(rawData, colorFinder, smooth)
   if (!plot)
     plot = L.createLine(
       g2Ref.value,

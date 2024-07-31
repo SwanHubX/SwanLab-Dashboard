@@ -266,9 +266,6 @@ const changeChartPinOrHide = async (cIndex, type) => {
     refreshData()
   }, 0)
 }
-// ---------------------------- 全局平滑配置 -------------------------------
-
-const smooth = ref({})
 
 // ------------------------- 全局依赖/状态 ----------------------------------
 /** @type {FoldSectionFunction} 折叠触发事件 */

@@ -58,6 +58,30 @@
         "win": "按 Ctrl+C 复制此数据",
         "apple": "按 CMD+C 复制此数据"
       }
+    },
+    "toolbar": {
+      "download": {
+        "title": "下载",
+        "png": "PNG",
+        "csv": "CSV (即将推出)"
+      }
+    }
+  },
+  "download": {
+    "panel": {
+      "name": "名称:",
+      "width": "宽度:",
+      "height": "高度:"
+    },
+    "line": {
+      "png": {
+        "title": "导出为PNG",
+        "button": "下载PNG"
+      },
+      "csv": {
+        "title": "导出为CSV",
+        "button": "下载CSV"
+      }
     }
   }
 }

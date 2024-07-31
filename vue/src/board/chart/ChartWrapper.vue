@@ -1,4 +1,5 @@
 <template>
+  <!-- 这串class与zoom目前为一致的 -->
   <div class="h-full w-full relative top-0 left-0 rounded py-4 px-3">
     <div class="flex items-center justify-center h-full z-10" v-if="state === 'loading'">
       <Spin />
@@ -9,9 +10,10 @@
     </div>
     <div class="w-full h-full text-base" v-else>
       <!-- 标题 -->
-      <div class="chart-title" :class="{ 'zoom-chart-title': zoom }">{{ chart.title }}</div>
-      <div class="chart-content" :class="{ 'zoom-chart-content': zoom }">
-        <component :is="chartComponent" :chart="chart" :metricsData="metricsData" :zoom="zoom" :multi="multi" />
+      <div class="chart-title">{{ chart.title }}</div>
+      <div class="chart-content">
+        <component :is="chartComponent.toolbar" />
+        <component :is="chartComponent.chart" />
       </div>
     </div>
   </div>
@@ -25,39 +27,29 @@
  **/
 import { onErrorCaptured } from 'vue'
 import { Spin } from 'ant-design-vue'
-import charts from '@swanlab-vue/board/charts'
+import charts from '../charts'
 import { parseChartMetrics } from './utils'
 import Poller from './poller'
-const props = defineProps({
-  /** 图表配置 */
-  chart: {
-    /** @type {PropType<Chart>} */
-    type: Object,
-    required: true
-  },
+defineProps({
   /** 是否可拖拽 */
   draggable: {
     type: Boolean,
     default: false
-  },
-  /** 是否为放大环境 */
-  zoom: {
-    type: Boolean,
-    default: false
   }
 })
-/** @type {ComputedRef<Component>} */
+/** @type {ComputedRef<Chart>} */
+const chart = inject('Chart')
+/** @type {ComputedRef<{chart:Component, toolbar:Component}>} */
 const chartComponent = computed(() => {
   if (state.value === 'error') return charts.error
   if (state.value === 'empty') return charts.empty
-  return charts[props.chart.type.toLowerCase()]
+  return charts[chart.value.type.toLowerCase()]
 })
 
 /** @type {import('@swanlab-vue/board/ChartsBoard.vue').MediaMetricsConstructor | import('@swanlab-vue/board/ChartsBoard.vue').ScalarMetricsConstructor} */
-const getter = props.chart.type === 'LINE' ? inject('ScalarConstructor') : inject('MediaConstructor')
+const getter = chart.value.type === 'LINE' ? inject('ScalarConstructor') : inject('MediaConstructor')
 /** @type {ComputedRef<Number>} 是否继续轮询 */
 const interval = inject('Interval')
-const multi = inject('Multi')
 /**
  * 此图表的数据
  * @type {import("vue").ShallowRef<null | MetricData[]>}
@@ -102,12 +94,11 @@ onErrorCaptured((err) => {
 
 // ---------------------------------- metric获取/更新 ----------------------------------
 
-const metrics = parseChartMetrics(props.chart)
+const metrics = parseChartMetrics(chart.value)
 const poller = new Poller()
 
 onMounted(() => {
   // 如果图表本身存在error字段，直接显示error图表而不开启轮询和获取数据
-
   poller.start(interval, async () => {
     try {
       /** @type {MetricData[]} */
@@ -132,27 +123,19 @@ onMounted(() => {
 })
 
 onUnmounted(() => poller.stop())
+
+// ---------------------------------- 注入到图表组件 ----------------------------------
+provide('MetricsData', metricsData)
 </script>
 
 <style lang="scss" scoped>
 $chart-title-height: 13%;
-$chart-title-zoom-height: 8%;
 .chart-title {
   @apply flex items-center justify-center font-semibold pb-1 pt-2;
   height: $chart-title-height;
 }
 
-.zoom-chart-title {
-  @apply text-2xl;
-  padding-bottom: 0.5rem !important;
-  height: $chart-title-zoom-height !important;
-}
-
 .chart-content {
   height: calc(100% - #{$chart-title-height});
-}
-
-.zoom-chart-content {
-  height: calc(100% - #{$chart-title-zoom-height});
 }
 </style>

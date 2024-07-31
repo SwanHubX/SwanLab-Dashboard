@@ -22,7 +22,7 @@
         <Dropdown class="toolbar-button" v-model:open="open">
           <more-outlined style="transform: rotate(90deg)" />
           <template #overlay>
-            <Menu style="width: 120px" @click="handleMenuClick">
+            <Menu style="width: 150px" @click="handleMenuClick">
               <MenuItem auto-close @click="handleHidden" :disabled="hiddenLoading || disabled">
                 <div class="flex items-center gap-3">
                   <!-- 当前在非隐藏列 -->
@@ -63,8 +63,9 @@ import {
   EyeInvisibleOutlined,
   EyeOutlined
 } from '@ant-design/icons-vue'
-import { Dropdown, Menu, MenuItem, Spin } from 'ant-design-vue'
+import { Dropdown, Menu, MenuItem } from 'ant-design-vue'
 import { t } from '@swanlab-vue/i18n'
+import { useBoardStore } from '@swanlab-vue/board/store'
 
 const props = defineProps({
   // 图表工具栏图标配置
@@ -73,28 +74,40 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
-  chart: {
-    /** @type {PropType<Chart>} */
-    type: Object,
-    required: true
-  },
   // 是否显示放大按钮
   noZoom: {
     type: Boolean,
     default: false
   }
 })
+const boardStore = useBoardStore()
 /**
  * @type {Ref<HTMLDivElement>}
  */
 const toolbarRef = ref(null)
-const emits = defineEmits(['zoom'])
-const handleZoom = inject('zoomChartEvent')
 /** @type {SectionType} */
 const sType = inject('SectionType')
 /** @type {import('@swanlab-vue/board/ChartsBoard.vue').moveChartEvent} */
 const changeChartPinOrHide = inject('ChangeChartPinOrHide')
 const PinComponent = sType === 'PINNED' ? PushpinFilled : PushpinOutlined
+/** @type {ComputedRef<MetricData[]>} */
+const metricsData = inject('MetricsData')
+/** @type {ComputedRef<Chart>} */
+const chart = inject('Chart')
+
+const handleZoom = () => {
+  boardStore.$modal = {
+    mode: 'zoom',
+    chart: chart.value,
+    /**
+     * @type {ChartPuzzleModalZoomInfo}
+     */
+    zoom: {
+      data: metricsData.value
+    },
+    cl: 'chart-zoom-modal'
+  }
+}
 
 /**
  * 工具栏图标配置属性
@@ -122,7 +135,7 @@ const toolBarIcons = [
     tip: sType === 'PINNED' ? t('chart.chart.toolbar.tips.unPin') : t('chart.chart.toolbar.tips.pin'),
     handler: () => {
       pinLoading.value = true
-      changeChartPinOrHide(props.chart.index, sType === 'PINNED' ? 'PUBLIC' : 'PINNED')
+      changeChartPinOrHide(chart.value.index, sType === 'PINNED' ? 'PUBLIC' : 'PINNED')
     },
     show: sType === 'PINNED',
     disabled,
@@ -138,7 +151,6 @@ const toolBarIcons = [
   },
   ...props.icons
 ]
-
 // ---------------------------------- 控制菜单的显示和隐藏，所有菜单都需要手动关闭 ----------------------------------
 
 const open = ref(false)
@@ -157,7 +169,7 @@ const handleMenuClick = (e) => {
 const hiddenLoading = ref(false)
 const handleHidden = () => {
   hiddenLoading.value = true
-  changeChartPinOrHide(props.chart.index, sType === 'HIDDEN' ? 'PUBLIC' : 'HIDDEN')
+  changeChartPinOrHide(chart.value.index, sType === 'HIDDEN' ? 'PUBLIC' : 'HIDDEN')
 }
 
 // ---------------------------------- toolbar显示和隐藏 ----------------------------------
@@ -167,6 +179,7 @@ const showToolbar = inject('ShowToolbar')
 <style lang="scss" scoped>
 .chart-toolbar {
   @apply absolute w-full h-6 top-0 left-0 pt-1 pr-2 z-full;
+  @apply hidden md:block;
   .panel {
     @apply flex justify-end w-full items-center gap-2 text-dimmer;
   }

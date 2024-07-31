@@ -2,7 +2,7 @@
 
 <script setup>
 /**
- * @description: 图表拖拽到某个地方时，显示的预览拼图
+ * @description: 图表更改大小预览组件
  * @file: ChartPreviewPuzzle.vue
  * @since: 2024-07-16 01:43:44
  **/

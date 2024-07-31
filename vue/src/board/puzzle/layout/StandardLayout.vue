@@ -1,7 +1,6 @@
 <template>
   <div ref="layoutRef">
-    <!-- 修改图表大小时的展示框 -->
-    <div class="chart-preview"></div>
+    <ResizePreview />
     <div class="relative overflow-hidden" :style="{ height: L.height.value + 'px' }" v-if="observerOn">
       <ChartPuzzle
         v-for="(chart, index) in nowCharts"
@@ -66,6 +65,7 @@
  **/
 import { Pagination } from 'ant-design-vue'
 import ChartPuzzle from '../ChartPuzzle.vue'
+import ResizePreview from './ResizePreview.vue'
 const props = defineProps({
   /**
    * section配置
