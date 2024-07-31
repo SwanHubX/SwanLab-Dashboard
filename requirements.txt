@@ -13,3 +13,4 @@ ujson
 
 # Information collection
 psutil
+setuptools
