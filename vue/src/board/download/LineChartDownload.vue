@@ -6,8 +6,18 @@
     <div class="download-body">
       <!-- 调节大小部分 -->
       <div class="adjust-panel">
-        <InputNumber v-model:value="width" min="300" max="1200" />
-        <InputNumber v-model:value="height" min="200" max="900" />
+        <div class="panel-item">
+          {{ $t('chart.download.panel.name') }}
+          <Input v-model:value="name" style="width: 150px" :placeholder="placeholder" />
+        </div>
+        <div class="panel-item">
+          {{ $t('chart.download.panel.width') }}
+          <InputSlider v-model="width" min="300" max="1200" />
+        </div>
+        <div class="panel-item">
+          {{ $t('chart.download.panel.height') }}
+          <InputSlider v-model="height" min="200" max="900" />
+        </div>
       </div>
       <!-- 展示部分 -->
       <div class="show-container">
@@ -24,7 +34,7 @@
       </div>
     </div>
     <div class="download-footer">
-      <Button class="py-2" style="height: auto">{{ btnText[type] }}</Button>
+      <Button class="py-2" style="height: auto" @click="handleDownload">{{ btnText[type] }}</Button>
     </div>
   </div>
 </template>
@@ -36,9 +46,10 @@
  * @since: 2024-07-29 18:07:51
  **/
 import LineChart from '../.charts/line/LineChart.vue'
-import { Button, InputNumber } from 'ant-design-vue'
+import { Button, Input } from 'ant-design-vue'
 import { useBoardStore } from '../store'
 import { useI18n } from 'vue-i18n'
+import InputSlider from './components/InputSlider.vue'
 const { t } = useI18n()
 
 const boardStore = useBoardStore()
@@ -60,6 +71,16 @@ provide('Zoom', true)
 // ---------------------------------- 调整宽高 ----------------------------------
 const width = ref(690)
 const height = ref(300)
+
+// ---------------------------------- 名称设置 ----------------------------------
+const name = ref('')
+// SwanLab-Chart_yyy-mm-dd_hh-mm-ss
+const placeholder = 'SwanLab-Chart_' + new Date().toLocaleString().replace(/[- :]/g, '_').replace(/\//g, '-')
+
+// ---------------------------------- 下载 ----------------------------------
+const handleDownload = () => {
+  console.log('下载')
+}
 </script>
 
 <style lang="scss" scoped>
@@ -82,7 +103,10 @@ $panel-height: 10%;
 $title-height: 30px;
 .adjust-panel {
   height: $panel-height;
-  @apply flex items-center;
+  @apply flex items-center gap-3 pb-2;
+  .panel-item {
+    @apply flex items-center gap-2;
+  }
 }
 .show-container {
   // 始终居中

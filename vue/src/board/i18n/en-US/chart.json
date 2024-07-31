@@ -68,6 +68,11 @@
     }
   },
   "download": {
+    "panel": {
+      "name": "Name:",
+      "width": "Width:",
+      "height": "Height:"
+    },
     "line": {
       "png": {
         "title": "Export PNG",

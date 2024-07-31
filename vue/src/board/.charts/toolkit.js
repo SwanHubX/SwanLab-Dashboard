@@ -70,11 +70,14 @@ export const useColorFinder = (chart, multi) => {
  * @returns {watchMetricResult}
  */
 export const watchMetric = (render) => {
-  /** @type {import('vue').ShallowRef<MetricData[]>} */
-  const data = inject('MetricsData')
+  /** @type {import('vue').ShallowRef<MetricData[]> | Error} */
+  const data = inject('MetricsData', new Error('provide("MetricsData") is required'))
   const multi = inject('Multi')
   const zoom = inject('Zoom', false)
-  const chart = inject('Chart')
+  console.debug(`You are rendering a chart with multi=${multi}, zoom=${zoom}`)
+  const chart = inject('Chart', new Error('provide("Chart") is required'))
+  if (data instanceof Error) throw data
+  if (chart instanceof Error) throw chart
   render &&
     onMounted(() => {
       watch(data, render, { immediate: true })

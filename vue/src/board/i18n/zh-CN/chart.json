@@ -68,6 +68,11 @@
     }
   },
   "download": {
+    "panel": {
+      "name": "名称:",
+      "width": "宽度:",
+      "height": "高度:"
+    },
     "line": {
       "png": {
         "title": "导出为PNG",
