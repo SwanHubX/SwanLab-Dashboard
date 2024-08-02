@@ -25,6 +25,7 @@ def get_package_version() -> str:
     """
     # 获取已安装包的版本
     try:
-        return version('swanlab')
+        v = version('swanlab')
+        return v if v else 'unknown'
     except Exception as e:  # noqa
-        print('swanlab is not installed')
+        return 'unknown'
