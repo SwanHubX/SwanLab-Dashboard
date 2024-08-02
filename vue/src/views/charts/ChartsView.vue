@@ -1,15 +1,23 @@
 <template>
   <div class="flex flex-col min-h-full bg-higher">
-    <ChartsPage
-      :groups="groups"
-      :charts="charts"
-      :default-color="defaultColor"
-      :get-color="getColor"
-      :key="chartsPageKey"
-      v-if="groups.length"
-    />
-    <!-- 图表不存在 -->
-    <p class="font-semibold pt-5 text-center" v-else-if="ready">Empty Charts</p>
+    <template v-if="ready">
+      <ChartsBoard
+        multi
+        v-model:refresh="refresh"
+        v-model:sections="sections"
+        v-model:charts="charts"
+        :MediaConstructor="getMediaMetrics"
+        :ScalarConstructor="getScalarMetrics"
+        :ResourceConstructor="C.getMediaResource"
+        :MoveChartConstructor="MoveChartConstructor"
+        :MetricURIConstructor="MetricURIConstructor"
+        :interval="interval"
+        v-if="charts.length"
+        @fold="handleFold"
+      />
+      <!-- 图表不存在 -->
+      <p class="font-semibold pt-5 text-center" v-else>Empty Charts</p>
+    </template>
   </div>
 </template>
 
@@ -22,75 +30,87 @@
  * @since: 2024-01-27 13:05:27
  **/
 import http from '@swanlab-vue/api/http'
-import { useProjectStore } from '@swanlab-vue/store'
 import { ref } from 'vue'
-import ChartsPage from './components/ChartsPage.vue'
-import { onUnmounted } from 'vue'
+import ChartsBoard from '@swanlab-vue/board/ChartsBoard.vue'
+import * as C from '@swanlab-vue/utils/chart'
+import { useProjectStore } from '@swanlab-vue/store'
 const projectStore = useProjectStore()
+
+/**
+ * @type {Ref<Section[]>} sections section配置
+ */
+const sections = shallowRef()
+/**
+ * @type {Ref<Chart[]>} charts 图表配置
+ */
+const charts = computed(() => {
+  // 根据不显示的实验id过滤图表
+  /**
+   * @type {Chart[]} cs
+   */
+  const cs = []
+  _charts.value.forEach((chart) => {
+    const c = { ...chart, metrics: [...chart.metrics] }
+    // 过滤不显示的实验
+    c.metrics = c.metrics.filter((metric) => !expIds.value.includes(metric.expId))
+    if (c.metrics.length && c.metrics.some((m) => m.column.class !== 'SYSTEM')) {
+      cs.push(c)
+    }
+  })
+  // console.log(cs)
+  return cs
+})
+
+/**
+ * @type {Ref<Chart[]>} charts 全部的图表配置
+ */
+const _charts = shallowRef([])
+
+/**
+ * @type {Ref<IndexId[]>} expIds 当前不显示的实验id
+ */
+const expIds = computed(() => {
+  return projectStore.experiments.map((exp) => (exp.show ? undefined : exp.id.toString())).filter((id) => id)
+})
+
+/** @type {Ref<boolean>} */
+const refresh = ref(false)
+
+/** 用于规定轮询器状态，0为不轮询（关闭轮询） */
+const interval = ref(0)
+
+const getMediaMetrics = C.createGetMediaMetrics(true)
+const getScalarMetrics = C.createGetScalarMetrics(true)
+
+// ---------------------------------- 请求图表数据 ----------------------------------
+const ready = ref(false)
 http.get('/project/charts').then(({ data }) => {
-  // 将namespaces转换为groups
-  charts.value = data.charts
-  namespaces.value = data.namespaces
-  groups.value = generateGroups()
+  const r = C.formatLocalData(data, projectStore.experiments)
+  sections.value = r[0]
+  _charts.value = r[1]
   ready.value = true
 })
-const ready = ref(false)
-// ---------------------------------- 数据驱动 ----------------------------------
-// 项目对比图表数据，[{name, charts: [charts]}]
-const groups = ref([])
-const charts = ref([])
-const namespaces = ref([])
-const chartsPageKey = ref(0)
 
-const generateGroups = () => {
-  // 生成groups
-  const groups = []
-  namespaces.value.forEach((namespace) => {
-    const group = {
-      ...namespace,
-      charts: []
-    }
-    namespace.charts.forEach((chart_id) => {
-      const chart = charts.value.find((chart) => {
-        return chart.id === chart_id
-      })
-      // 如果chart的所有source都为不可见，不push
-      if (chart.source.every((source) => !projectStore.showMap[source])) return
-      // 首先找到所有source中不在error的keys中的source
-      const sources = chart.source.filter((source) => !chart.error[source])
-      if (sources.every((source) => !projectStore.showMap[source])) return
-      // 如果在source中不在error的keys中的都不可见，不push
-      group.charts.push(chart)
-    })
-    // 如果group的所有chart都为不可见，不push
-    if (group.charts.length) groups.push(group)
-  })
-  return groups
-}
+// ---------------------------------- 折叠事件 ----------------------------------
 
-// ---------------------------------- 向projectStore注册回调，当点击眼睛时执行此回调 ----------------------------------
-const handleShowChange = () => {
-  // 重新渲染页面
-  chartsPageKey.value++
-  // 重新生成groups
-  groups.value = generateGroups()
-}
-// 注册点击眼睛的回调
-projectStore.registerChangeShowCallback(handleShowChange)
+const handleFold = C.createFoldSectionCallBack(projectStore.id)
 
-onUnmounted(() => {
-  projectStore.destoryChangeShowCallback()
-})
-
-// ---------------------------------- 色盘注入 ----------------------------------
-const getColor = (() => {
-  // 遍历所有实验，实验名称为key，实验颜色为value
-  const colors = projectStore.colorMap
-  return (exp_name) => {
-    return colors[exp_name]
+// ---------------------------------- 图表移动 ----------------------------------
+/** @type {import('@swanlab-vue/board/ChartsBoard.vue').MoveChartConstructor} */
+const MoveChartConstructor = async (cIndex, type) => {
+  const data = await C.moveChartEventRequest(cIndex, type)
+  const _ = C.formatLocalData(data, projectStore.experiments)
+  return {
+    sections: _[0],
+    charts: _[1]
   }
-})()
-const defaultColor = projectStore.colors[0]
+}
+
+// ---------------------------------- metric路径跳转 ----------------------------------
+/** @type {import('@swanlab-vue/board/ChartsBoard.vue').MetricURIConstructor} */
+const MetricURIConstructor = (index, expId) => {
+  return `/experiment/${expId}/chart`
+}
 </script>
 
 <style lang="scss" scoped></style>

@@ -32,7 +32,7 @@ def read_tag_data(file_path: str) -> List[dict]:
         return []
     # 读取文件内容，文件内部本质上是字符串一堆json格式的数据，每一行是一个json并且有换行符分隔，需要拿到然后解析为list<dict>
     data = []
-    with open(file_path, "r") as f:
+    with open(file_path, "r", encoding="utf8") as f:
         lines = f.readlines()
         # 解析为list<dict>
         for i in range(len(lines)):

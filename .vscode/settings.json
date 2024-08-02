@@ -11,7 +11,11 @@
     "experiment": "benchMark",
     "chart": "app",
     "charts": "app",
+    "board": "benchmark",
     "index": "home",
+    "line": "components",
+    "text": "config",
+    "puzzle": "stack",
     "readme_files": "custom",
     "run": "core",
     "system": "core",
@@ -19,7 +23,10 @@
     "unit": "test",
     "migrate": "Husky",
     "business": "components",
-    "dog": "Husky"
+    "empty": "error",
+    "toolbar": "tools",
+    "zoom": "desktop",
+    "edit": "custom"
   },
   "material-icon-theme.files.associations": {
     ".env.mock": "Tune"
@@ -80,10 +87,10 @@
     "zh": "cn", // show Chinese flag for 'zh'
     "ko": "ko" // show Korean flag for 'ko'
   },
-  "i18n-ally.localesPaths": ["vue/src/i18n"],
+  "i18n-ally.localesPaths": ["vue/src/i18n", "vue/src/board/i18n"],
   "i18n-ally.keystyle": "nested", // 翻译路径格式,
   "i18n-ally.namespace": true,
-  "i18n-ally.enabledParsers": ["json", "json5"],
+  "i18n-ally.enabledParsers": ["json"],
   "i18n-ally.sourceLanguage": "zh-CN", // 翻译源语言 是你翻译文件的名字
   "i18n-ally.displayLanguage": "zh-CN", //显示语言
 
@@ -114,5 +121,5 @@
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
   "vue-i18n.i18nPaths": "vue/src/i18n",
-  "cSpell.words": ["apipa", "netwo", "psutil", "swandb"]
+  "cSpell.words": ["apipa", "crosshairs", "debias", "netwo", "psutil", "swandb"]
 }

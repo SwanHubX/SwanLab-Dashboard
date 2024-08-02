@@ -165,7 +165,8 @@ $main-content-height: calc(100vh - 56px);
 }
 
 .close-button {
-  @apply absolute z-full outline-none border-none rounded p-1 bg-transparent;
+  @apply absolute  outline-none border-none rounded p-1 bg-transparent;
+  z-index: 1499;
   transition-duration: $duration;
   transition-timing-function: ease-in-out;
   transition-property: top, color, transform, background-color;

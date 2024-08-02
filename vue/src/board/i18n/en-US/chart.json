@@ -1,0 +1,87 @@
+{
+  "toolbar": {
+    "search": {
+      "placeholder": "Search chart"
+    },
+    "smooth": {
+      "level": "Smoothing",
+      "method": "Method"
+    },
+    "refresh": "Refresh"
+  },
+  "copy": {
+    "success": "Copied",
+    "error": "Failed to copy"
+  },
+  "zoom": {
+    "close": "Close",
+    "edit": "Edit",
+    "tips": {
+      "edit": "Coming soon"
+    }
+  },
+  "section": {
+    "name": {
+      "Text": "Text",
+      "Image": "Image",
+      "Audio": "Audio",
+      "Media": "Media",
+      "default": "Charts",
+      "pinned": "Pinned",
+      "hidden": "Hidden"
+    }
+  },
+  "chart": {
+    "toolbar": {
+      "tips": {
+        "pin": "Pin",
+        "zoom": "Zoom in",
+        "hide": "Hide",
+        "unHide": "Un hide",
+        "unPin": "Un pin"
+      }
+    },
+    "error": {
+      "unknown": "This chart is not displayed correctly"
+    },
+    "empty": {
+      "description": "No Data"
+    },
+    "limit": {
+      "title": "Showing first {count} runs",
+      "tip": "Click on the pencil icon (top right corner of this chart) to change the max number of runs displayed"
+    }
+  },
+  "line": {
+    "tooltip": {
+      "copy": {
+        "win": "Press Ctrl+C to copy this data",
+        "apple": "Press CMD+C to copy this data"
+      }
+    },
+    "toolbar": {
+      "download": {
+        "title": "Download",
+        "png": "PNG",
+        "csv": "CSV (Coming soon)"
+      }
+    }
+  },
+  "download": {
+    "panel": {
+      "name": "Name:",
+      "width": "Width:",
+      "height": "Height:"
+    },
+    "line": {
+      "png": {
+        "title": "Export PNG",
+        "button": "Download PNG"
+      },
+      "csv": {
+        "title": "Export CSV",
+        "button": "Download CSV"
+      }
+    }
+  }
+}

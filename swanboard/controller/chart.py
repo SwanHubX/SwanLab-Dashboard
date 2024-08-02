@@ -37,8 +37,4 @@ def update_charts_status(chart_id: int, status: int):
         chart_list, namespace_list = get_proj_charts(chart.project_id.id)
     else:
         chart_list, namespace_list = get_exp_charts(chart.experiment_id.id)
-    for namespace in namespace_list:
-        for j, chart_id in enumerate(namespace["charts"]):
-            # 在charts中找到对应的chart_id
-            namespace["charts"][j] = next((x for x in chart_list if x["id"] == chart_id), None)
-    return SUCCESS_200({"groups": namespace_list})
+    return SUCCESS_200({"charts": chart_list, "namespaces": namespace_list})

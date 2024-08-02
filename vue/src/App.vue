@@ -1,8 +1,16 @@
 <template>
-  <MainLayout :show-side-bar="!errorCode" v-if="ready">
-    <router-view v-if="!errorCode" />
-    <ErrorView :code="errorCode" :message="errorMessage" v-else />
-  </MainLayout>
+  <a-config-provider
+    :theme="{
+      token: {
+        colorPrimary: '#33AA47'
+      }
+    }"
+  >
+    <MainLayout :show-side-bar="!errorCode" v-if="ready">
+      <router-view v-if="!errorCode" />
+      <ErrorView :code="errorCode" :message="errorMessage" v-else />
+    </MainLayout>
+  </a-config-provider>
   <!-- 全局气泡提示 -->
   <SLMessages ref="messagesRef" />
   <!-- 全局确认弹窗 -->
@@ -21,7 +29,6 @@ import { watch } from 'vue'
 import { installMessage, SLMessages, message } from '@swanlab-vue/components/message'
 import { installConfirm, SLConfirm } from './components/confirm'
 import { onMounted } from 'vue'
-
 // ---------------------------------- state ----------------------------------
 
 const projectStore = useProjectStore()
