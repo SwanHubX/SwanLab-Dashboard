@@ -9,7 +9,8 @@ r"""
 """
 import os
 from peewee import SqliteDatabase
-from .table_config import tables
+from .table_config import tables, Tag
+from .migrate import compat_tag_key
 
 db_path = None
 """
@@ -66,4 +67,7 @@ def connect(path: str = None, autocreate: bool = False) -> SqliteDatabase:
         swandb.bind(tables)
         swandb.create_tables(tables)
         swandb.close()
+        if not Tag.field_exists("folder"):
+            # 添加 folder 字段
+            compat_tag_key(SqliteDatabase(db_path))
     return swandb

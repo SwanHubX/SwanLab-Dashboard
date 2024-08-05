@@ -156,6 +156,7 @@ class SwanBoardCallback(SwanKitCallback):
             experiment_id=self.exp.id,
             name=column_info.key,
             type=column_info.chart.value.chart_type,
+            folder=column_info.id,
         )
         # 添加一条source记录
         error = None

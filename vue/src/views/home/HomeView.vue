@@ -44,7 +44,7 @@
             </SLStatusLabel>
           </template>
           <template v-slot:create="{ row }">
-            {{ transTime(convertUtcToLocal(row.create_time)) }}
+            {{ transTime(row.create_time) }}
           </template>
           <template v-slot:duration="{ row }">
             {{ getDuration(row) }}
@@ -75,7 +75,7 @@ import { formatTime, getDuration } from '@swanlab-vue/utils/time'
 import { computed, ref, onMounted } from 'vue'
 import SLStatusLabel from '@swanlab-vue/components/SLStatusLabel.vue'
 import ExperimentName from './components/ExperimentName.vue'
-import { transTime, convertUtcToLocal } from '@swanlab-vue/utils/time'
+import { transTime } from '@swanlab-vue/utils/time'
 import { t } from '@swanlab-vue/i18n'
 import http from '@swanlab-vue/api/http'
 import ExprTable from './components/ExprTable.vue'
