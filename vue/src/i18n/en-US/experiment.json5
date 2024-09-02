@@ -89,6 +89,7 @@
       git_remote: 'Git Repository',
       git_branch: 'Git Branch',
       git_commit: 'Git Commit',
+      brand: 'CPU brand',
       cpu: 'CPU count',
       memory: 'Memory',
       gpu_cores: 'GPU count',
