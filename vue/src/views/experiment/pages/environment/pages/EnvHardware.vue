@@ -33,8 +33,12 @@ const environments = computed(() => {
 const cpu = computed(() => {
   return [
     {
+      key: 'brand',
+      value: system.cpu?.brand
+    },
+    {
       key: 'cpu',
-      value: system.cpu
+      value: system.cpu?.cores || system.cpu
     },
     {
       key: 'memory',

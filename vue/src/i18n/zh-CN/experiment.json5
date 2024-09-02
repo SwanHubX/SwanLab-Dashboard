@@ -6,6 +6,7 @@
     keys: {
       OS: 'OS',
       command: 'Command',
+      brand: 'CPU brand',
       cpu: 'CPU count',
       description: 'Description',
       duration: 'Duration',
