@@ -117,7 +117,6 @@ const navs = computed(() => [
     icon: 'info'
   }
 ])
-
 </script>
 
 <style scoped lang="scss">

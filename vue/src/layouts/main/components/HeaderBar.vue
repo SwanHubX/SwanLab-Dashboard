@@ -20,7 +20,13 @@
       </div>
       <!-- links -->
       <div class="px-6 items-center font-semibold gap-8 md:flex hidden">
-        <a :href="item.link" target="_blank" class="w-16 hover:text-white-higher text-center" v-for="item in links" :key="item.link">
+        <a
+          :href="item.link"
+          target="_blank"
+          class="w-16 hover:text-white-higher text-center"
+          v-for="item in links"
+          :key="item.link"
+        >
           {{ item.title }}
         </a>
       </div>

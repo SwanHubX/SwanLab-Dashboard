@@ -110,7 +110,7 @@ const total = computed(() => projectStore.experiments?.length || 0)
 // ---------------------------------- 表格配置 ----------------------------------
 
 // *静态数据 国际化需要放到computed中，切换时才会有响应式
-const column = computed(()=>[
+const column = computed(() => [
   {
     title: t('home.list.table.header.name'),
     slot: 'name',
