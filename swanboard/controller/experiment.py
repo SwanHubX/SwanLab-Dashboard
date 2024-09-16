@@ -149,7 +149,7 @@ def get_experiment_info(experiment_id: int):
         with open(config_path, "r+") as f:
             experiment["config"] = yaml.load(f, Loader=yaml.FullLoader)
 
-    # 加载实验元信息
+    # 加载实验元信息 
     meta_path = get_meta_path(experiment["run_id"])
     if os.path.exists(meta_path) and not os.stat(meta_path).st_size == 0:
         with open(meta_path, "r+") as f:
