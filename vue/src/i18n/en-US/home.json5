@@ -6,7 +6,7 @@
     logdir: 'Logdir'
   },
   list: {
-    title: 'Experiments',
+    title: 'Experiment Lists',
     table: {
       header: {
         name: 'Name',

@@ -12,11 +12,11 @@
         name: '实验名',
         status: '状态',
         create: '创建时间',
-        duration: 'Runtime'
+        duration: '运行时间'
       }
     }
   },
   empty: {
-    table: 'There are no experiments, you can create one by importing SwanLog in your code'
+    table: '目前没有实验，您可以通过在代码中导入 SwanLog 来创建一个实验'
   }
 }

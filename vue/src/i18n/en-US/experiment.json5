@@ -15,7 +15,7 @@
       'table-bar': {
         placeholder: 'Search experiments',
         summary: 'Only summary',
-        export: 'Export'
+        export: 'Export to CSV'
       },
       experiment_infos: {
         status: 'State',
