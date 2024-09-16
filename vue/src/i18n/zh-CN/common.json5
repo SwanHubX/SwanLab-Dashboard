@@ -4,7 +4,7 @@
     'not-allowed': '正在运行，无法操作',
     save: {
       default: '保存更改',
-      savimg: 'saving',//？
+      savimg: 'saving', //？
       success: '保存成功'
     },
     'sub-title': {
