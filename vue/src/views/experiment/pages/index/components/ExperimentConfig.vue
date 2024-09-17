@@ -41,18 +41,18 @@ import { t } from '@swanlab-vue/i18n'
 const experiment = ref(useExperimentStore().experiment)
 
 // 通用表头
-const column = [
-  {
-    // title: 'key',
-    title: computed(() => t('experiment.index.config.table.key')),
-    key: 'key'
-  },
-  {
-    // title: 'value',
-    title: computed(() => t('experiment.index.config.table.value')),
-    key: 'value'
-  }
-]
+const column = computed(() => {
+  return [
+    {
+      title: t('experiment.index.config.table.key'),
+      key: 'key'
+    },
+    {
+      title: t('experiment.index.config.table.value'),
+      key: 'value'
+    }
+  ]
+})
 
 // ---------------------------------- 转化实验配置为表格数据 ----------------------------------
 

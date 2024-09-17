@@ -11,11 +11,11 @@
       </div>
     </div>
     <div class="flex gap-3">
-      <SLButton hollow @click="copy" class="truncate">
+      <SLButton hollow @click="copy">
         <SLIcon icon="copy" class="icon"></SLIcon>
         {{ $t('experiment.func-bar.copy') }}
       </SLButton>
-      <SLButton hollow @click="download" class="truncate">
+      <SLButton hollow @click="download">
         <SLIcon icon="download" class="icon"></SLIcon>
         {{ $t('experiment.func-bar.download') }}
       </SLButton>
@@ -100,7 +100,7 @@ const download = () => {
 
 <style lang="scss" scoped>
 button {
-  @apply rounded-lg px-3 py-1 flex items-center gap-2;
+  @apply rounded-lg px-3 py-1 flex items-center gap-2 truncate;
 }
 
 .icon {
