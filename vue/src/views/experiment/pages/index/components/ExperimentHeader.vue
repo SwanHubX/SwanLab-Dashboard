@@ -20,7 +20,7 @@
           <div :title="item.value">{{ item.value || 'Unkown' }}</div>
         </div>
         <SLButton theme="primary" hollow class="rounded-lg">
-          <router-link to="env" class="block px-3 py-1">All Details</router-link>
+          <router-link to="env" class="block px-3 py-1">{{ $t('experiment.index.config.all_detail') }}</router-link>
         </SLButton>
       </div>
     </div>

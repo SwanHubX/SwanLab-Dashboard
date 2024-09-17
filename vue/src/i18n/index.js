@@ -1,5 +1,5 @@
 import zhCN from './zh-CN'
-import en from './en-US'
+import enUS from './en-US'
 import { createI18n } from 'vue-i18n'
 
 export const langs = ['zh-CN', 'en-US']
@@ -19,6 +19,9 @@ export const getDefaultLang = () => {
   return 'en-US'
 }
 
+// 设置html标签的lang属性
+document.documentElement.lang = getDefaultLang().toLowerCase()
+
 export const i18n = createI18n({
   // locale: 'en', // 设置地区
   locale: getDefaultLang(),
@@ -26,7 +29,7 @@ export const i18n = createI18n({
   globalInjection: true, // 全局注册$t方法
   messages: {
     'zh-CN': zhCN,
-    'en-US': en
+    'en-US': enUS
   }
 })
 

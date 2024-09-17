@@ -3,7 +3,7 @@
     chart: '实验图表',
     env: '实验环境',
     index: '概览',
-    log: '日志Log'
+    log: '日志'
   },
   status: {
     '-1': '中断',
@@ -13,12 +13,17 @@
   index: {
     config: {
       detail: '配置',
+      all_detail: '更多',
       help: {
         config: '配置（Config）参数描述你的模型的输入项，在swanlab.init的config参数中配置，点击图标了解更多。',
         summary: '摘要（Summary）参数描述你记录的指标的最终结果，点击图标了解更多。'
       },
       summarize: '摘要',
       table: {
+        config: '配置',
+        summary: '摘要',
+        key: '键',
+        value: '值',
         empty: '暂无数据',
         search: '搜索...'
       },
@@ -97,7 +102,7 @@
       swanlab: 'SwanLab版本',
       workspace: '工作地址',
       verbose: 'Python详细信息',
-      pid: 'PID'
+      pid: '进程ID'
     },
     empty: {
       requirements: '暂无依赖'
@@ -111,5 +116,6 @@
       log: '搜索日志...',
       requirements: '搜索依赖...'
     }
-  }
+  },
+  emptyLog: '暂无日志'
 }

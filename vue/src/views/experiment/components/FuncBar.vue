@@ -11,11 +11,11 @@
       </div>
     </div>
     <div class="flex gap-3">
-      <SLButton hollow @click="copy">
+      <SLButton hollow @click="copy" class="truncate">
         <SLIcon icon="copy" class="icon"></SLIcon>
         {{ $t('experiment.func-bar.copy') }}
       </SLButton>
-      <SLButton hollow @click="download">
+      <SLButton hollow @click="download" class="truncate">
         <SLIcon icon="download" class="icon"></SLIcon>
         {{ $t('experiment.func-bar.download') }}
       </SLButton>

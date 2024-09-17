@@ -20,6 +20,15 @@
     title: {
       experiment: '修改实验信息',
       project: '修改项目信息'
+    },
+    error: {
+      projectChange: '没有项目配置变更',
+      experimentChange: '没有实验配置变更',
+      projectName: '无效项目名称',
+      experimentName: '无效实验名称',
+      name: '过长或存在非法字符',
+      description: '非法描述',
+      experimentDuplicated: '实验名重复'
     }
   },
   copy: '复制成功！',
@@ -51,5 +60,11 @@
   },
   table: {
     empty: '暂无数据'
+  },
+  confirm: {
+    title: '是否确认?',
+    content: '确认这样操作?',
+    confirm: '确认',
+    cancel: '取消'
   }
 }

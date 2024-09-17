@@ -20,6 +20,15 @@
     title: {
       experiment: 'Experiment Information',
       project: 'Project Information'
+    },
+    error: {
+      projectChange: 'nothing changed in project config',
+      experimentChange: 'nothing changed in experiment config',
+      projectName: 'invalid project name',
+      experimentName: 'invalide experiment name',
+      name: 'too long or invalid characters',
+      description: 'invalid description',
+      experimentDuplicated: 'The experiment name is duplicated'
     }
   },
   copy: 'Copy successful!',
@@ -51,5 +60,11 @@
   },
   table: {
     empty: 'Empty Table'
+  },
+  confirm: {
+    title: 'Are you sure?',
+    content: 'Are you sure you want to do this?',
+    confirm: 'Yes, I confirm',
+    cancel: 'Cancel'
   }
 }

@@ -19,13 +19,15 @@ import { ref } from 'vue'
 import SLModal from '../SLModal.vue'
 import { reactive } from 'vue'
 import SLButton from '../SLButton.vue'
+import { t } from '@swanlab-vue/i18n'
+import { computed } from 'vue'
 
 const visiable = ref(false)
 const defaultConfig = {
-  title: 'Are you sure?',
-  content: 'Are you sure you want to do this?',
-  confirm: 'Yes, I confirm',
-  cancel: 'Cancel'
+  title: computed(() => t('common.confirm.title')),
+  content: computed(()=>t('common.confirm.content')),
+  confirm: computed(() => t('common.confirm.confirm')),
+  cancel: computed(() => t('common.confirm.cancel'))
 }
 
 const text = reactive({
@@ -48,6 +50,7 @@ const show = (title, content, config, resolve, reject) => {
   text.content = content || defaultConfig.content
   text.confirm = config?.buttonText?.confirm || defaultConfig.confirm
   text.cancel = config?.buttonText?.cancel || defaultConfig.cancel
+
   callback.resolve = resolve
   callback.reject = reject
 }
