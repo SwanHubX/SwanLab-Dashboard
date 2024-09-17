@@ -37,7 +37,11 @@ const props = defineProps({
 const emits = defineEmits(['confirm', 'cancel'])
 
 const click = () => {
-  confirm(computed(()=>t(`common.delete.title.${props.type}`)), computed(()=>t(`common.delete.content.${props.type}`)), {}).then(() => {
+  confirm(
+    computed(() => t(`common.delete.title.${props.type}`)),
+    computed(() => t(`common.delete.content.${props.type}`)),
+    {}
+  ).then(() => {
     emits('confirm')
   })
 }

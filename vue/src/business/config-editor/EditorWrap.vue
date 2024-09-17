@@ -136,26 +136,25 @@ const save = async () => {
 
   // 检查格式要求
   if (props.type === 'project' && !checkName.value) {
-    message.warning(computed(()=>t('common.config-editor.error.projectName')))
-    return (errors.value.name = computed(()=>t('common.config-editor.error.name')))
+    message.warning(computed(() => t('common.config-editor.error.projectName')))
+    return (errors.value.name = computed(() => t('common.config-editor.error.name')))
   } else if (!checkName.value) {
-    message.warning(computed(()=>t('common.config-editor.error.experimentName')))
-    return (errors.value.name = computed(()=>t('common.config-editor.error.name')))
+    message.warning(computed(() => t('common.config-editor.error.experimentName')))
+    return (errors.value.name = computed(() => t('common.config-editor.error.name')))
   }
   if (!checkDescription.value) {
-    message.warning(computed(()=>t('common.config-editor.error.description')))
-    return (errors.value.description = computed(()=>t('common.config-editor.error.description')))
+    message.warning(computed(() => t('common.config-editor.error.description')))
+    return (errors.value.description = computed(() => t('common.config-editor.error.description')))
   }
 
   // 判断是否一点没变
   if (info.value.name.trim() === projectStore.name && info.value.description === projectStore.description) {
-    return (errors.value.name = computed(()=>t('common.config-editor.error.projectChange')))
+    return (errors.value.name = computed(() => t('common.config-editor.error.projectChange')))
   } else if (
     info.value.name.trim() === experimentStore.name &&
     info.value.description === experimentStore.description
   ) {
-    return (errors.value.name = computed(()=>t('common.config-editor.error.experimentChange')))
-
+    return (errors.value.name = computed(() => t('common.config-editor.error.experimentChange')))
   }
 
   // 实验模式中，校验实验名是否重复
@@ -165,7 +164,7 @@ const save = async () => {
       // 如果重复，提示错误信息，但是注意实验名称可以和原来的一样
       if (info.value.name === expr.name && info.value.name !== experimentStore.name) {
         duplicated = true
-        errors.value.name = computed(()=>t('common.config-editor.error.experimentDuplicated'))
+        errors.value.name = computed(() => t('common.config-editor.error.experimentDuplicated'))
       }
     })
   }

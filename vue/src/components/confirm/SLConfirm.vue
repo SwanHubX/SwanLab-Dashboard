@@ -25,7 +25,7 @@ import { computed } from 'vue'
 const visiable = ref(false)
 const defaultConfig = {
   title: computed(() => t('common.confirm.title')),
-  content: computed(()=>t('common.confirm.content')),
+  content: computed(() => t('common.confirm.content')),
   confirm: computed(() => t('common.confirm.confirm')),
   cancel: computed(() => t('common.confirm.cancel'))
 }
