@@ -2,9 +2,7 @@
   <SLButton @click="click" theme="negative" hollow :disabled-tip="$t('common.delete.not-allowed')">
     <div class="text-sm flex items-center gap-2">
       <SLIcon icon="trash" class="w-4 h-4" />
-      <span class="md:block hidden">
-        {{ $t('common.delete.button') }}
-      </span>
+      <span class="md:block hidden"> 111 {{ $t('common.delete.button') }} </span>
     </div>
   </SLButton>
 </template>
@@ -37,11 +35,7 @@ const props = defineProps({
 const emits = defineEmits(['confirm', 'cancel'])
 
 const click = () => {
-  confirm(
-    computed(() => t(`common.delete.title.${props.type}`)),
-    computed(() => t(`common.delete.content.${props.type}`)),
-    {}
-  ).then(() => {
+  confirm(t(`common.delete.title.${props.type}`), t(`common.delete.content.${props.type}`), {}).then(() => {
     emits('confirm')
   })
 }
