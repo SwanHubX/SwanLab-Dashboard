@@ -117,5 +117,5 @@
       requirements: '搜索依赖...'
     }
   },
-  emptyLog: '暂无日志'
+  empty_log: '暂无日志'
 }

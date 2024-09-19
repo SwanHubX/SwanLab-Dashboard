@@ -51,7 +51,7 @@
           v-if="logs.length === 0 && errorLogs.length === 0"
         >
           <SLIcon class="magnifier" icon="search"></SLIcon>
-          <span>{{ $t('experiment.emptyLog') }}</span>
+          <span>{{ $t('experiment.empty_log') }}</span>
         </div>
       </div>
       <div class="flex h-full items-center justify-center" v-else>

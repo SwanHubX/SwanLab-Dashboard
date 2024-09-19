@@ -117,5 +117,5 @@
       log: 'Search log...'
     }
   },
-  emptyLog: 'No Logs'
+  empty_log: 'No Logs'
 }

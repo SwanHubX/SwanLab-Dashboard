@@ -22,13 +22,13 @@
       project: 'Project Information'
     },
     error: {
-      projectChange: 'nothing changed in project config',
-      experimentChange: 'nothing changed in experiment config',
-      projectName: 'invalid project name',
-      experimentName: 'invalide experiment name',
+      project_change: 'nothing changed in project config',
+      experiment_change: 'nothing changed in experiment config',
+      project_name: 'invalid project name',
+      experiment_name: 'invalide experiment name',
       name: 'too long or invalid characters',
       description: 'invalid description',
-      experimentDuplicated: 'The experiment name is duplicated'
+      experiment_duplicated: 'The experiment name is duplicated'
     }
   },
   copy: 'Copy successful!',

@@ -12,6 +12,7 @@
       </div>
     </div>
     <div class="w-full grow flex justify-end gap-6 px-8">
+      <!-- button: language switch -->
       <div class="flex items-center font-semibold">
         <button @click="switchLang()" class="switchLang relative w-9 h-9">
           <div :class="mainLangClass">中</div>
@@ -130,18 +131,18 @@ const switchLang = () => {
 }
 
 .switchLang:hover .mainlang {
-  @apply bg-[#DADDE1];
+  @apply bg-white-higher;
 }
 
 .switchLang:hover .secondlang {
-  @apply border-[#DADDE1] text-[#DADDE1];
+  @apply border-white-higher text-white-higher;
 }
 
 .mainlang {
-  @apply absolute top-0 left-0 w-6 h-6 z-[1] rounded bg-[#b5b5b5] text-[#27282e] text-sm content-center duration-100 ease-in-out;
+  @apply absolute top-0 left-0 w-6 h-6 z-[1] rounded bg-white-highest text-default text-sm content-center duration-100 ease-in-out;
 }
 
 .secondlang {
-  @apply absolute left-3 top-3 w-6 h-6 z-[0] rounded border-[1px] border-[#b5b5b5] text-[#b5b5b5] text-sm content-center duration-100 ease-in-out;
+  @apply absolute left-3 top-3 w-6 h-6 z-[0] rounded border-[1px] border-white-highest text-dimmest text-sm content-center duration-100 ease-in-out;
 }
 </style>
