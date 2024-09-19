@@ -42,7 +42,8 @@
     title: {
       experiment: '删除该实验',
       project: '删除该项目'
-    }
+    },
+    success: '删除成功'
   },
   search: {
     placeholder: '搜索实验...'

@@ -42,7 +42,8 @@
     title: {
       experiment: 'Delete this experiment',
       project: 'Delete this project'
-    }
+    },
+    success: 'Delete Successfully'
   },
   search: {
     placeholder: 'Search Lab...'

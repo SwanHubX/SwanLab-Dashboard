@@ -100,6 +100,7 @@ class SwanBoardCallback(SwanKitCallback):
         # 这个循环的目的是如果创建失败则等零点五秒重新生成后缀重新创建，直到创建成功
         # 但是由于需要考虑suffix为none不生成后缀的情况，所以需要在except中判断一下
         old = exp_name
+        spare_suffix=1
         while True:
             experiment_name, exp_name = self.__get_exp_name(old, suffix)
             try:
@@ -114,8 +115,11 @@ class SwanBoardCallback(SwanKitCallback):
                     continue
                 # 其他情况下，说明是用户自定义的后缀，需要报错
                 else:
-                    Experiment.purely_delete(run_id=run_id)
-                    raise ExistedError(f"Experiment {exp_name} has existed in local, please try another name.")
+                    old=exp_name+'-'+str(spare_suffix)
+                    spare_suffix+=1
+                    swanlog.debug(f"Experiment {exp_name} has existed, try another name...")
+                    # Experiment.purely_delete(run_id=run_id)
+                    # raise ExistedError(f"Experiment {exp_name} has existed in local, please try another name.")
         # 执行相关设置
         setter(experiment_name, self.exp.light, self.exp.dark, self.exp.description)
 
