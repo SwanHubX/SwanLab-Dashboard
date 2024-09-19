@@ -2,10 +2,21 @@
   <div class="pr-5" icon="config" :title="$t('experiment.index.config.title')" :retract="false">
     <div class="pl-6 w-full grid lg:grid-cols-2 lg:gap-10">
       <div class="pt-4 w-full">
-        <DataTable class="w-full" table-border :column="column" :data="configs" title="Config" />
+        <DataTable
+          class="w-full"
+          table-border
+          :column="column"
+          :data="configs"
+          :title="$t('experiment.index.config.table.config')"
+        />
       </div>
       <div class="pt-4">
-        <DataTable table-border :column="column" :data="summaries" title="Summary" />
+        <DataTable
+          table-border
+          :column="column"
+          :data="summaries"
+          :title="$t('experiment.index.config.table.summary')"
+        />
       </div>
     </div>
     <div class="w-full h-6"></div>
@@ -25,20 +36,23 @@ import { ref } from 'vue'
 import { useExperimentStore } from '@swanlab-vue/store'
 import { computed } from 'vue'
 import { formatNumber2SN } from '@swanlab-vue/utils/common'
+import { t } from '@swanlab-vue/i18n'
 
 const experiment = ref(useExperimentStore().experiment)
 
 // 通用表头
-const column = [
-  {
-    title: 'key',
-    key: 'key'
-  },
-  {
-    title: 'value',
-    key: 'value'
-  }
-]
+const column = computed(() => {
+  return [
+    {
+      title: t('experiment.index.config.table.key'),
+      key: 'key'
+    },
+    {
+      title: t('experiment.index.config.table.value'),
+      key: 'value'
+    }
+  ]
+})
 
 // ---------------------------------- 转化实验配置为表格数据 ----------------------------------
 

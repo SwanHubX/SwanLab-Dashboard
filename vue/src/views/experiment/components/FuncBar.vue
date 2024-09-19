@@ -100,7 +100,7 @@ const download = () => {
 
 <style lang="scss" scoped>
 button {
-  @apply rounded-lg px-3 py-1 flex items-center gap-2;
+  @apply rounded-lg px-3 py-1 flex items-center gap-2 truncate;
 }
 
 .icon {

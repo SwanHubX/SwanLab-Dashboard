@@ -15,22 +15,25 @@
  * @file: SLConfirm.vue
  * @since: 2024-01-03 19:19:46
  **/
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import SLModal from '../SLModal.vue'
 import { reactive } from 'vue'
 import SLButton from '../SLButton.vue'
+import { t } from '@swanlab-vue/i18n'
 
 const visiable = ref(false)
-const defaultConfig = {
-  title: 'Are you sure?',
-  content: 'Are you sure you want to do this?',
-  confirm: 'Yes, I confirm',
-  cancel: 'Cancel'
-}
+const defaultConfig = computed(() => {
+  return {
+    title: t('common.confirm.title'),
+    content: t('common.confirm.content'),
+    confirm: t('common.confirm.confirm'),
+    cancel: t('common.confirm.cancel')
+  }
+})
 
 const text = reactive({
-  title: defaultConfig.title,
-  content: defaultConfig.content,
+  title: defaultConfig.value.title,
+  content: defaultConfig.value.content,
   confirm: 'Yes, I confirm',
   cancel: 'Cancel'
 })
@@ -44,10 +47,11 @@ const callback = {
 // 通过调用此方法，显示弹窗，传入标题、内容、配置，配置包含：确认按钮文字、取消按钮文字、确认回调、取消回调
 const show = (title, content, config, resolve, reject) => {
   visiable.value = true
-  text.title = title || defaultConfig.title
-  text.content = content || defaultConfig.content
-  text.confirm = config?.buttonText?.confirm || defaultConfig.confirm
-  text.cancel = config?.buttonText?.cancel || defaultConfig.cancel
+  text.title = title || defaultConfig.value.title
+  text.content = content || defaultConfig.value.content
+  text.confirm = config?.buttonText?.confirm || defaultConfig.value.confirm
+  text.cancel = config?.buttonText?.cancel || defaultConfig.value.cancel
+
   callback.resolve = resolve
   callback.reject = reject
 }

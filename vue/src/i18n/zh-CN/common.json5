@@ -1,42 +1,51 @@
 {
   'config-editor': {
-    button: 'Edit',
-    'not-allowed': 'Not Allowed Since Is Running',
+    button: '编辑',
+    'not-allowed': '正在运行，无法操作',
     save: {
-      default: 'save changes',
-      savimg: 'saving',
-      success: 'Save Successfully'
+      default: '保存更改',
+      savimg: 'saving', //？
+      success: '保存成功'
     },
     'sub-title': {
       experiment: {
-        desc: 'Description',
-        name: 'Experiment name'
+        desc: '描述',
+        name: '实验名称'
       },
       project: {
-        desc: 'Description',
-        name: 'Project name'
+        desc: '描述',
+        name: '项目名称'
       }
     },
     title: {
-      experiment: 'Modify Experiment Information',
-      project: 'Modify Project Information'
+      experiment: '修改实验信息',
+      project: '修改项目信息'
+    },
+    error: {
+      project_change: '没有项目配置变更',
+      experiment_change: '没有实验配置变更',
+      project_name: '无效项目名称',
+      experiment_name: '无效实验名称',
+      name: '过长或存在非法字符',
+      description: '非法描述',
+      experiment_duplicated: '实验名重复'
     }
   },
   copy: '复制成功！',
   delete: {
-    button: 'Delete',
+    button: '删除',
     content: {
-      experiment: '一旦你删除了一个实验，就没有回头路了。请确认一下。',
-      project: '一旦你删除了一个项目，就没有回头路了。一定要确定。'
+      experiment: '一旦你删除了该实验，将无法恢复。请确认。',
+      project: '一旦你删除了该项目，将无法恢复。请确认。'
     },
-    'not-allowed': 'Not Allowed Since Is Running',
+    'not-allowed': '正在运行，无法操作',
     title: {
-      experiment: '删除这个实验',
-      project: '删除这个项目'
+      experiment: '删除该实验',
+      project: '删除该项目'
     }
   },
   search: {
-    placeholder: 'Search Lab...'
+    placeholder: '搜索实验...'
   },
   sidebar: {
     experiments: {
@@ -51,5 +60,11 @@
   },
   table: {
     empty: '暂无数据'
+  },
+  confirm: {
+    title: '是否确认?',
+    content: '确认这样操作?',
+    confirm: '确认',
+    cancel: '取消'
   }
 }

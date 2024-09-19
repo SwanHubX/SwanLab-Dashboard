@@ -5,6 +5,7 @@ import moment from './moment.json5'
 import common from './common.json5'
 import error from './error.json5'
 import chart from './chart.json5'
+import nav from './nav.json5'
 
 export default {
   chart,
@@ -13,5 +14,6 @@ export default {
   experiment,
   moment,
   common,
-  error
+  error,
+  nav
 }

@@ -58,6 +58,7 @@ import { useProjectStore, useExperimentStore } from '@swanlab-vue/store'
 import { useRouter } from 'vue-router'
 import { message } from '@swanlab-vue/components/message'
 import { t } from '@swanlab-vue/i18n'
+
 import { ref } from 'vue'
 
 const router = useRouter()
@@ -92,7 +93,9 @@ const modifyExperiment = async (newV, hideModal) => {
 }
 
 // ---------------------------------- 导航标签配置 ----------------------------------
-const navs = [
+
+// *静态数据 国际化需要放到computed中，切换时才会有响应式
+const navs = computed(() => [
   {
     label: t('experiment.navs.index'),
     to: `/experiment/${experimentStore.id}/index`,
@@ -113,7 +116,7 @@ const navs = [
     to: `/experiment/${experimentStore.id}/env`,
     icon: 'info'
   }
-]
+])
 </script>
 
 <style scoped lang="scss">
