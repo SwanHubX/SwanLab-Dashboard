@@ -12,7 +12,6 @@ import os
 import ujson
 import shutil
 from fastapi import Request
-from urllib.parse import quote
 from swanboard.utils import check_desc_format, get_swanlog_dir, COLOR_LIST, swanlog
 import yaml
 from typing import List
@@ -124,12 +123,11 @@ def get_project_summary(project_id: int = DEFAULT_PROJECT_ID) -> dict:
             "id": experiment.id,
             "name": experiment.name,
             "run_id": experiment.run_id,
-            "tags": [tag["name"] for tag in __to_list(experiment.tags)],
+            "tags": [{"name": tag["name"], "sort": tag["sort"]} for tag in __to_list(experiment.tags)],
         }
         for experiment in experiments
     ]
     ids = [item["id"] for item in exprs]
-
     # 根据 id 列表找到所有的 tag，提出不含重复 tag 名的元组
     # tags = Tag.filter(Tag.experiment_id.in_(ids)).order_by(Tag.experiment_id)
     tags = (
@@ -151,12 +149,13 @@ def get_project_summary(project_id: int = DEFAULT_PROJECT_ID) -> dict:
     data = {}
     # 第一层循环对应实验层，每次探寻一个实验
     for expr in exprs:
-        # 第二层为 tag 层，在实验目录下遍历所有 tag，若存在则获取最后一个次提交的值
+        # 第二层为 tag 层，在实验目录下遍历所有 tag，若存在则获取最后一次提交的值
         experiment_summaries = {}
         for tag in expr["tags"]:
-            tag_path = get_tag_dir(expr["run_id"], quote(tag, safe=""))
+            # tag 结构：{ name: tag_name, sort: tag_sort }，其中 sort 同时为 tag 文件夹名
+            tag_path = get_tag_dir(expr["run_id"], str(tag["sort"]))
             if not os.path.exists(tag_path):
-                experiment_summaries[tag] = "TypeError"
+                experiment_summaries[tag["name"]] = "TypeError"
                 continue
             # 获取所有 tag 文件
             logs = get_tag_files(tag_path, exclude=LOGS_CONFIGS)
@@ -165,9 +164,9 @@ def get_project_summary(project_id: int = DEFAULT_PROJECT_ID) -> dict:
                 try:
                     lines = f.readlines()
                     tag_data = ujson.loads(lines[-1])
-                    experiment_summaries[tag] = tag_data["data"]
+                    experiment_summaries[tag["name"]] = tag_data["data"]
                 except Exception as e:
-                    swanlog.error(f"[expr: {expr['name']} - {tag}] --- {e}")
+                    swanlog.error(f"[expr: {expr['name']} - {tag["name"]}] --- {e}")
                     continue
 
         data[expr["name"]] = experiment_summaries
