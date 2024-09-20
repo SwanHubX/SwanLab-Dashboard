@@ -121,6 +121,7 @@ class Experiment(SwanModel):
         cls,
         name: str,
         run_id: str,
+        colors: tuple,
         description: str = None,
         project_id: int = Project.DEFAULT_PROJECT_ID,
         num: int = None,
@@ -134,6 +135,8 @@ class Experiment(SwanModel):
             实验名称
         run_id : str
             运行时信息
+        colors : Tuple[str, str], optional
+            实验颜色，[light, dark]，默认为None
         description : str
             实验描述，默认为空字符串
         project_id : int, optional
@@ -160,8 +163,7 @@ class Experiment(SwanModel):
             raise ForeignProNotExistedError("项目不存在")
         # 这个sum是+1以后的值
         _sum = Project.increase_sum(project_id)
-        # 调用父类的create方法创建实验实例
-        light, dark = generate_color(_sum if num is None else num + 1)
+        light, dark = colors
         try:
             return super().create(
                 name=name,

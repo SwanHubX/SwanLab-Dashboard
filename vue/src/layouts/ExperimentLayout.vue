@@ -73,7 +73,7 @@ const deleteExperiment = () => {
     .then(({ data }) => {
       projectStore.deleteExperiment(data.experiment_id)
       router.replace('/').then(() => {
-        message.success('Delete Successfully')
+        message.success(t('common.delete.success'))
       })
     })
     .catch(({ data }) => {

@@ -166,7 +166,7 @@ def get_project_summary(project_id: int = DEFAULT_PROJECT_ID) -> dict:
                     tag_data = ujson.loads(lines[-1])
                     experiment_summaries[tag["name"]] = tag_data["data"]
                 except Exception as e:
-                    swanlog.error(f"[expr: {expr['name']} - {tag["name"]}] --- {e}")
+                    swanlog.error(f"[expr: {expr['name']} - {tag['name']}] --- {e}")
                     continue
 
         data[expr["name"]] = experiment_summaries
