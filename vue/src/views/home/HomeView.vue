@@ -50,7 +50,7 @@
             {{ getDuration(row) }}
           </template>
           <template v-for="item in configs" :key="item.slot" v-slot:[item.slot]="{ row }">
-            {{ row.config[item.slot]?.value != undefined ? row.config[item.slot]?.value : '-' }}
+            {{ row.config?.[item.slot]?.value != undefined ? row.config[item.slot]?.value : '-' }}
           </template>
         </ExprTable>
       </div>
@@ -140,6 +140,7 @@ const configs = ref([])
 ;(() => {
   // 寻找需要增加的表头
   experiments.value.map((item) => {
+    if (!item.config) return
     Object.entries(item.config).forEach(([key]) => {
       // 如果这个key已经存在configs中，跳过
       if (configs.value.some((config) => config.title === key)) {
@@ -155,6 +156,7 @@ const configs = ref([])
   // column.value.push(...configs.value)
 })()
 
+console.log(configs.value)
 // ---------------------------------- 表格数据，同时还有tag的表头处理 ----------------------------------
 
 // 表格体数据
