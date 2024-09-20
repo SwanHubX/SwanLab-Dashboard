@@ -1,9 +1,8 @@
 from swankit.callback import SwanKitCallback, ColumnInfo
 from .db.models import *
 from .db import add_multi_chart, connect, NotExistedError, ExistedError, ChartTypeError
-from typing import Tuple, Callable, Optional
-from swanboard.utils import check_exp_name_format, check_desc_format, swanlog, get_swanlog_dir
-from datetime import datetime
+from typing import Tuple, Optional
+from swanboard.utils import swanlog, get_swanlog_dir
 import time
 import re
 
@@ -16,63 +15,6 @@ class SwanBoardCallback(SwanKitCallback):
     def __init__(self):
         super(SwanBoardCallback, self).__init__()
         self.exp: Optional[Experiment] = None
-
-    @staticmethod
-    def __get_exp_name(experiment_name: str = None, suffix: str = None) -> Tuple[str, str]:
-        """
-        预处理实验名称，如果实验名称过长，截断
-
-        Parameters
-        ----------
-        experiment_name : str
-            实验名称
-        suffix : str
-            实验名称后缀添加方式，可以为None、"default"或自由后缀，前者代表不添加后缀，后者代表添加时间戳后缀
-
-        Returns
-        ----------
-        experiment_name : str
-            校验后的实验名称
-        exp_name : str
-            最终的实验名称
-        """
-        # ---------------------------------- 校验实验名称 ----------------------------------
-        experiment_name = "exp" if experiment_name is None else experiment_name
-        # 校验实验名称
-        experiment_name_checked = check_exp_name_format(experiment_name)
-        # 如果实验名称太长的tip
-        tip = "The experiment name you provided is too long, it has been truncated automatically."
-
-        # 如果前后长度不一样，说明实验名称被截断了，提醒
-        if len(experiment_name_checked) != len(experiment_name) and suffix is None:
-            swanlog.warning(tip)
-
-        # 如果suffix为None, 则不添加后缀，直接返回
-        if suffix is None or suffix is False:
-            return experiment_name_checked, experiment_name
-
-        # 如果suffix为True, 则添加默认后缀
-        if suffix is True:
-            suffix = "default"
-
-        # suffix必须是字符串
-        if not isinstance(suffix, str):
-            raise TypeError("The suffix must be a string, but got {}".format(type(suffix)))
-
-        # 如果suffix_checked为default，则设置为默认后缀
-        if suffix.lower().strip() == "default":
-            # 添加默认后缀
-            default_suffix = "{}".format(datetime.now().strftime("%b%d_%H-%M-%S"))
-            exp_name = "{}_{}".format(experiment_name_checked, default_suffix)
-        else:
-            exp_name = "{}_{}".format(experiment_name_checked, suffix)
-
-        # 校验实验名称，如果实验名称过长，截断
-        experiment_name_checked = check_exp_name_format(exp_name)
-        if len(experiment_name_checked) != len(exp_name):
-            swanlog.warning(tip)
-
-        return experiment_name_checked, exp_name
 
     def __str__(self) -> str:
         return "SwanBoardCallback"
@@ -89,42 +31,32 @@ class SwanBoardCallback(SwanKitCallback):
         exp_name: str,
         description: str,
         num: int,
-        suffix: str,
-        setter: Callable[[str, str, str, str], None],
+        colors: Tuple[str, str],
     ):
-        # ---------------------------------- 实验描述校验 ----------------------------------
-        description = description if description is not None else ""
-        desc = check_desc_format(description)
-        if desc != description:
-            swanlog.warning("The description has been truncated automatically.")
+        pattern = r"-\d+$"
         # ---------------------------------- 实验名称校验 ----------------------------------
         # 这个循环的目的是如果创建失败则等零点五秒重新生成后缀重新创建，直到创建成功
-        # 但是由于需要考虑suffix为none不生成后缀的情况，所以需要在except中判断一下
-        old = exp_name
-        spare_suffix = 1
         while True:
-            experiment_name, exp_name = self.__get_exp_name(old, suffix)
             try:
                 # 获得数据库实例
-                self.exp = Experiment.create(name=exp_name, run_id=run_id, description=description, num=num)
+                self.exp = Experiment.create(
+                    name=exp_name,
+                    run_id=run_id,
+                    description=description,
+                    num=num,
+                    colors=colors,
+                )
                 break
             except ExistedError:
-                if re.search(r'-\d+$', exp_name):
-                    # 提取末尾的数字
-                    match = re.search(r'(\d+)$', exp_name)
-                    if match:
-                        last_number = int(match.group(1))
-                        new_suffix = last_number + 1
-                        old = exp_name[:match.start()] + "-" + str(new_suffix)
-                    else:
-                        old = exp_name + "-" + str(spare_suffix)
-                        spare_suffix += 1
-                else:
-                    old = exp_name + "-" + str(spare_suffix)
-                    spare_suffix += 1
                 swanlog.debug(f"Experiment {exp_name} has existed, try another name...")
-        # 执行相关设置
-        setter(experiment_name, self.exp.light, self.exp.dark, self.exp.description)
+                # 以-{数字}结尾
+                if bool(re.search(pattern, exp_name)):
+                    arr = exp_name.split("-")
+                    arr[-1] = str(int(arr[-1]) + 1)
+                    exp_name = "-".join(arr)
+                else:
+                    exp_name = f"{exp_name}-1"
+                time.sleep(0.5)
 
     def on_log(self):
         # 每一次log的时候检查一下数据库中的实验状态
