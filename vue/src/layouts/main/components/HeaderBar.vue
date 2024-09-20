@@ -11,16 +11,9 @@
         <!-- <span class="whitespace-nowrap text-xs pl-2 text-dimmer"> {{ formatVersion(version) }}</span> -->
       </div>
     </div>
-    <div class="w-full grow flex justify-end gap-6 px-8">
-      <!-- button: language switch -->
-      <div class="flex items-center font-semibold">
-        <button @click="switchLang()" class="switchLang relative w-9 h-9">
-          <div :class="mainLangClass">中</div>
-          <div :class="secondLangClass">En</div>
-        </button>
-      </div>
+    <div class="w-full grow flex justify-end gap-6 pl-8 pr-4">
       <!-- links -->
-      <div class="px-6 items-center font-semibold gap-8 md:flex hidden">
+      <div class="pl-6 items-center font-semibold gap-6 md:flex hidden">
         <a
           :href="item.link"
           target="_blank"
@@ -33,7 +26,14 @@
       </div>
     </div>
     <!-- fixeds -->
-    <div class="flex items-center font-semibold">
+    <div class="flex items-center font-semibold gap-4">
+      <!-- button: language switch -->
+      <div class="flex items-center font-semibold">
+        <button @click="switchLang()" class="switchLang relative w-9 h-9">
+          <div :class="mainLangClass">中</div>
+          <div :class="secondLangClass">En</div>
+        </button>
+      </div>
       <a
         :href="item.link"
         target="_blank"
