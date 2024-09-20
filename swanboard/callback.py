@@ -5,6 +5,7 @@ from typing import Tuple, Callable, Optional
 from swanboard.utils import check_exp_name_format, check_desc_format, swanlog, get_swanlog_dir
 from datetime import datetime
 import time
+import re
 
 
 class SwanBoardCallback(SwanKitCallback):
@@ -108,18 +109,20 @@ class SwanBoardCallback(SwanKitCallback):
                 self.exp = Experiment.create(name=exp_name, run_id=run_id, description=description, num=num)
                 break
             except ExistedError:
-                # 如果suffix名为default，说明是自动生成的后缀，需要重新生成后缀
-                if isinstance(suffix, str) and suffix.lower().strip() == "default":
-                    swanlog.debug(f"Experiment {exp_name} has existed, try another name...")
-                    time.sleep(0.5)
-                    continue
-                # 其他情况下，说明是用户自定义的后缀，需要报错
+                if re.search(r'-\d+$', exp_name):
+                    # 提取末尾的数字
+                    match = re.search(r'(\d+)$', exp_name)
+                    if match:
+                        last_number = int(match.group(1))
+                        new_suffix = last_number + 1
+                        old = exp_name[:match.start()] + "-" + str(new_suffix)
+                    else:
+                        old = exp_name + "-" + str(spare_suffix)
+                        spare_suffix += 1
                 else:
                     old = exp_name + "-" + str(spare_suffix)
                     spare_suffix += 1
-                    swanlog.debug(f"Experiment {exp_name} has existed, try another name...")
-                    # Experiment.purely_delete(run_id=run_id)
-                    # raise ExistedError(f"Experiment {exp_name} has existed in local, please try another name.")
+                swanlog.debug(f"Experiment {exp_name} has existed, try another name...")
         # 执行相关设置
         setter(experiment_name, self.exp.light, self.exp.dark, self.exp.description)
 
