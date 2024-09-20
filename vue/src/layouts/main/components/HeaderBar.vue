@@ -26,7 +26,7 @@
       </div>
     </div>
     <!-- fixeds -->
-    <div class="flex items-center font-semibold gap-4">
+    <div class="flex items-center font-semibold gap-6">
       <!-- button: language switch -->
       <div class="flex items-center font-semibold">
         <button @click="switchLang()" class="switchLang relative w-9 h-9">
