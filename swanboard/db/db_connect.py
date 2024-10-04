@@ -33,6 +33,9 @@ def connect(path: str = None, autocreate: bool = False) -> SqliteDatabase:
         是否自动创建数据库，如果设置为True，当数据库不存在时，会自动创建数据库
         如果设置为False，当数据库不存在时，会抛出FileNotFoundError异常
         设置此参数是为了严格控制数据库创建行为，避免误操作
+    wal : bool
+        是否启用WAL模式，如果启用，可以提高并发性能，但会增加数据库文件大小
+        WAL模式下，数据库文件会变大，但是读写性能会快很多
 
     Return:
     -------
@@ -59,8 +62,8 @@ def connect(path: str = None, autocreate: bool = False) -> SqliteDatabase:
     db_exists = os.path.exists(db_path)
     if not db_exists and not autocreate:
         raise FileNotFoundError(f"DB file {db_path} not found")
-    # 启用外键约束
-    swandb = SqliteDatabase(db_path, pragmas={"foreign_keys": 1})
+    # 启用外键约束，启用WAL模式
+    swandb = SqliteDatabase(db_path, pragmas={"foreign_keys": 1, "journal_mode": "wal"})
     if not bound:
         # 动态绑定数据库
         swandb.connect()
