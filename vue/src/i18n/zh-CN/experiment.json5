@@ -81,13 +81,14 @@
       overview: '概览'
     },
     groups: {
-      experiment: "实验",
-      system: "系统",
-      python: "Python",
+      experiment: '实验',
+      system: '系统',
+      python: 'Python',
       git: 'Git',
-      cpu: "处理器",
-      gpu: "GPU",
-      nvidia: "英伟达GPU"
+      cpu: '处理器',
+      gpu: 'GPU',
+      nvidia: '英伟达GPU',
+      apple: 'Apple'
     },
     keys: {
       OS: '操作系统',
@@ -103,7 +104,7 @@
       gpu_cores: 'GPU数量',
       gpu_type: 'GPU类型',
       gpu_driver: '驱动版本',
-      cuda: "CUDA版本",
+      cuda: 'CUDA版本',
       hostname: '主机名',
       logdir: '日志目录',
       memory: '内存',
@@ -116,7 +117,8 @@
       pid: '进程ID'
     },
     empty: {
-      requirements: '暂无依赖'
+      requirements: '暂无依赖',
+      hardware: '暂无硬件信息'
     }
   },
   'func-bar': {

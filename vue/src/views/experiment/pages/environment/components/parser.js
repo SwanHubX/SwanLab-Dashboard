@@ -52,12 +52,13 @@ const parseGitInfo = (system) => {
   ]
 }
 
-// 硬件(除 gpu 相关)
+// 硬件信息
 export const getHardwareData = (exp) => {
   const system = exp?.system
-  if (!system) return {}
+  if (!system) return null
   const gpu = exp?.system?.gpu
   return {
+    apple: system.soc?.apple,
     cpu: parseCPUInfo(system),
     memory: parseMemoryInfo(system),
     gpu: gpu.type ? gpu : null,
@@ -73,5 +74,5 @@ const parseCPUInfo = (system) => {
 }
 
 const parseMemoryInfo = (system) => {
-  return [ { key: 'memory', value: system.memory ? system.memory + 'GB' : '' } ]
+  return [{ key: 'memory', value: system.memory ? system.memory + 'GB' : '' }]
 }

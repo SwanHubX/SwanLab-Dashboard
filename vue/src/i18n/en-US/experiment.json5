@@ -85,9 +85,10 @@
       system: 'System',
       python: 'Python',
       git: 'Git',
-      cpu: "CPU",
+      cpu: 'CPU',
       gpu: 'GPU',
-      nvidia: 'NVIDIA GPU'
+      nvidia: 'NVIDIA GPU',
+      apple: "Apple"
     },
     keys: {
       name: 'Experiment name',
