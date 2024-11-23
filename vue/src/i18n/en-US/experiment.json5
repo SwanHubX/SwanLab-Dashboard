@@ -76,9 +76,18 @@
       requirements: 'Requirements'
     },
     title: {
-      exp_env_index: 'Overview',
-      exp_env_hardware: 'System Hardware',
-      exp_env_dependencies: 'Requirements'
+      overview: 'Overview',
+      hardware: 'System Hardware',
+      dependencies: 'Requirements'
+    },
+    groups: {
+      experiment: 'Experiment',
+      system: 'System',
+      python: 'Python',
+      git: 'Git',
+      cpu: "CPU",
+      gpu: 'GPU',
+      nvidia: 'NVIDIA GPU'
     },
     keys: {
       name: 'Experiment name',
@@ -99,13 +108,16 @@
       memory: 'Memory',
       gpu_cores: 'GPU count',
       gpu_type: 'GPU type',
+      gpu_driver: 'Driver version',
+      cuda: 'CUDA version',
       logdir: 'Logdir',
       swanlab: 'SwanLab Version',
-      verbose: 'Python Verbose',
+      verbose: 'Verbose',
       pid: 'PID'
     },
     empty: {
-      requirements: 'No requirements found'
+      requirements: 'No Requirements Found',
+      hardware: 'No Hardware Information'
     }
   },
   'func-bar': {
