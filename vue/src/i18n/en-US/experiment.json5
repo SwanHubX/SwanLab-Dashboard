@@ -88,7 +88,7 @@
       cpu: 'CPU',
       gpu: 'GPU',
       nvidia: 'NVIDIA GPU',
-      apple: "Apple"
+      apple: 'Apple'
     },
     keys: {
       name: 'Experiment name',
@@ -114,7 +114,8 @@
       logdir: 'Logdir',
       swanlab: 'SwanLab Version',
       verbose: 'Verbose',
-      pid: 'PID'
+      pid: 'PID',
+      provider: 'Provider'
     },
     empty: {
       requirements: 'No Requirements Found',

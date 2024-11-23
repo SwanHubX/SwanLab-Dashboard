@@ -114,7 +114,8 @@
       swanlab: 'SwanLab版本',
       workspace: '运行目录',
       verbose: '详细信息',
-      pid: '进程ID'
+      pid: '进程ID',
+      provider: '云厂商'
     },
     empty: {
       requirements: '暂无依赖',

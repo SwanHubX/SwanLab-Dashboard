@@ -25,7 +25,9 @@ const parseExperimentInfo = (exp, logdir) => {
 
 const parseSystemInfo = (system) => {
   if (!system) return null
+  const provider = system?.swanlab?._coop?.qing_cloud?.aicp_platform
   return [
+    { key: 'provider', value: provider && '基石智算', link: 'https://coreshub.cn/' },
     { key: 'hostname', value: system.hostname },
     { key: 'OS', value: system.os },
     { key: 'pid', value: system.pid }
@@ -46,7 +48,7 @@ const parsePythonInfo = (system) => {
 const parseGitInfo = (system) => {
   if (!system) return null
   return [
-    { key: 'git_remote', value: system.git_remote, hightLight: true, link: true },
+    { key: 'git_remote', value: system.git_remote, hightLight: true, link: system.git_remote },
     { key: 'git_branch', value: system.git_info ? system.git_info[0] : '' },
     { key: 'git_commit', value: system.git_info ? system.git_info[1] : '', hightLight: true, copy: true }
   ]
