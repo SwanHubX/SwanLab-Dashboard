@@ -36,6 +36,8 @@ class SwanBoardCallback(SwanKitCallback):
         pattern = r"-\d+$"
         # ---------------------------------- 实验名称校验 ----------------------------------
         # 这个循环的目的是如果创建失败则等零点五秒重新生成后缀重新创建，直到创建成功
+        # 搜索所有以exp_name开头的实验
+        count = Experiment.filter(Experiment.name.startswith(exp_name)).count()
         while True:
             try:
                 # 获得数据库实例
@@ -48,15 +50,16 @@ class SwanBoardCallback(SwanKitCallback):
                 )
                 break
             except ExistedError:
+                count += 1
                 swanlog.debug(f"Experiment {exp_name} has existed, try another name...")
                 # 以-{数字}结尾
                 if bool(re.search(pattern, exp_name)):
                     arr = exp_name.split("-")
-                    arr[-1] = str(int(arr[-1]) + 1)
+                    arr[-1] = str(count)
                     exp_name = "-".join(arr)
                 else:
-                    exp_name = f"{exp_name}-1"
-                time.sleep(0.5)
+                    exp_name = f"{exp_name}-{count}"
+                time.sleep(0.2)
 
     def on_log(self):
         # 每一次log的时候检查一下数据库中的实验状态
