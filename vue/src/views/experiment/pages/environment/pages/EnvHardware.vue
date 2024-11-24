@@ -1,11 +1,14 @@
 <template>
-  <div class="w-full border p-6 rounded-lg bg-default">
-    <h1 class="w-full text-xl font-semibold pb-4 border-b mb-2">{{ $t(`experiment.env.title.${route.name}`) }}</h1>
-    <EnvItems :data="item" v-for="item in environments" :key="item" />
-    <EnvGPUItem />
-    <div v-if="Object.keys(experimentStore.experiment.system).length === 0">
-      <p class="text-center pt-5">No hardware information</p>
-    </div>
+  <div class="w-full border p-6 rounded-lg bg-default" v-if="data">
+    <h1 class="w-full text-xl font-semibold pb-4 border-b">{{ $t('experiment.env.title.hardware') }}</h1>
+    <AppleChip :data="data.apple" v-if="isApple" />
+    <EnvGroup :title="$t('experiment.env.groups.cpu')" :data="data.cpu" v-if="data.cpu && !isApple" />
+    <EnvGroup :data="data.memory" v-if="data.memory && !isApple" />
+    <NvidiaGpu :data="data.nvidia" type="nvidia" v-if="data.nvidia" />
+    <NvidiaGpu :data="data.gpu" type="gpu" v-else />
+  </div>
+  <div v-else>
+    <p class="text-center pt-5">{{ $t('experiment.env.empty.hardware') }}</p>
   </div>
 </template>
 
@@ -15,37 +18,17 @@
  * @file: EnvHardware.vue
  * @since: 2024-01-24 21:19:24
  **/
-
 import { computed } from 'vue'
 import { useExperimentStore } from '@swanlab-vue/store'
-import EnvItems from '../components/EnvItems.vue'
-import EnvGPUItem from '../components/EnvGPUItem.vue'
-import { useRoute } from 'vue-router'
-const experimentStore = useExperimentStore()
-const experiment = experimentStore.experiment
-const system = experiment.system
-const route = useRoute()
-const environments = computed(() => {
-  return [cpu.value]
-})
+import EnvGroup from '../components/EnvGroup.vue'
+import { getHardwareData } from '@swanlab-vue/views/experiment/pages/environment/components/parser.js'
+import NvidiaGpu from '@swanlab-vue/views/experiment/pages/environment/components/hardware/NvidiaGpu.vue'
+import AppleChip from '@swanlab-vue/views/experiment/pages/environment/components/hardware/AppleChip.vue'
+const { experiment } = useExperimentStore()
 
 // 系统硬件信息
-const cpu = computed(() => {
-  return [
-    {
-      key: 'brand',
-      value: system.cpu?.brand
-    },
-    {
-      key: 'cpu',
-      value: system.cpu?.cores || system.cpu
-    },
-    {
-      key: 'memory',
-      value: system.memory ? system.memory + 'GB' : ''
-    }
-  ]
-})
+const data = computed(() => getHardwareData(experiment))
+const isApple = computed(() => data.value?.apple)
 </script>
 
 <style lang="scss" scoped></style>

@@ -5,7 +5,7 @@
     <!-- value -->
     <span class="item" :class="{ 'high-light': highLight, copy: copy }" @click="copy && copyText(envValue)">
       <span v-if="!link">{{ envValue }}</span>
-      <a :href="envValue" target="_blank" class="hover:underline underline-offset-2" v-else>{{ envValue }}</a>
+      <a :href="link" target="_blank" class="hover:underline underline-offset-2" v-else>{{ envValue }}</a>
       <SLIcon icon="copy" class="copy-button" v-if="copy" />
     </span>
   </div>
@@ -35,8 +35,8 @@ defineProps({
     default: false
   },
   link: {
-    type: Boolean,
-    default: false
+    type: String,
+    default: null
   },
   copy: {
     type: Boolean,

@@ -1,7 +1,7 @@
 <template>
   <div class="w-full border p-6 rounded-lg bg-default" v-if="requirements">
     <div class="flex items-center justify-between border-b pb-4 mb-5">
-      <h1 class="text-xl font-semibold border-none basis-1/4">{{ $t(`experiment.env.title.${route.name}`) }}</h1>
+      <h1 class="text-xl font-semibold border-none basis-1/4">{{ $t('experiment.env.title.dependencies') }}</h1>
       <FuncBar
         class="basis-1/3"
         @input="search"
@@ -46,10 +46,8 @@ import { ref, computed } from 'vue'
 import { useExperimentStore } from '@swanlab-vue/store'
 import FuncBar from '@swanlab-vue/views/experiment/components/FuncBar.vue'
 import http from '@swanlab-vue/api/http'
-import { useRoute } from 'vue-router'
 const experimentStore = useExperimentStore()
 const requirements = ref()
-const route = useRoute()
 http
   .get(`/experiment/${experimentStore.id}/requirements`)
   .then(({ data }) => {
@@ -97,30 +95,3 @@ function splitStringBySearch(target, substring) {
 
 const filename = 'requirements.txt'
 </script>
-
-<style lang="scss" scoped>
-$duration: 3s;
-
-.magnifier {
-  @apply w-10 h-10;
-  animation: animloader $duration infinite;
-}
-
-@keyframes animloader {
-  0% {
-    transform: translate(-5px, -5px);
-  }
-  25% {
-    transform: translate(-5px, 5px);
-  }
-  50% {
-    transform: translate(5px, 5px);
-  }
-  75% {
-    transform: translate(5px, -5px);
-  }
-  100% {
-    transform: translate(-5px, -5px);
-  }
-}
-</style>

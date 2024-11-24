@@ -76,36 +76,50 @@
       requirements: '依赖'
     },
     title: {
-      exp_env_dependencies: '依赖',
-      exp_env_hardware: '系统硬件',
-      exp_env_index: '概览'
+      dependencies: '依赖',
+      hardware: '系统硬件',
+      overview: '概览'
+    },
+    groups: {
+      experiment: '实验',
+      system: '系统',
+      python: 'Python',
+      git: 'Git',
+      cpu: '处理器',
+      gpu: 'GPU',
+      nvidia: '英伟达GPU',
+      apple: 'Apple'
     },
     keys: {
       OS: '操作系统',
-      command: '命令',
+      command: '运行命令',
       brand: 'CPU型号',
       cpu: 'CPU数量',
       description: '描述',
-      duration: '持续时间',
-      executable: 'Python可执行文件',
+      duration: '运行时间',
+      executable: 'Python解释器',
       git_branch: 'Git分支',
       git_commit: 'Git提交',
       git_remote: 'Git仓库',
       gpu_cores: 'GPU数量',
       gpu_type: 'GPU类型',
+      gpu_driver: '驱动版本',
+      cuda: 'CUDA版本',
       hostname: '主机名',
-      logdir: '日志',
+      logdir: '日志目录',
       memory: '内存',
       name: '实验名称',
-      python: 'Python版本',
-      start_time: '起始时间',
+      python: '版本',
+      start_time: '开始于',
       swanlab: 'SwanLab版本',
-      workspace: '工作地址',
-      verbose: 'Python详细信息',
-      pid: '进程ID'
+      workspace: '运行目录',
+      verbose: '详细信息',
+      pid: '进程ID',
+      provider: '云厂商'
     },
     empty: {
-      requirements: '暂无依赖'
+      requirements: '暂无依赖',
+      hardware: '暂无硬件信息'
     }
   },
   'func-bar': {
