@@ -63,8 +63,8 @@ export const getHardwareData = (exp) => {
     apple: system.soc?.apple,
     cpu: parseCPUInfo(system),
     memory: parseMemoryInfo(system),
-    gpu: gpu.type ? gpu : null,
-    nvidia: gpu.nvidia
+    gpu: gpu?.type ? gpu : null,
+    nvidia: gpu?.nvidia
   }
 }
 
