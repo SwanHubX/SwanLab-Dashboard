@@ -4,10 +4,8 @@
     <AppleChip :data="data.apple" v-if="isApple" />
     <EnvGroup :title="$t('experiment.env.groups.cpu')" :data="data.cpu" v-if="hasCPU && !isApple" />
     <EnvGroup :data="data.memory" v-if="hasMem && !isApple" />
-    <template v-if="data.gpu">
-      <NvidiaGpu :data="data.nvidia" type="nvidia" v-if="data.nvidia" />
-      <NvidiaGpu :data="data.gpu" type="gpu" v-else />
-    </template>
+    <NvidiaGpu :data="data.nvidia" type="nvidia" v-if="data.nvidia" />
+    <NvidiaGpu :data="data.gpu" type="gpu" v-else-if="data.gpu" />
   </div>
   <div v-else>
     <p class="text-center pt-5">{{ $t('experiment.env.empty.hardware') }}</p>
