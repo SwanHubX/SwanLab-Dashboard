@@ -47,11 +47,11 @@
         </div>
         <!-- 没有日志 -->
         <div
-          class="w-full py-10 flex flex-col items-center text-lg font-semibold"
+          class="w-full py-10 flex justify-center items-center gap-2 font-semibold"
           v-if="logs.length === 0 && errorLogs.length === 0"
         >
-          <SLIcon class="magnifier" icon="search"></SLIcon>
-          <span>{{ $t('experiment.empty_log') }}</span>
+          <SLIcon class="size-5" icon="search"></SLIcon>
+          <span class="text-base">{{ $t('experiment.empty_log') }}</span>
         </div>
       </div>
       <div class="flex h-full items-center justify-center" v-else>
