@@ -1,4 +1,5 @@
-from swankit.callback import SwanKitCallback, ColumnInfo
+from swankit.callback import SwanKitCallback
+from swankit.callback.models import ColumnInfo
 from .db.models import *
 from .db import add_multi_chart, connect, NotExistedError, ExistedError, ChartTypeError
 from typing import Tuple, Optional
@@ -75,19 +76,22 @@ class SwanBoardCallback(SwanKitCallback):
             raise KeyboardInterrupt("The experiment has been stopped by the user")
 
     def on_column_create(self, column_info: ColumnInfo):
+
+        if column_info.cls != "CUSTOM":
+            return  # 屏蔽系统生成的指标
+        chart_type = column_info.chart_type.value.chart_type
         # 创建Chart
         chart = Chart.create(
             column_info.key,
             experiment_id=self.exp,
-            type=column_info.chart.value.chart_type,
-            reference=column_info.reference,
-            config=column_info.config,
+            type=chart_type,
+            reference=column_info.chart_reference.lower(),
         )
         # 创建命名空间，如果命名空间已经存在，会抛出ExistedError异常，捕获不处理即可
         # 需要指定sort，default命名空间的sort为0，其他命名空间的sort为None，表示默认添加到最后
-        namespace = column_info.namespace
+        namespace = column_info.section_name
         try:
-            n = Namespace.create(name=namespace, experiment_id=self.exp.id, sort=column_info.sort)
+            n = Namespace.create(name=namespace, experiment_id=self.exp.id, sort=column_info.section_sort)
             swanlog.debug(f"Namespace {namespace} created, id: {n.id}")
         except ExistedError:
             n: Namespace = Namespace.get(name=namespace, experiment_id=self.exp.id)
@@ -97,8 +101,8 @@ class SwanBoardCallback(SwanKitCallback):
         tag: Tag = Tag.create(
             experiment_id=self.exp.id,
             name=column_info.key,
-            type=column_info.chart.value.chart_type,
-            folder=column_info.id,
+            type=chart_type,
+            folder=column_info.kid,
         )
         # 添加一条source记录
         error = None
