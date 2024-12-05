@@ -1,4 +1,5 @@
-from swankit.callback import SwanKitCallback, ColumnInfo
+from swankit.callback import SwanKitCallback
+from swankit.callback.models import ColumnInfo
 from .db.models import *
 from .db import add_multi_chart, connect, NotExistedError, ExistedError, ChartTypeError
 from typing import Tuple, Optional
@@ -76,7 +77,7 @@ class SwanBoardCallback(SwanKitCallback):
 
     def on_column_create(self, column_info: ColumnInfo):
 
-        if column_info.key_class != "CUSTOM":
+        if column_info.cls != "CUSTOM":
             return  # 屏蔽系统生成的指标
         chart_type = column_info.chart_type.value.chart_type
         # 创建Chart
@@ -101,7 +102,7 @@ class SwanBoardCallback(SwanKitCallback):
             experiment_id=self.exp.id,
             name=column_info.key,
             type=chart_type,
-            folder=column_info.key_id,
+            folder=column_info.kid,
         )
         # 添加一条source记录
         error = None
