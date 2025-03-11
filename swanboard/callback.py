@@ -62,7 +62,7 @@ class SwanBoardCallback(SwanKitCallback):
                     exp_name = f"{exp_name}-{count}"
                 time.sleep(0.2)
 
-    def on_log(self):
+    def on_log(self, *args, **kwargs):
         # 每一次log的时候检查一下数据库中的实验状态
         # 如果实验状态不为0，说明实验已经结束，不允许再次调用log方法
         # 这意味着每次log都会进行查询，比较消耗性能，后续考虑采用多进程共享内存的方式进行优化
