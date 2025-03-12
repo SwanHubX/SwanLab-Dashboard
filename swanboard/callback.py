@@ -33,6 +33,8 @@ class SwanBoardCallback(SwanKitCallback):
         description: str,
         num: int,
         colors: Tuple[str, str],
+        *args,
+        **kwargs,
     ):
         pattern = r"-\d+$"
         # ---------------------------------- 实验名称校验 ----------------------------------
@@ -75,7 +77,7 @@ class SwanBoardCallback(SwanKitCallback):
         if exp.status != 0:
             raise KeyboardInterrupt("The experiment has been stopped by the user")
 
-    def on_column_create(self, column_info: ColumnInfo):
+    def on_column_create(self, column_info: ColumnInfo, *args, **kwargs):
 
         if column_info.cls != "CUSTOM":
             return  # 屏蔽系统生成的指标
@@ -118,6 +120,6 @@ class SwanBoardCallback(SwanKitCallback):
         except ChartTypeError:
             swanlog.debug("In the multi-experiment chart, the current type of tag is not as expected.")
 
-    def on_stop(self, error: str = None):
+    def on_stop(self, error: str = None, *args, **kwargs):
         # 更新数据库中的实验状态
         self.exp.update_status(-1 if error is not None else 1)
