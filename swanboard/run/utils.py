@@ -8,11 +8,10 @@ r"""
     启动服务相关的工具函数
 """
 from typing import MutableMapping, Optional
-import os
-from swanboard.utils import FONT
 import psutil
 import socket
 import re
+from rich.text import Text
 
 # ---------------------------------- 格式检查 ----------------------------------
 
@@ -79,28 +78,32 @@ def is_int(string: str) -> bool:
 class URL(object):
     # 生成链接提示,先生成各个组件
     _arrow = "\t\t\t➜"
-    arrow = FONT.bold(FONT.green(_arrow))
-    local = arrow + FONT.bold("  Local:   ")
-    netwo = arrow + FONT.bold("  Network: ")
+    arrow = Text(_arrow, "bold green")
+    local = arrow + Text("  Local:   ", "bold")
+    netwo = arrow + Text("  Network: ", "bold")
 
     def __init__(self, ip, port) -> None:
         self.ip = ip
         self.port = port
 
     def __str__(self) -> str:
-        url = FONT.blue(f"http://{self.ip}:{self.port}")
+        url = Text(f"http://{self.ip}:{self.port}", "blue")
         if self.is_localhost(self.ip):
             return self.local + url
         else:
             return self.netwo + url
 
     @classmethod
-    def last_tip(cls) -> str:
+    def last_tip(cls) -> Text:
         """
         打印最后一条提示信息
         """
-        t = FONT.dark_gray("  press ") + FONT.bold(FONT.default("ctrl + c")) + FONT.dark_gray(" to quit")
-        return FONT.dark_green(cls._arrow) + t
+        text = Text()
+        text.append(cls._arrow, "green")
+        text.append("  press ", style="grey39")
+        text.append("ctrl + c", style="bold")
+        text.append(" to quit", style="grey39")
+        return text
 
     @staticmethod
     def is_localhost(ip):

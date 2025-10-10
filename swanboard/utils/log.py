@@ -1,3 +1,3 @@
-from swankit.log import SwanLabSharedLog
+from swanlab.toolkit import SwanKitLogger
 
-swanlog = SwanLabSharedLog("swanboard")
+swanlog = SwanKitLogger("swanboard")

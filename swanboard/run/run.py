@@ -10,9 +10,10 @@ r"""
 import uvicorn
 from .utils import URL, is_ipv4, is_port
 import time
-from swanboard.utils import FONT, swanlog as swl, get_package_version
+from swanboard.utils import swanlog as swl, get_package_version
 from swanboard.db import connect
 import sys
+from rich.text import Text
 
 
 class SwanBoardRun:
@@ -70,11 +71,11 @@ class SwanBoardRun:
 
         start = time.time()
         # debug一下当前日志文件夹的位置
-        swl.debug("Try to explore the swanlab experiment logs in: " + FONT.bold(path))
+        swl.debug("Try to explore the swanlab experiment logs in:", Text(path, "bold"))
         try:
             connect(path=path)
         except FileNotFoundError:
-            swl.error("Can not find the swanlab db in: " + FONT.bold(path))
+            swl.error("Can not find the swanlab db in:",  Text(path, "bold"))
         # ---------------------------------- 日志打印 ----------------------------------
         # 可用URL
         ipv4 = URL.get_all_ip()
@@ -82,11 +83,10 @@ class SwanBoardRun:
             tip = "\n".join([URL(i, port).__str__() for i in ipv4])
         else:
             tip = URL(host, port).__str__()
-        tip = tip + "\n" + URL.last_tip() + "\n"
-        v = FONT.bold("v" + get_package_version())
+        v = Text("v" + get_package_version(), "bold")
         # 耗时
         take_time = int((time.time() - start) * 1000).__str__() + "ms\n\n"
-        swl.info(f"SwanLab Experiment Dashboard " + v + " ready in " + FONT.bold(take_time) + tip)
+        swl.info("SwanLab Experiment Dashboard ", v, " ready in ", Text(take_time, "bold"), tip, "\n", URL.last_tip(), "\n", sep="")
         # ---------------------------------- 启动服务 ----------------------------------
         # 使用 uvicorn 启动 FastAPI 应用，关闭原生日志
         # 使用try except 捕获退出，涉及端口占用等
