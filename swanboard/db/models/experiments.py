@@ -22,7 +22,7 @@ from peewee import (
 from .projects import Project
 from ..error import ExistedError, NotExistedError, ForeignProNotExistedError
 from swanboard.utils import generate_color, get_swanlog_dir, get_package_version
-from swankit.env import create_time
+from swanlab.swankit.env import create_time
 import shutil
 
 
