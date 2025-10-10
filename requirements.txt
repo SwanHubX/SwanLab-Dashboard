@@ -1,6 +1,3 @@
-# swanlab
-swanlab
-
 # web server
 fastapi>=0.110.1
 uvicorn>=0.14.0
