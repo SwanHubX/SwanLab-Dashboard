@@ -8,5 +8,5 @@ TEST_DIR = "swanboard-test"
 
 TEST_PATH = os.path.join(TEMP_PATH, TEST_DIR)
 
-# 测试时设置 SWANLAB_LOG_DIR，将 swanlab.swankit 中 get_swanlog_dir 函数的返回值定向到测试目录
+# 测试时设置 SWANLAB_LOG_DIR，将 swanlab.toolkit 中 get_swanlog_dir 函数的返回值定向到测试目录
 os.environ["SWANLAB_LOG_DIR"] = TEST_PATH

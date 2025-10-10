@@ -1,5 +1,5 @@
-from swanlab.swankit.callback import SwanKitCallback
-from swanlab.swankit.callback.models import ColumnInfo
+from swanlab.toolkit.callback import SwanKitCallback
+from swanlab.toolkit.callback.models import ColumnInfo
 from .db.models import *
 from .db import add_multi_chart, connect, NotExistedError, ExistedError, ChartTypeError
 from typing import Tuple, Optional

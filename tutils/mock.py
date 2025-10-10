@@ -9,7 +9,7 @@ r"""
 """
 from nanoid import generate
 from swanboard.db import Project, Experiment, Tag, Chart, Namespace, Source, Display
-from swanlab.swankit.env import create_time
+from swanlab.toolkit import create_time
 from swanboard.utils import generate_color
 from .env import TEST_PATH
 import os

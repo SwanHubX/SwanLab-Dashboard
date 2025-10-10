@@ -9,4 +9,4 @@ from .package import get_package_version
 
 # ---------------------------------- 一些常用但属于外部的东西 ----------------------------------
 
-from swanlab.swankit.env import get_swanlog_dir
+from swanlab.toolkit import get_swanlog_dir
