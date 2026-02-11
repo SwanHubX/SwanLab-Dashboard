@@ -80,7 +80,7 @@ class SwanBoardRun:
         # 可用URL
         ipv4 = URL.get_all_ip()
         if URL.is_zero_ip(host):
-            tip = Text("\n").join([URL(i, port).__str__() for i in ipv4])
+            tip = Text("\n").join(URL(i, port).__str__() for i in ipv4)
         else:
             tip = URL(host, port).__str__()
         v = Text("v" + get_package_version(), "bold")
