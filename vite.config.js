@@ -17,6 +17,7 @@ export default defineConfig(({ mode }) => {
     }
   }
   return {
+    base: './', // 设置相对路径
     // 服务插件
     plugins: [
       json5Plugin(),
