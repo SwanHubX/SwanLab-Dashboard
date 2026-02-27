@@ -4,7 +4,7 @@ uvicorn>=0.14.0
 
 
 # database
-peewee
+peewee>3.0.0, <4.0.0
 ujson
 
 
