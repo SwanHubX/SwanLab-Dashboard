@@ -1,3 +1,8 @@
+> [!IMPORTANT]
+> SwanBoard 已停止维护，后续不再接受新功能开发请求，仅保留必要的 Bug 修复、安全更新和兼容性维护。新的训练可视化相关能力将逐步迁移至 SwanLab 主项目或其他新的可视化模块中。
+> 若需要扩展功能，建议基于现有版本自行维护 Fork，或关注 [swanlab-core](https://github.com/SwanHubX/SwanLab/tree/main/core/proto/swanlab) 后续发布的替代方案。
+
+
 # SwanLab-Dashboard
 
 SwanLab - 训练可视化服务
