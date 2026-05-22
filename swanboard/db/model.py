@@ -9,9 +9,10 @@ r"""
 """
 from peewee import Model, OperationalError
 from playhouse.shortcuts import model_to_dict
-from swanlab.env import create_time
 from .error import NotExistedError
 import json
+
+from ..utils import create_time
 
 
 class SwanModel(Model):
